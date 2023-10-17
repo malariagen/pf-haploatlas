@@ -23,6 +23,9 @@ This app will be built off of code which exists from generating Figure 3A and Su
 The current code for this is located [here](https://github.com/malariagen/PDNA_SP_markers/blob/9b73a05d2c573e66ea70b282adb7055a66e2022e/work/3_haplotype_plots/20221221_haplotype_plots.ipynb)
 
 
+![A mock up of the app workflow](assets/mutapp.png)
+
+
 ## Project Management
 
 We will use issues to structure the work, and management of issues can be dealt with at the [issue board](https://gitlab.com/malariagen/gsp/mutation-discovery-app/-/boards).
