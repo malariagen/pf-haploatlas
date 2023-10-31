@@ -1,3 +1,11 @@
+"""
+cd to this directory
+run `python3 -m streamlit run app.py` in command line (you may have to pip install streamlit first)
+copy the `Network URL` and paste it into your browser (should be something like http://10.160.20.64:8501)
+"""
+
+# ============================================================================================================================================================
+
 import os
 import lzma
 import pickle
@@ -13,7 +21,7 @@ from plotly.subplots import make_subplots
 from streamlit_plotly_events import plotly_events
 
 
-# ============================================================================================================================================================
+
 # ============================================================================================================================================================
 
 population_colours = collections.OrderedDict()
@@ -364,7 +372,5 @@ for i in [1, 2, 3]:
 fig.update_layout(height = 1100,
                   # yaxis=dict(showticklabels=False)
                  )
-
-st.dataframe(df_frequencies)
     
 st.plotly_chart(fig)
