@@ -1,0 +1,4 @@
+env
+work/.ipynb_checkpoints
+assets/.ipynb_checkpoints
+*__pycache__*
