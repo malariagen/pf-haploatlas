@@ -4,8 +4,6 @@ bsub -J[1-100] -o generate_gene_summary-%J.output -e generate_gene_summary-%J.er
 
 
 
-
-
 import sys
 import os
 import numpy as np
