@@ -71,7 +71,7 @@ default_gene_id_index = gene_ids.index("PF3D7_0523000")
 
 gene_id_query = st.experimental_get_query_params()
 gene_id_query_array = [gene_id_query["gene_id"][0] == gene for gene in gene_ids if "gene_id" in gene_id_query.keys()]
-    
+
 if True in gene_id_query_array:
     gene_id_query_index = gene_id_query_array.index(True)
 elif "gene_id" not in gene_id_query.keys():
