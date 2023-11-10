@@ -79,7 +79,7 @@ if "-" in gene_id_extracted:
 
 if gene_id_extracted and "gene_id" not in st.session_state:
     st.session_state["gene_id"] = gene_id_extracted
-
+    
 gene_name_selected = st.selectbox("", ["--"] + gene_names, key = "gene_id")
 
 if gene_name_selected == "--":
