@@ -198,7 +198,7 @@ for column_num in np.arange(2, df_haplotypes_set.shape[1] - 4):
         marker=dict(color=population_colours[pop]),
         customdata = [pop] * len(df_haplotypes_set),
         name=pop,
-        hovertemplate='<b>%{customdata}:</b> %{y:0.1f}<extra></extra>'
+        hovertemplate='<b>%{customdata}:</b> %{y:0.1f}%<extra></extra>'
     ))
 
 fig.add_traces(bars, rows=2, cols=1)
@@ -413,14 +413,19 @@ label = {p: df_frequencies.loc[df_frequencies['Population'] == p, 'Admin level 1
 # ============================================================================================================================================================
 # ============================================================================================================================================================
 
-fig = make_subplots(rows = 1, cols = 3, shared_yaxes = True, column_widths = [1, 1, 5])
+fig = make_subplots(rows = 1, cols = 4, shared_yaxes = True, column_widths = [3, 1, 1, 5])
 
-xlims = [(1982, 1986),
-        (1994,1998),
-        (2000,2019)]
+xlims = [
+    (1982, 1986),
+    (1994,1998),
+    (2000,2019)
+]
 
-for i in [1, 2, 3]:
-    fig.update_xaxes(range=xlims[i-1], row=1, col=i)
+labels_list = []
+population_colours_list = []
+
+for i in [2, 3, 4]:
+    fig.update_xaxes(range=xlims[i-2], row=1, col=i)
     
     for pop in reversed(populations):
         
@@ -431,8 +436,13 @@ for i in [1, 2, 3]:
         for c in country[np.sort(idx)]:
 
             data = df_frequencies[(df_frequencies['Population'] == pop) & (df_frequencies['Country'] == c)]
-
+                
             for index, row in data.iterrows():
+                
+                if row.Label not in labels_list:
+                    labels_list.append(row.Label)
+                    population_colours_list.append(population_colours[row.Population])
+                
                 if row[ns_changes + ' frequency'] == 0:
                     fig.add_traces(go.Scatter(
                         x = [row.Year],
@@ -482,13 +492,32 @@ for i in [1, 2, 3]:
                                     opacity=row[ns_changes + ' frequency'])
                     ), rows = 1, cols = i)
 
+fig.add_traces(
+    go.Scatter(
+        x = np.ones(len(labels_list)),
+        y = labels_list,
+        mode="text",
+        text = labels_list,
+        textposition = "middle left",
+        textfont=dict(color=population_colours_list),
+        showlegend = False,
+        hoverinfo = "none"
+    )
+)
+
+fig.update_xaxes(range = (0, 1), row=1, col=1)
 fig.update_layout(height = 1100,
                   title = f"Viewing haplotype: {ns_changes}",
                   title_font_size = 18,
-                  xaxis = dict(tickangle=-60),
-                  xaxis2 = dict(tickangle=-60),
-                  xaxis3 = dict(tickangle=-60, tickvals = np.arange(2000, 2020).astype(int)),
+                  xaxis = dict(fixedrange=True, tickvals = []),
+                  xaxis2 = dict(fixedrange=True, tickangle=-60),
+                  xaxis3 = dict(fixedrange=True, tickangle=-60),
+                  xaxis4 = dict(fixedrange=True, tickangle=-60, tickvals = np.arange(2000, 2020).astype(int)),
+                  
+                  yaxis = dict(tickvals = []),
+                  yaxis2 = dict(showticklabels = False, tickmode='linear'),
+                  yaxis3 = dict(showticklabels = False, tickmode='linear'),
+                  yaxis4 = dict(showticklabels = False, tickmode='linear'),
                  )
-
 
 st.plotly_chart(fig)
