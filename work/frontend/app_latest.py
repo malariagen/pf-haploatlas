@@ -94,7 +94,7 @@ if gene_id_selected is not gene_id_extracted:
     st.experimental_set_query_params(**current_query_params)
 
 selected_gene_plasmodb_url = f'https://plasmodb.org/plasmo/app/record/gene/{gene_id_selected}'
-placeholder.markdown("Search for a gene below to get started.")
+placeholder.empty()
 filename = gene_ids_to_files[gene_id_selected]
 
 # ============================================================================================================================================================
