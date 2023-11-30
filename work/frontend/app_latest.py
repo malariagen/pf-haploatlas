@@ -423,6 +423,12 @@ label = {p: df_frequencies.loc[df_frequencies['Population'] == p, 'Admin level 1
 # ============================================================================================================================================================
 # ============================================================================================================================================================
 
+
+st.divider()
+
+st.subheader(f"Viewing haplotype: {ns_changes}")
+st.write("Click and drag to zoom. Double-click to reset.")
+    
 fig = make_subplots(rows = 2, cols = 4,
                     vertical_spacing = 0,
                     horizontal_spacing = 0.05,
@@ -553,35 +559,26 @@ fig.add_traces([
     [_abacus_scatter(x = [pos], y = [legend_y], hoverinfo = "none", **scatter_config["partial_frequency"]) for pos in partial_frequency_positions] +
     [_abacus_scatter(x = [pos], y = [legend_y], hoverinfo = "none", marker=dict(color = "black", size = 16, symbol = "circle", opacity=o)) for pos, o in zip(partial_frequency_positions, partial_frequency_opacities)] +
     
-    [go.Scatter(x = [0.4, 0.6], y = [0.6, 0.6], showlegend = False, mode = "text", text = ["0%", "100%"])] +
+    [go.Scatter(x = [0.4, 0.6], y = [0.6, 0.6], hoverinfo = "none", showlegend = False, mode = "text", text = ["0%", "100%"])] +
     
     [go.Scatter(x = [0.5], y = [0.9], hoverinfo = "none", showlegend = False, mode = "text", text = ["Haplotype Allele Frequency"])],
     
     rows = 1, cols = 1)
 
-fig.add_annotation(
-    go.layout.Annotation(
-        x=0.57,
-        y=legend_y+0.3,
-        xref="x",
-        yref="y",
-        text="",
-        showarrow=True,
-        axref="x",
-        ayref='y',
-        ax=0.42,
-        ay=legend_y+0.3,
-        arrowhead=3,
-        arrowwidth=1.5,
-    )
-)
+
+def plotly_arrow(x0, x1, y):
+    a = go.layout.Annotation(
+        x = x1, ax = x0, y = y, ay = y,
+        xref="x", yref="y", text="", showarrow=True,
+        axref="x", ayref='y', arrowhead=3, arrowwidth=1.5)
+    
+    return a
+
+fig.add_annotation(plotly_arrow(0.42, 0.57, legend_y+0.3))
 
 
 
 fig.update_layout(height = 1300,
-                  title = f"Viewing haplotype: {ns_changes}",
-                  title_font_size = 18,
-                  
                   xaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
                   xaxis2 = dict(range = (0, 1), fixedrange=True, tickvals = []),
                   xaxis3 = dict(fixedrange=True, tickangle=-60),
@@ -594,7 +591,6 @@ fig.update_layout(height = 1300,
                   yaxis4 = dict(showticklabels = False, tickmode='linear'),
                   yaxis5 = dict(showticklabels = False, tickmode='linear'),
                   
-                  
                  )
 
-st.plotly_chart(fig)
+st.plotly_chart(fig, config = {"displayModeBar": False})
