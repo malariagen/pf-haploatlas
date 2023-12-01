@@ -29,7 +29,7 @@ st.set_page_config(
     }
 )
 
-st.title('Pf7.0 Haplotype Explorer (PfHEx7.0)')
+st.title('Mutation Discovery App')
 st.subheader("Haplotype summaries for *Plasmodium falciparum* genes across time and space")
 st.divider()
 placeholder = st.empty()
@@ -64,22 +64,12 @@ gene_mapper = cache_load_gene_mapper()
 default_value = "--"
 base_path = "/nfs/team112_data03/personal/nw20/gitlab/malariagen/gsp/mutation-discovery-app/work/array_job_ID/"
 
-def _is_core_genome(filename: str):
-    if "VAR" in filename:
-        return False
-    elif "SURF" in filename:
-        return False
-    elif "RIF" in filename:
-        return False
-    else:
-        return True
-
 files_to_gene_ids = {f: f.split(".")[0] for f in os.listdir(base_path) if f.endswith("pkl.xz")}
 gene_ids_to_files = dict(zip(files_to_gene_ids.values(), files_to_gene_ids.keys()))
 
 gene_ids_to_gene_names = {gene: (f'{gene} - {gene_mapper[gene]}' if not gene_mapper[gene] is "." else gene) for gene in sorted(files_to_gene_ids.values())}
 gene_names_to_gene_ids = dict(zip(gene_ids_to_gene_names.values(), gene_ids_to_gene_names.keys()))
-gene_names = [gene for gene in gene_ids_to_gene_names.values() if _is_core_genome(gene)]
+gene_names = list(gene_ids_to_gene_names.values())
 
 current_query_params = st.experimental_get_query_params()
 gene_id_extracted = (current_query_params["gene_id"][0] if "gene_id" in current_query_params.keys() else "")
@@ -208,7 +198,7 @@ for column_num in np.arange(2, df_haplotypes_set.shape[1] - 4):
         marker=dict(color=population_colours[pop]),
         customdata = [pop] * len(df_haplotypes_set),
         name=pop,
-        hovertemplate='<b>%{customdata}:</b> %{y:0.1f}%<extra></extra>'
+        hovertemplate='<b>%{customdata}:</b> %{y:0.1f}<extra></extra>'
     ))
 
 fig.add_traces(bars, rows=2, cols=1)
@@ -423,74 +413,14 @@ label = {p: df_frequencies.loc[df_frequencies['Population'] == p, 'Admin level 1
 # ============================================================================================================================================================
 # ============================================================================================================================================================
 
+fig = make_subplots(rows = 1, cols = 3, shared_yaxes = True, column_widths = [1, 1, 5])
 
-st.divider()
+xlims = [(1982, 1986),
+        (1994,1998),
+        (2000,2019)]
 
-st.subheader(f"Viewing haplotype: {ns_changes}")
-st.write("Click and drag to zoom. Double-click to reset.")
-    
-fig = make_subplots(rows = 2, cols = 4,
-                    vertical_spacing = 0,
-                    horizontal_spacing = 0.05,
-                    specs = [
-                        [{"colspan": 4}, None, None, None],
-                        [{}, {}, {}, {}],
-                    ],
-                    row_heights = [1, 20],
-                    column_widths = [3, 1, 1, 5],
-                    shared_yaxes = "rows"
-                   )
-
-
-xlims = [
-    (1982, 1986),
-    (1994,1998),
-    (2000,2019)
-]
-
-labels_list = []
-population_colours_list = []
-
-
-def _abacus_scatter(**kwargs):
-    return go.Scatter(
-        customdata = [[row.n, int(row.n * row[ns_changes + ' frequency']), np.round(row[ns_changes + ' frequency'] * 100, 1)]],
-        showlegend = False,
-        **kwargs
-    )
-
-scatter_config = {
-    "zero_frequency": {
-        "marker": dict(color="white",
-                       size=13,
-                       symbol="circle-x",
-                       line=dict(color='gray',
-                                 width=1))
-    },
-    "full_frequency": {
-        "marker": dict(color="black",
-                       size=20,
-                       symbol="circle"),
-        "text": "<b>!</b>",
-        "mode": "markers+text",
-        "textfont": dict(size=30,
-                         color="white")
-    },
-    "partial_frequency": {
-        "marker": dict(color="white",
-                       size=16,
-                       symbol="circle",
-                       line=dict(
-                           color='black',
-                           width=1.5)
-                      )
-    },      
-}
-
-hovertemplate = '<b>%{y} in %{x}</b><br>Samples with selected haplotype: %{customdata[1]} (%{customdata[2]}%)<br>All samples: %{customdata[0]}<extra></extra>',
-
-for i in [2, 3, 4]:
-    fig.update_xaxes(range=xlims[i-2], row=2, col=i)
+for i in [1, 2, 3]:
+    fig.update_xaxes(range=xlims[i-1], row=1, col=i)
     
     for pop in reversed(populations):
         
@@ -501,96 +431,64 @@ for i in [2, 3, 4]:
         for c in country[np.sort(idx)]:
 
             data = df_frequencies[(df_frequencies['Population'] == pop) & (df_frequencies['Country'] == c)]
-                
+
             for index, row in data.iterrows():
-                
-                if row.Label not in labels_list:
-                    labels_list.append(row.Label)
-                    population_colours_list.append(population_colours[row.Population])
-                
                 if row[ns_changes + ' frequency'] == 0:
-                    fig.add_traces(
-                        _abacus_scatter(x = [row.Year], y = [row.Label],
-                                        hovertemplate = hovertemplate,
-                                        **scatter_config["zero_frequency"]
-                                       ), rows = 2, cols = i)
+                    fig.add_traces(go.Scatter(
+                        x = [row.Year],
+                        y = [row.Label],
+                        customdata = [[row.n, int(row.n * row[ns_changes + ' frequency']), np.round(row[ns_changes + ' frequency'] * 100, 1)]],
+                        hovertemplate = '<b>%{y} in %{x}</b><br>Samples with selected haplotype: %{customdata[1]} (%{customdata[2]}%)<br>All samples: %{customdata[0]}<extra></extra>',
+                        showlegend = False,
+                        marker=dict(color = "white", size = 18, symbol = "circle-x",
+                                    line=dict(color='black',width=2))
+                    ), rows = 1, cols = i)
                     
                 elif row[ns_changes + ' frequency'] == 1:
-                    fig.add_traces(
-                        _abacus_scatter(x = [row.Year], y = [row.Label],
-                                        hovertemplate = hovertemplate,
-                                        **scatter_config["full_frequency"]
-                                       ), rows = 2, cols = i)
-
+                    fig.add_traces(go.Scatter(
+                        x = [row.Year],
+                        y = [row.Label],
+                        customdata = [[row.n, int(row.n * row[ns_changes + ' frequency']), np.round(row[ns_changes + ' frequency'] * 100, 1)]],
+                        hovertemplate = '<b>%{y} in %{x}</b><br>Samples with selected haplotype: %{customdata[1]} (%{customdata[2]}%)<br>All samples: %{customdata[0]}<extra></extra>',
+                        showlegend = False,
+                        marker=dict(color = "black", size = 18, symbol = "circle-x",
+                                    line=dict(color='white',width=2))
+                    ), rows = 1, cols = i)
+                elif np.isnan(row[ns_changes + ' frequency']):
+                    fig.add_traces(go.Scatter(
+                        x = [row.Year],
+                        y = [row.Label],
+                        customdata = [[row.n, int(row.n * row[ns_changes + ' frequency']), np.round(row[ns_changes + ' frequency'] * 100, 1)]],
+                        hovertemplate = '<b>%{y} in %{x}</b><br>Samples with selected haplotype: %{customdata[1]} (%{customdata[2]}%)<br>All samples: %{customdata[0]}<extra></extra>',
+                        showlegend = False,
+                        marker=dict(color = "white", size = 18, symbol = "circle",
+                                    line=dict(color='white',width=2))
+                    ), rows = 1, cols = i)
                 else:
-                    fig.add_traces(
-                        _abacus_scatter(x = [row.Year], y = [row.Label],
-                                        **scatter_config["partial_frequency"]
-                                       ), rows = 2, cols = i)
-                    
-                    fig.add_traces(
-                        _abacus_scatter(x = [row.Year], y = [row.Label],
-                                        hovertemplate = hovertemplate,
-                                        marker=dict(color = "black", size = 16, symbol = "circle", opacity=row[ns_changes + ' frequency'])
-                                       ), rows = 2, cols = i)
-                            
-fig.add_traces(
-    go.Scatter(
-        x = np.ones(len(labels_list)),
-        y = labels_list,
-        mode="text",
-        text = labels_list,
-        textposition = "middle left",
-        textfont=dict(color=population_colours_list),
-        showlegend = False,
-        hoverinfo = "none"
-    ),
-    rows = 2, cols = 1
-)
+                    fig.add_traces(go.Scatter(
+                        x = [row.Year],
+                        y = [row.Label],
+                        showlegend = False,
+                        marker=dict(color = "white", size = 18, symbol = "circle",
+                                    line=dict(color='black',width=2))
+                    ), rows = 1, cols = i)
+                    fig.add_traces(go.Scatter(
+                        x = [row.Year],
+                        y = [row.Label],
+                        customdata = [[row.n, int(row.n * row[ns_changes + ' frequency']), np.round(row[ns_changes + ' frequency'] * 100, 1)]],
+                        hovertemplate = '<b>%{y} in %{x}</b><br>Samples with selected haplotype: %{customdata[1]} (%{customdata[2]}%)<br>All samples: %{customdata[0]}<extra></extra>',
+                        showlegend = False,
+                        marker=dict(color = "black", size = 18, symbol = "circle",
+                                    opacity=row[ns_changes + ' frequency'])
+                    ), rows = 1, cols = i)
 
-legend_y = 0.3
-partial_frequency_opacities = np.linspace(0.05, 0.95, 8)
-partial_frequency_positions = np.linspace(0.45, 0.55, 8)
-
-fig.add_traces([
-    _abacus_scatter(x = [0.4], y = [legend_y], hoverinfo = "none", **scatter_config["zero_frequency"]),
-    _abacus_scatter(x = [0.6], y = [legend_y], hoverinfo = "none", **scatter_config["full_frequency"])] +
-    
-    [_abacus_scatter(x = [pos], y = [legend_y], hoverinfo = "none", **scatter_config["partial_frequency"]) for pos in partial_frequency_positions] +
-    [_abacus_scatter(x = [pos], y = [legend_y], hoverinfo = "none", marker=dict(color = "black", size = 16, symbol = "circle", opacity=o)) for pos, o in zip(partial_frequency_positions, partial_frequency_opacities)] +
-    
-    [go.Scatter(x = [0.4, 0.6], y = [0.6, 0.6], hoverinfo = "none", showlegend = False, mode = "text", text = ["0%", "100%"])] +
-    
-    [go.Scatter(x = [0.5], y = [0.9], hoverinfo = "none", showlegend = False, mode = "text", text = ["Haplotype Allele Frequency"])],
-    
-    rows = 1, cols = 1)
-
-
-def plotly_arrow(x0, x1, y):
-    a = go.layout.Annotation(
-        x = x1, ax = x0, y = y, ay = y,
-        xref="x", yref="y", text="", showarrow=True,
-        axref="x", ayref='y', arrowhead=3, arrowwidth=1.5)
-    
-    return a
-
-fig.add_annotation(plotly_arrow(0.42, 0.57, legend_y+0.3))
-
-
-
-fig.update_layout(height = 1300,
-                  xaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
-                  xaxis2 = dict(range = (0, 1), fixedrange=True, tickvals = []),
-                  xaxis3 = dict(fixedrange=True, tickangle=-60),
-                  xaxis4 = dict(fixedrange=True, tickangle=-60),
-                  xaxis5 = dict(fixedrange=True, tickangle=-60, tickvals = np.arange(2000, 2020).astype(int)),
-                  
-                  yaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
-                  yaxis2 = dict(tickvals = []),
-                  yaxis3 = dict(showticklabels = False, tickmode='linear'),
-                  yaxis4 = dict(showticklabels = False, tickmode='linear'),
-                  yaxis5 = dict(showticklabels = False, tickmode='linear'),
-                  
+fig.update_layout(height = 1100,
+                  title = f"Viewing haplotype: {ns_changes}",
+                  title_font_size = 18,
+                  xaxis = dict(tickangle=-60),
+                  xaxis2 = dict(tickangle=-60),
+                  xaxis3 = dict(tickangle=-60, tickvals = np.arange(2000, 2020).astype(int)),
                  )
 
-st.plotly_chart(fig, config = {"displayModeBar": False})
+
+st.plotly_chart(fig)
