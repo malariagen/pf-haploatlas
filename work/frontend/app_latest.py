@@ -43,7 +43,7 @@ with st.sidebar:
     st.header("**Samples**")
     st.markdown("The Mutation Discovery App uses 16,203 QC pass samples from the [Pf7 dataset.](https://wellcomeopenresearch.org/articles/8-22/v1)")
     st.header("**Genes**")
-    st.markdown("The Mutation Discovery App uses **XXX** genes, according to the **XXX** version of the 3D7 Pf genome from *PlasmoDB link?* All genes have a unique identifier, e.g. **PF3D7_XXXXXXX**, and in some cases a gene name, e.g. **MDR1**.")
+    st.markdown("The [insert final name] App uses 5,568 genes, according to the **XXX** version of the 3D7 Pf genome from [PlasmoDB](https://plasmodb.org/plasmo/app/). All genes have a unique identifier, e.g. **PF3D7_XXXXXXX**, and in some cases a gene name, e.g. **MDR1**.")
     st.header("**Plots**")
     st.markdown("The app generates four plots per gene:")
     st.markdown("**1. Sample counts per haplotype** - cumulative counts of samples per haplotype. Toggle the y-axis between raw values or a log scale.")
@@ -62,7 +62,7 @@ def cache_load_gene_mapper():
 
 gene_mapper = cache_load_gene_mapper()
 default_value = "--"
-base_path = "/nfs/team112_data03/personal/nw20/gitlab/malariagen/gsp/mutation-discovery-app/work/array_job_ID/"
+base_path = "/nfs/team112_data03/personal/nw20/gitlab/malariagen/gsp/mutation-discovery-app/work/backend/06-12-23_smaller_pkls/"
 
 def _is_core_genome(filename: str):
     if "VAR" in filename:
@@ -119,7 +119,7 @@ def cache_load(gene_id: str):
         loaded_plot_data = pickle.load(file)
     return loaded_plot_data
 
-df_haplotypes, df_clonal, df_join, background_ns_changes, gene_name = cache_load(filename)
+df_haplotypes, df_join, background_ns_changes, gene_name = cache_load(filename)
 
 col1, col2 = st.columns([3, 2])
 with col1.expander("Click to edit plot settings"):
