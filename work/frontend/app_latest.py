@@ -60,10 +60,6 @@ def cache_load_gene_mapper():
     with open("gene_mapping.json", "r") as f:
         return json.load(f)
 
-gene_mapper = cache_load_gene_mapper()
-default_value = "--"
-base_path = "/nfs/team112_data03/personal/nw20/gitlab/malariagen/gsp/mutation-discovery-app/work/array_job_ID/"
-
 def _is_core_genome(filename: str):
     if "VAR" in filename:
         return False
@@ -74,44 +70,46 @@ def _is_core_genome(filename: str):
     else:
         return True
 
+def _lookup_gene_name(gene_id: str) -> str:
+    if gene_id == "--":
+        return "--"
+    else:
+        return gene_ids_to_gene_names[gene_id]
+
+gene_mapper = cache_load_gene_mapper()
+default_value = "--"
+base_path = "../backend/23-11-23_run_array_job"
+
+
 files_to_gene_ids = {f: f.split(".")[0] for f in os.listdir(base_path) if f.endswith("pkl.xz")}
 gene_ids_to_files = dict(zip(files_to_gene_ids.values(), files_to_gene_ids.keys()))
 
 gene_ids_to_gene_names = {gene: (f'{gene} - {gene_mapper[gene]}' if not gene_mapper[gene] is "." else gene) for gene in sorted(files_to_gene_ids.values())}
-gene_names_to_gene_ids = dict(zip(gene_ids_to_gene_names.values(), gene_ids_to_gene_names.keys()))
-gene_names = [gene for gene in gene_ids_to_gene_names.values() if _is_core_genome(gene)]
+gene_ids = [gene_id for gene_id, gene_name in gene_ids_to_gene_names.items() if _is_core_genome(gene_name)]
 
+
+# Handle URL - functionalise this
 current_query_params = st.experimental_get_query_params()
 gene_id_extracted = (current_query_params["gene_id"][0] if "gene_id" in current_query_params.keys() else "")
-
-if "-" in gene_id_extracted:
-    gene_id_extracted = gene_ids_to_gene_names[gene_id_extracted]
 
 if gene_id_extracted and "gene_id" not in st.session_state:
     st.session_state["gene_id"] = gene_id_extracted
 
-gene_name_selected = st.selectbox("", ["--"] + gene_names, key = "gene_id")
+gene_id_selected = st.selectbox("", ["--"] + gene_ids, format_func = _lookup_gene_name, key = "gene_id")
 
-if gene_name_selected == "--":
+if gene_id_selected == "--":
     placeholder.markdown("### Search for a gene below to get started.")
     st.experimental_set_query_params()
     st.stop()
-
-gene_id_selected = gene_names_to_gene_ids[gene_name_selected]
 
 if gene_id_selected is not gene_id_extracted:
     current_query_params["gene_id"] = gene_id_selected
     st.experimental_set_query_params(**current_query_params)
 
-selected_gene_plasmodb_url = f'https://plasmodb.org/plasmo/app/record/gene/{gene_id_selected}'
-placeholder.empty()
 filename = gene_ids_to_files[gene_id_selected]
+placeholder.empty()
 
 # ============================================================================================================================================================
-
-if ("VAR" in gene_name_selected) | ("RIF" in gene_name_selected):
-    st.warning('"VAR" and "RIF" genes are subject to high levels of recombination and are thus unlikely to provide interpretable haplotype data')
-
 # Retrieve the data from the files
 @st.cache_data
 def cache_load(gene_id: str):
@@ -125,6 +123,9 @@ col1, col2 = st.columns([3, 2])
 with col1.expander("Click to edit plot settings"):
     min_samples = st.number_input("Minimum number of samples per haplotype for analysis", min_value = 1, value = 25)
     sample_count_mode = st.radio("Select a mode for Plot 1:", ["Sample counts", "Sample counts on a log scale"], index=0)
+
+selected_gene_plasmodb_url = f'https://plasmodb.org/plasmo/app/record/gene/{gene_id_selected}'
+
 
 col2.markdown(
     f'''<a href="{selected_gene_plasmodb_url}" style="display: inline-block;
@@ -145,6 +146,10 @@ df_haplotypes['cum_proportion'] = df_haplotypes['Total'].cumsum() / total_sample
 df_haplotypes_set = df_haplotypes.loc[df_haplotypes['Total'] >= min_samples] 
 df_haplotypes_set['ns_changes'] = df_haplotypes_set['ns_changes'].replace('', '3D7 REF')
 
+if len(df_haplotypes_set) == 0:
+    st.warning("No haplotype data found.")
+    st.stop()
+
 mutations = pd.Series(np.unique(np.concatenate(df_haplotypes_set['ns_changes_list'].values)))
 mutations = mutations.loc[mutations != '']
 mutations_np_ref = mutations.apply(lambda x: x[1:])
@@ -161,7 +166,7 @@ upset_plot_height = 1.5 + len(df_mutations_set) / 5
 total_plot_height = (5 + upset_plot_height) * 100
 
 # Create the plots
-fig = make_subplots(rows = 3, cols = 1, shared_xaxes = True, row_heights = [2, 3, upset_plot_height], vertical_spacing = 0.025)
+fig = make_subplots(rows = 3, cols = 1, shared_xaxes = True, row_heights = [2, 3, upset_plot_height], vertical_spacing = 0)
 
 # Plot 1 - sample counts per haplotype
 fig.add_trace(
@@ -273,7 +278,7 @@ fig.update_yaxes(showgrid = True, zeroline = False, gridcolor='rgba(0, 0, 0, 0.1
                  tickvals=df_mutations_set.reset_index()["index"],
                  ticktext=df_mutations_set.reset_index().mutation,
                  row = 3, col = 1)
-fig.update_layout(hovermode='closest')
+fig.update_layout(hovermode = 'closest')
 
 # ============================================================================================================================================================
 # ============================================================================================================================================================
@@ -290,100 +295,6 @@ if isinstance(ns_changes, int):
 # ============================================================================================================================================================
 # ============================================================================================================================================================
 
-locations = [
-
-    ('SA', 'Colombia', 'Cauca'),
-
-    ('AF-W', 'Gabon', 'Wouleu-Ntem'),
-    ('AF-W', 'Cameroon', 'Sud-Ouest'),
-    ('AF-W', 'Nigeria', 'Lagos'),
-    ('AF-W', 'Benin', 'Littoral'),
-    ('AF-W', 'Benin', 'Atlantique'),
-    ('AF-W', 'Ghana', 'Volta'),
-    ('AF-W', 'Ghana', 'Greater Accra'),
-    ('AF-W', 'Ghana', 'Upper East'),
-    ('AF-W', 'Ghana', 'Central'),
-    ('AF-W', 'Ghana', 'Ashanti'),
-    ('AF-W', 'Ghana', 'Brong Ahafo'),
-    ('AF-W', 'Burkina Faso', 'Haut-Bassins'),
-    ('AF-W', 'Mali', 'Segou'),
-    ('AF-W', 'Mali', 'Sikasso'),
-    ('AF-W', 'Mali', 'Koulikoro'),
-    ('AF-W', 'Mali', 'Bamako'),
-    ('AF-W', 'Mali', 'Kayes'),
-    
-    
-    ('AF-W', "Côte d'Ivoire", 'Abidjan'),
-    ('AF-W', 'Mauritania', 'Hodh el Gharbi'),
-    ('AF-W', 'Mauritania', 'Hodh ech Chargui'), 
-    ('AF-W', 'Guinea', 'Nzerekore'),
-    ('AF-W', 'Guinea', 'Faranah'),
-    ('AF-W', 'Senegal', 'Sedhiou'),
-    ('AF-W', 'Senegal', 'Dakar'),
-    ('AF-W', 'Gambia', 'Upper River'),
-    ('AF-W', 'Gambia', 'North Bank'),
-    ('AF-W', 'Gambia', 'Western'),
-    
-    ('AF-C', 'DRC', 'Kinshasa'),
-
-    ('AF-NE', 'Kenya', 'Kisumu'),
-    ('AF-NE', 'Sudan', 'Khartoum'),
-
-    ('AF-E', 'Kenya', 'Kilifi'),
-    ('AF-E', 'Mozambique', 'Gaza'), 
-    ('AF-E', 'Tanzania', 'Lindi'),
-    ('AF-E', 'Tanzania', 'Tanga'),
-    ('AF-E', 'Tanzania', 'Morogoro'),
-    ('AF-E', 'Tanzania', 'Kagera'),
-    ('AF-E', 'Tanzania', 'Kigoma'),
-    ('AF-E', 'Malawi', 'Zomba'),   
-    ('AF-E', 'Malawi', 'Chikwawa'),
-
-    ('AS-S-E', 'India', 'West Bengal'),
-    ('AS-S-E', 'India', 'Odisha'),
-
-     ('AS-S-FE', 'Bangladesh', 'Chittagong'),
-     ('AS-S-FE', 'India', 'Tripura'),
-
-     ('AS-SE-W', 'Thailand', 'Tak'),
-    ('AS-SE-W', 'Myanmar', 'Tanintharyi'),
-    ('AS-SE-W', 'Myanmar', 'Shan'),
-    ('AS-SE-W', 'Myanmar', 'Kayin'),
-    ('AS-SE-W', 'Myanmar', 'Kachin'),
-    ('AS-SE-W', 'Myanmar', 'Bago'),
-    ('AS-SE-W', 'Myanmar', 'Mandalay'),
-    ('AS-SE-W', 'Myanmar', 'Sagaing'),
-
-    ('AS-SE-E', 'Vietnam', 'Khanh Hoa'),
-    ('AS-SE-E', 'Vietnam', 'Ninh Thuan'),
-    ('AS-SE-E', 'Vietnam', 'Gia Lai'),
-    ('AS-SE-E', 'Vietnam', 'Dak Lak'),
-    ('AS-SE-E', 'Vietnam', 'Quang Nam'),
-    ('AS-SE-E', 'Vietnam', 'Dak Nong'),
-    ('AS-SE-E', 'Vietnam', 'Quang Tri'),
-    ('AS-SE-E', 'Vietnam', 'Binh Phuoc'),
-    ('AS-SE-E', 'Cambodia', 'Ratanakiri'),
-    ('AS-SE-E', 'Cambodia', 'Stueng Traeng'),
-    ('AS-SE-E', 'Cambodia', 'Preah Vihear'),
-    ('AS-SE-E', 'Cambodia', 'Pursat'),
-    ('AS-SE-E', 'Cambodia', 'Battambang'),
-    ('AS-SE-E', 'Cambodia', 'Pailin'),
-
-    ('AS-SE-E', 'Laos', 'Sekong'),
-    ('AS-SE-E', 'Laos', 'Attapeu'),
-    ('AS-SE-E', 'Laos', 'Salavan'),
-    ('AS-SE-E', 'Laos', 'Champasak'),
-    ('AS-SE-E', 'Laos', 'Savannakhet'),
-    ('AS-SE-E', 'Thailand', 'Sisakhet'),
-
-    ('OC-NG', 'Papua New Guinea', 'Milne Bay'),
-    ('OC-NG', 'Papua New Guinea', 'Madang'),
-    ('OC-NG', 'Papua New Guinea', 'East Sepik'),
-    ('OC-NG', 'Indonesia', 'Papua')
-]       
-
-
-
 def locations_agg(x, ns_changes):
     names = collections.OrderedDict()
     names['n'] = np.count_nonzero(x['ns_changes_homozygous'])
@@ -396,7 +307,6 @@ def locations_agg(x, ns_changes):
     
     return pd.Series(names)
 
-
 columns_to_remove = ['aa_haplotype', 'nucleotide_haplotype']
 df_samples_with_ns_changes = df_join.drop(columns=columns_to_remove, axis=1)
 df_samples_with_ns_changes = df_samples_with_ns_changes.loc[df_samples_with_ns_changes['QC pass']]
@@ -404,6 +314,9 @@ df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democra
 df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "3D7 REF"
 
 df_samples_with_ns_changes['ns_changes_homozygous'] = ( df_samples_with_ns_changes['ns_changes'] == df_samples_with_ns_changes['ns_changes'].str.upper() )
+
+aggregated_locations = df_samples_with_ns_changes.groupby(['Population', 'Country', 'Admin level 1']).apply(lambda x: len(x) >= min_samples)
+locations = aggregated_locations.index[aggregated_locations.values].values
 
 df_frequencies = (
     df_samples_with_ns_changes
@@ -425,6 +338,12 @@ label = {p: df_frequencies.loc[df_frequencies['Population'] == p, 'Admin level 1
 
 
 st.divider()
+
+# def _haplotype_formatter(h: str) -> str:
+#     if h.count("/") > 5:
+#         h = "/".join(h.split("/")[:5]) + "<br>" + "/".join(h.split("/")[5:])
+#     else:
+#         return h
 
 st.subheader(f"Viewing haplotype: {ns_changes}")
 st.write("Click and drag to zoom. Double-click to reset.")
@@ -476,16 +395,14 @@ scatter_config = {
         "textfont": dict(size=30,
                          color="white")
     },
-    "partial_frequency": {
-        "marker": dict(color="white",
-                       size=16,
-                       symbol="circle",
-                       line=dict(
-                           color='black',
-                           width=1.5)
-                      )
-    },      
 }
+
+def _partial_frequency_marker_colour(freq: float):
+    colour_intensity = max(0, min(255, 255 - int(255 * freq)))
+    marker_colour = f"rgba({colour_intensity}, {colour_intensity}, {colour_intensity}, 1)"
+    
+    return marker_colour
+    
 
 hovertemplate = '<b>%{y} in %{x}</b><br>Samples with selected haplotype: %{customdata[1]} (%{customdata[2]}%)<br>All samples: %{customdata[0]}<extra></extra>',
 
@@ -523,15 +440,17 @@ for i in [2, 3, 4]:
                                        ), rows = 2, cols = i)
 
                 else:
-                    fig.add_traces(
-                        _abacus_scatter(x = [row.Year], y = [row.Label],
-                                        **scatter_config["partial_frequency"]
-                                       ), rows = 2, cols = i)
+
                     
                     fig.add_traces(
                         _abacus_scatter(x = [row.Year], y = [row.Label],
                                         hovertemplate = hovertemplate,
-                                        marker=dict(color = "black", size = 16, symbol = "circle", opacity=row[ns_changes + ' frequency'])
+                                        marker=dict(color = _partial_frequency_marker_colour(row[ns_changes + ' frequency']),
+                                                    size = 16, symbol = "circle",
+                                                    line=dict(
+                                                        color='black',
+                                                        width=1.5)
+                                                   )
                                        ), rows = 2, cols = i)
                             
 fig.add_traces(
@@ -549,19 +468,19 @@ fig.add_traces(
 )
 
 legend_y = 0.3
-partial_frequency_opacities = np.linspace(0.05, 0.95, 8)
+partial_frequency_frequencies = np.linspace(0.05, 0.95, 8)
 partial_frequency_positions = np.linspace(0.45, 0.55, 8)
 
 fig.add_traces([
     _abacus_scatter(x = [0.4], y = [legend_y], hoverinfo = "none", **scatter_config["zero_frequency"]),
     _abacus_scatter(x = [0.6], y = [legend_y], hoverinfo = "none", **scatter_config["full_frequency"])] +
     
-    [_abacus_scatter(x = [pos], y = [legend_y], hoverinfo = "none", **scatter_config["partial_frequency"]) for pos in partial_frequency_positions] +
-    [_abacus_scatter(x = [pos], y = [legend_y], hoverinfo = "none", marker=dict(color = "black", size = 16, symbol = "circle", opacity=o)) for pos, o in zip(partial_frequency_positions, partial_frequency_opacities)] +
+    [_abacus_scatter(x = [pos], y = [legend_y], hoverinfo = "none", marker=dict(color = _partial_frequency_marker_colour(freq), size = 16, symbol = "circle",
+                                                                                line=dict(color='black', width=1.5))) for pos, freq in zip(partial_frequency_positions, partial_frequency_frequencies)] +
     
     [go.Scatter(x = [0.4, 0.6], y = [0.6, 0.6], hoverinfo = "none", showlegend = False, mode = "text", text = ["0%", "100%"])] +
     
-    [go.Scatter(x = [0.5], y = [0.9], hoverinfo = "none", showlegend = False, mode = "text", text = ["Haplotype Allele Frequency"])],
+    [go.Scatter(x = [0.5], y = [0.9], hoverinfo = "none", showlegend = False, mode = "text", text = ["Haplotype Frequency"])],
     
     rows = 1, cols = 1)
 
@@ -575,8 +494,6 @@ def plotly_arrow(x0, x1, y):
     return a
 
 fig.add_annotation(plotly_arrow(0.42, 0.57, legend_y+0.3))
-
-
 
 fig.update_layout(height = 1300,
                   xaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
