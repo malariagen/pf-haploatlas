@@ -35,7 +35,6 @@ st.divider()
 placeholder = st.empty()
 placeholder.markdown("### Search for a gene below to get started.")
 
-# ============================================================================================================================================================
 ## Sidebar for additional info
 with st.sidebar:
     st.title("**Further Information**")
@@ -78,7 +77,7 @@ def _lookup_gene_name(gene_id: str) -> str:
 
 gene_mapper = cache_load_gene_mapper()
 default_value = "--"
-base_path = "../backend/23-11-23_run_array_job"
+base_path = "../backend/06-12-23_smaller_pkls"
 
 
 files_to_gene_ids = {f: f.split(".")[0] for f in os.listdir(base_path) if f.endswith("pkl.xz")}
@@ -117,7 +116,7 @@ def cache_load(gene_id: str):
         loaded_plot_data = pickle.load(file)
     return loaded_plot_data
 
-df_haplotypes, df_clonal, df_join, background_ns_changes, gene_name = cache_load(filename)
+df_haplotypes, df_join, background_ns_changes, gene_name = cache_load(filename)
 
 col1, col2 = st.columns([3, 2])
 with col1.expander("Click to edit plot settings"):
