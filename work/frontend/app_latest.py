@@ -89,24 +89,28 @@ gene_ids = [gene_id for gene_id, gene_name in gene_ids_to_gene_names.items() if 
 
 # Handle URL - functionalise this
 current_query_params = st.experimental_get_query_params()
-gene_id_extracted = (current_query_params["gene_id"][0] if "gene_id" in current_query_params.keys() else "")
+gene_id_extracted = current_query_params.get("gene_id", [""])[0]
+
+if gene_id_extracted not in gene_ids:
+    gene_id_extracted = "--"
 
 if gene_id_extracted and "gene_id" not in st.session_state:
     st.session_state["gene_id"] = gene_id_extracted
 
-gene_id_selected = st.selectbox("", ["--"] + gene_ids, format_func = _lookup_gene_name, key = "gene_id")
+gene_id_selected = st.selectbox("", ["--"] + gene_ids, format_func=_lookup_gene_name, key="gene_id")
 
 if gene_id_selected == "--":
     placeholder.markdown("### Search for a gene below to get started.")
     st.experimental_set_query_params()
     st.stop()
 
-if gene_id_selected is not gene_id_extracted:
+if gene_id_selected != gene_id_extracted:
     current_query_params["gene_id"] = gene_id_selected
     st.experimental_set_query_params(**current_query_params)
 
 filename = gene_ids_to_files[gene_id_selected]
 placeholder.empty()
+
 
 # ============================================================================================================================================================
 # Retrieve the data from the files
