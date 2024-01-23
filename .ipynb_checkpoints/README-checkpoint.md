@@ -2,6 +2,18 @@
 
 A project to develop an interactive web app for eventual public use. The overall aim is to give Pf7(+) users the ability to look at genetic, spatial, and temporal trends for any Pf gene of interest in a quick and intuitive way. 
 
+## Guide to running app
+
+Python 3.9.10
+
+cd to this directory
+
+pip install streamlit==1.25.0 and streamlit_plotly_events==0.0.6
+
+run `python3 -m streamlit run app_latest.py` in command line
+
+if the app doesn't open by itself, copy the `Network URL` and paste it into your browser (should be something like http://10.160.20.64:8501)
+
 ### What will the app do?
 
 We would like the app to be able to acheive the following, for any of the ~5000 genes in the Pf genome:
