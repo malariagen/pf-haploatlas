@@ -1,5 +1,5 @@
 import streamlit as st
-import json, os, lzma, pickle
+import json, os, lzma, pickle, collections
 
 base_path = "app/files/06-12-23_smaller_pkls"
 
@@ -44,3 +44,19 @@ def cache_load_gene_summary(filename: str, base_path = base_path):
     with lzma.open(f'{base_path}/{filename}', 'rb') as file:
         loaded_plot_data = pickle.load(file)
     return loaded_plot_data
+
+@st.cache_data
+def cache_load_population_colours():
+    population_colours = collections.OrderedDict()
+    population_colours['SA'] = "#4daf4a"
+    population_colours['AF-W']= "#e31a1c"
+    population_colours['AF-C'] = "#fd8d3c" 
+    population_colours['AF-NE'] = "#bb8129" 
+    population_colours['AF-E'] = "#fecc5c"
+    population_colours['AS-S-E'] = "#dfc0eb" 
+    population_colours['AS-S-FE'] = "#984ea3" 
+    population_colours['AS-SE-W'] = "#9ecae1"
+    population_colours['AS-SE-E'] = "#3182bd"
+    population_colours['OC-NG'] = "#f781bf"
+    
+    return population_colours

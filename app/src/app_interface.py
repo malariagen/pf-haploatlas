@@ -4,7 +4,6 @@ import json, os
 from PIL import Image
 
 from src.utils import _cache_load_utility_mappers
-# , _lookup_gene_name
 
 def set_up_interface():
     
