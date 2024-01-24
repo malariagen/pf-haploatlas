@@ -8,11 +8,15 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from streamlit_plotly_events import plotly_events
 
-from src.utils import cache_load_population_colours
+from src.utils import cache_load_population_colours, _cache_load_utility_mappers
 
 def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_changes, min_samples, sample_count_mode):
+    """Main function called in main.py to generate and present haplotype plot"""
     
     population_colours = cache_load_population_colours()
+    utility_mappers = _cache_load_utility_mappers()
+    
+    st.subheader(f'Viewing gene: {utility_mappers["gene_ids_to_gene_names"][gene_id_selected]}')
     
     # Inputs for plots
     total_samples = df_haplotypes['Total'].sum()
@@ -109,7 +113,6 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
                 hoverinfo = 'none',
                 mode = "lines"),
                            rows = 3, cols = 1)
-
 
             background_mutations = np.intersect1d(indexes, background_mutation_indices)
             other_mutations = np.setdiff1d(indexes, background_mutation_indices)

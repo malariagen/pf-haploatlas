@@ -1,6 +1,7 @@
 import streamlit as st
 
 def process_configs_menu(gene_id_selected):
+    """Main function called in main.py to handle user config settings in the expander"""
     col1, col2 = st.columns([3, 2])
     
     with col1.expander("Click to edit plot settings"):
