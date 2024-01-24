@@ -3,18 +3,13 @@ import json, os, lzma, pickle, collections
 
 base_path = "app/files/06-12-23_smaller_pkls"
 
-def _is_core_genome(filename: str):
-        if "VAR" in filename:
-            return False
-        elif "SURF" in filename:
-            return False
-        elif "RIF" in filename:
-            return False
-        else:
-            return True
-
 @st.cache_data
 def _cache_load_utility_mappers(base_path = base_path):
+    """
+    Loads various useful dictionaries and lists related to handling gene IDs and converting
+    back and forth between gene IDs and gene names etc. 
+    Caches the objects when first loaded
+    """
     
     with open("app/files/gene_mapping.json", "r") as f:
             gene_mapper = json.load(f)
@@ -41,12 +36,14 @@ def _cache_load_utility_mappers(base_path = base_path):
 
 @st.cache_data
 def cache_load_gene_summary(filename: str, base_path = base_path):
+    """Loads the relevant gene summary file based on provided file path. Caches the objects when first loaded"""
     with lzma.open(f'{base_path}/{filename}', 'rb') as file:
         loaded_plot_data = pickle.load(file)
     return loaded_plot_data
 
 @st.cache_data
 def cache_load_population_colours():
+    """Pf7 population colour palette. Caches the objects when first loaded"""
     population_colours = collections.OrderedDict()
     population_colours['SA'] = "#4daf4a"
     population_colours['AF-W']= "#e31a1c"

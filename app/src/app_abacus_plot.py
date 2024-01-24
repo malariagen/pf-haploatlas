@@ -10,20 +10,41 @@ from plotly.subplots import make_subplots
 
 from src.utils import cache_load_population_colours
 
-def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set):
-    population_colours = cache_load_population_colours()
-    
-    def locations_agg(x, ns_changes):
-        names = collections.OrderedDict()
-        names['n'] = np.count_nonzero(x['ns_changes_homozygous'])
-        if names['n'] == 0:
-            names[f'{ns_changes} frequency'] = np.nan
-        else:
-            names[f'{ns_changes} frequency'] = np.count_nonzero(
-                ( x['ns_changes'] == ns_changes)
-            ) / names['n']
+def _plotly_arrow(x0, x1, y):
+    """One time function used to generate the arrow in the legend of the abacus plot"""
+    a = go.layout.Annotation(
+        x = x1, ax = x0, y = y, ay = y,
+        xref="x", yref="y", text="", showarrow=True,
+        axref="x", ayref='y', arrowhead=3, arrowwidth=1.5)
 
-        return pd.Series(names)
+    return a
+
+def _locations_agg(x, ns_changes):
+    """Aggregation function used to reformat dataframe in preparation for abacus plot"""
+    names = collections.OrderedDict()
+    names['n'] = np.count_nonzero(x['ns_changes_homozygous'])
+    if names['n'] == 0:
+        names[f'{ns_changes} frequency'] = np.nan
+    else:
+        names[f'{ns_changes} frequency'] = np.count_nonzero(
+            ( x['ns_changes'] == ns_changes)
+        ) / names['n']
+
+    return pd.Series(names)
+
+def _partial_frequency_marker_colour(freq: float) -> str:
+    """
+    Convenience function which takes haplotype frequency and returns an rgba string for the grey colour used to
+    colour the marker in the abacus plot. The higher the frequency, the darker the grey
+    """
+    colour_intensity = max(0, min(255, 255 - int(255 * freq)))
+    marker_colour = f"rgba({colour_intensity}, {colour_intensity}, {colour_intensity}, 1)"
+
+    return marker_colour
+
+def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set):
+    """Main function called in main.py to generate and present the abacus plot"""
+    population_colours = cache_load_population_colours()
 
     columns_to_remove = ['aa_haplotype', 'nucleotide_haplotype']
     df_samples_with_ns_changes = df_join.drop(columns=columns_to_remove, axis=1)
@@ -39,7 +60,7 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set):
     df_frequencies = (
         df_samples_with_ns_changes
         .groupby(['Population', 'Year', 'Country', 'Admin level 1'])
-        .apply(lambda x: locations_agg(x, ns_changes))
+        .apply(lambda x: _locations_agg(x, ns_changes))
         .reset_index()
         .set_index(['Population', 'Country', 'Admin level 1'])
         .loc[locations]
@@ -79,17 +100,14 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set):
                        )
 
 
-    xlims = [
-        (1982, 1986),
-        (1994,1998),
-        (2000,2019)
-    ]
+    xlims = [(1982, 1986), (1994,1998), (2000,2019)]
 
     labels_list = []
     population_colours_list = []
 
 
     def _abacus_scatter(**kwargs):
+        """Convenience function for creating scatter points on the abacus plot"""
         return go.Scatter(
             customdata = [[row.n, int(row.n * row[ns_changes + ' frequency']), np.round(row[ns_changes + ' frequency'] * 100, 1)]],
             showlegend = False,
@@ -114,14 +132,7 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set):
                              color="white")
         },
     }
-
-    def _partial_frequency_marker_colour(freq: float):
-        colour_intensity = max(0, min(255, 255 - int(255 * freq)))
-        marker_colour = f"rgba({colour_intensity}, {colour_intensity}, {colour_intensity}, 1)"
-
-        return marker_colour
-
-
+    
     hovertemplate = '<b>%{y} in %{x}</b><br>Samples with selected haplotype: %{customdata[1]} (%{customdata[2]}%)<br>All samples: %{customdata[0]}<extra></extra>',
 
     for i in [2, 3, 4]:
@@ -158,8 +169,6 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set):
                                            ), rows = 2, cols = i)
 
                     else:
-
-
                         fig.add_traces(
                             _abacus_scatter(x = [row.Year], y = [row.Label],
                                             hovertemplate = hovertemplate,
@@ -191,27 +200,19 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set):
 
     fig.add_traces([
         _abacus_scatter(x = [0.4], y = [legend_y], hoverinfo = "none", **scatter_config["zero_frequency"]),
-        _abacus_scatter(x = [0.6], y = [legend_y], hoverinfo = "none", **scatter_config["full_frequency"])] +
+        _abacus_scatter(x = [0.6], y = [legend_y], hoverinfo = "none", **scatter_config["full_frequency"]),
+        go.Scatter(x = [0.4, 0.6], y = [0.6, 0.6], hoverinfo = "none", showlegend = False, mode = "text", text = ["0%", "100%"]),
+        go.Scatter(x = [0.5], y = [0.9], hoverinfo = "none", showlegend = False, mode = "text", text = ["Haplotype Frequency"])] +
 
-        [_abacus_scatter(x = [pos], y = [legend_y], hoverinfo = "none", marker=dict(color = _partial_frequency_marker_colour(freq), size = 16, symbol = "circle",
-                                                                                    line=dict(color='black', width=1.5))) for pos, freq in zip(partial_frequency_positions, partial_frequency_frequencies)] +
-
-        [go.Scatter(x = [0.4, 0.6], y = [0.6, 0.6], hoverinfo = "none", showlegend = False, mode = "text", text = ["0%", "100%"])] +
-
-        [go.Scatter(x = [0.5], y = [0.9], hoverinfo = "none", showlegend = False, mode = "text", text = ["Haplotype Frequency"])],
-
+        [_abacus_scatter(x = [pos], y = [legend_y], hoverinfo = "none",
+                         marker=dict(color = _partial_frequency_marker_colour(freq),
+                                     size = 16, symbol = "circle",
+                                     line=dict(color='black', width=1.5))
+                        ) for pos, freq in zip(partial_frequency_positions, partial_frequency_frequencies)],
+        
         rows = 1, cols = 1)
 
-
-    def plotly_arrow(x0, x1, y):
-        a = go.layout.Annotation(
-            x = x1, ax = x0, y = y, ay = y,
-            xref="x", yref="y", text="", showarrow=True,
-            axref="x", ayref='y', arrowhead=3, arrowwidth=1.5)
-
-        return a
-
-    fig.add_annotation(plotly_arrow(0.42, 0.57, legend_y+0.3))
+    fig.add_annotation(_plotly_arrow(0.42, 0.57, legend_y+0.3))
 
     fig.update_layout(height = 1300,
                       xaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
