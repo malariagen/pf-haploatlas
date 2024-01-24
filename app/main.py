@@ -16,7 +16,7 @@ def main():
     
     filename, gene_id_selected = file_selector(placeholder)
     
-    df_haplotypes, df_join, background_ns_changes, gene_name = cache_load_gene_summary(filename)
+    df_haplotypes, df_join, background_ns_changes, _ = cache_load_gene_summary(filename)
     
     min_samples, sample_count_mode = process_configs_menu(gene_id_selected)
     
@@ -27,5 +27,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-    
