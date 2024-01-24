@@ -60,21 +60,6 @@ The shade of the point represents the haplotype frequency from white (0%) to bla
     
     return placeholder
 
-def _is_core_genome(filename: str):
-    """
-    Temporary function to check if gene is part of 'core genome'.
-    Soon to be deprecated and replaced with backend implementation
-    """
-    if "VAR" in filename:
-        return False
-    elif "SURF" in filename:
-        return False
-    elif "RIF" in filename:
-        return False
-    else:
-        return True
-
-st.cache_data
 def file_selector(placeholder):
     """Main function called in main.py to allow for user's gene selection and handle the app's URL"""
     utility_mappers = _cache_load_utility_mappers()

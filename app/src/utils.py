@@ -3,6 +3,20 @@ import json, os, lzma, pickle, collections
 
 base_path = "app/files/06-12-23_smaller_pkls"
 
+def _is_core_genome(filename: str):
+    """
+    Temporary function to check if gene is part of 'core genome'.
+    Soon to be deprecated and replaced with backend implementation
+    """
+    if "VAR" in filename:
+        return False
+    elif "SURF" in filename:
+        return False
+    elif "RIF" in filename:
+        return False
+    else:
+        return True
+
 @st.cache_data
 def _cache_load_utility_mappers(base_path = base_path):
     """
