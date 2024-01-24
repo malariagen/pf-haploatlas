@@ -9,7 +9,9 @@ from src.app_abacus_plot import generate_abacus_plot
 
 if DEVELOPER_MODE:
     import sys, importlib
-    importlib.reload(sys.modules["src.app_interface"])
+    
+    for module in ["src.utils", "src.app_interface", "src.app_configs_menu", "src.app_haplotype_plot", "src.app_abacus_plot"]:
+        importlib.reload(sys.modules[module])
 
 def main():
     placeholder = set_up_interface()
