@@ -122,6 +122,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
                 y = background_mutations,
                 showlegend=False,
                 hovertemplate='%{y}<extra></extra>',
+                mode='lines+markers',
                 marker=dict(size=marker_size)
             ),
                            rows = 3, cols = 1)
@@ -129,6 +130,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
                 x = [i] * len(other_mutations),
                 y = other_mutations,
                 showlegend=False,
+                mode='lines+markers',
                 hovertemplate='%{y}<extra></extra>',
                 marker=dict(size=marker_size)
             ),
