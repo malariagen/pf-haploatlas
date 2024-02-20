@@ -1,13 +1,14 @@
 import streamlit as st
 import json, os, lzma, pickle, collections
 
-base_path = "app/files/06-12-23_smaller_pkls"
+base_path = "app/files/15-02-24_smaller_pkls"
 
+"""
 def _is_core_genome(filename: str):
-    """
+    
     Temporary function to check if gene is part of 'core genome'.
     Soon to be deprecated and replaced with backend implementation
-    """
+    
     if "VAR" in filename:
         return False
     elif "SURF" in filename:
@@ -16,7 +17,7 @@ def _is_core_genome(filename: str):
         return False
     else:
         return True
-
+"""
 @st.cache_data
 def _cache_load_utility_mappers(base_path = base_path):
     """
@@ -39,7 +40,7 @@ def _cache_load_utility_mappers(base_path = base_path):
     
     gene_names_to_gene_ids = dict(zip(gene_ids_to_gene_names.values(), gene_ids_to_gene_names.keys()))
     
-    gene_ids = [gene_id for gene_id, gene_name in gene_ids_to_gene_names.items() if _is_core_genome(gene_name)]
+    gene_ids = [gene_id for gene_id, gene_name in gene_ids_to_gene_names.items()] # before core genes identified: if _is_core_genome(gene_name)
     
     return {
         "gene_ids_to_files": gene_ids_to_files,
