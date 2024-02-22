@@ -25,11 +25,12 @@ LSB_JOBINDEX = int(sys.argv[1]) - 1
 # Get list of all Pf gene ids
 gff_fn = '/lustre/scratch124/gsu/legacy/pfalciparum/resources/snpEff/data/Pfalciparum_GeneDB_Feb2020/Pfalciparum_replace_Pf3D7_MIT_v3_with_Pf_M76611.gff'
 df_gff = allel.gff3_to_dataframe(gff_fn, attributes=['ID', 'Name'])
-filtered_df_gff = df_gff[df_gff['type'] == 'gene']
-Pf3D7_genes_list = filtered_df_gff['ID'].tolist()
+
+# Read IDs in json as into a list
+Pf3D7_core_genes_list = pd.read_json('../../files/core_genes.json', orient='index').index.to_list()
 
 # Array job setup
-gene_id = Pf3D7_genes_list[LSB_JOBINDEX]
+gene_id = Pf3D7_core_genes_list[LSB_JOBINDEX]
 
 
 # Read in data files
