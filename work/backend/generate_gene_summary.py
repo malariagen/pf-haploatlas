@@ -414,7 +414,9 @@ def prepare_plot_data(
 ):
     # Haplotpye call only for QC pass samples
     df_samples = pd.read_csv(samples_fn, sep='\t', low_memory=False, index_col=0)
-    qc_pass_samples = df_samples[df_samples['QC pass'] == True]
+    qc_pass_samples = list(df_samples[df_samples['QC pass'] == True].index)
+    # Add lab strain samples in haplotype calling
+    ref_samples = list(df_samples[df_samples['Study'] == '1153-PF-Pf3KLAB-KWIATKOWSKI'].index)
 #     print(gene_id)
     if gene_id is not None:
         cds_results = determine_cds(gene_id)
@@ -424,7 +426,7 @@ def prepare_plot_data(
     
         if haplotype_calls is None:
             haplotype_calls = call_haplotype(
-                samples=qc_pass_samples.index,
+                samples=qc_pass_samples + ref_samples,
                 chrom=cds_results['chrom'],
                 starts=cds_results['starts'],
                 ends=cds_results['ends'],
@@ -506,8 +508,9 @@ def prepare_plot_data(
                 df_haplotypes.loc[df_haplotypes['ns_changes']==ns_changes, 'sample_names'] + '\n' + samples_to_show[sample]
             )
     if verbose:
-        print(f"Found {df_haplotypes.shape[0]:,} unique haplotypes in QC pass samples")
-    gene_logs[gene_id]['c_unq_h'] = df_haplotypes.shape[0]   
+        print(f"Found {df_haplotypes[df_haplotypes['Total']>0].shape[0]:,} unique haplotypes in QC pass samples")
+    # Don't count lab strains as unique haplotypes if there is any, filter by 'Total' >0 since they dont have a population frequency     
+    gene_logs[gene_id]['c_unq_h'] = df_haplotypes[df_haplotypes['Total']>0].shape[0]   
     # Determine background mutations
     if sample_to_use_as_background in df_clonal.index:
         background_ns_changes = df_clonal.loc[sample_to_use_as_background, 'ns_changes']

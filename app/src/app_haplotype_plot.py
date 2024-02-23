@@ -44,7 +44,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     total_plot_height = (5 + upset_plot_height) * 100
 
     # Create the plots
-    fig = make_subplots(rows = 3, cols = 1, shared_xaxes = True, row_heights = [2, 3, upset_plot_height], vertical_spacing = 0)
+    fig = make_subplots(rows = 3, cols = 1, shared_xaxes = True, row_heights = [2, 3, upset_plot_height], vertical_spacing = 0.05)
 
     # Plot 1 - sample counts per haplotype
     fig.add_trace(
@@ -80,6 +80,24 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             name=pop,
             hovertemplate='<b>%{customdata}:</b> %{y:0.1f}%<extra></extra>'
         ))
+
+    fig.add_traces(bars, rows=2, cols=1)
+    fig.update_yaxes(range=[0, 100], row=2, col=1)
+    fig.update_layout(barmode='stack', legend=dict(x=1, y = 1 - 2 / (5 + upset_plot_height)))
+    # Add ref strains as text annotations 
+    for i, sample_name in enumerate(df_haplotypes_set['sample_names'].values):
+        modified_sample_name = sample_name.replace("\n", "<br>")
+        fig.add_annotation(
+            x=df_haplotypes_set['ns_changes'].values[i],
+            y=0,  # Adjust the y-coordinate to be above the bars
+            text=modified_sample_name,
+            showarrow=False,
+            xanchor='center',
+            yanchor='top',  # Anchor to the bottom of the text
+            font=dict(size=10 - (len(df_haplotypes_set['ns_changes'].unique()) // 7)),  # Set the font size
+            row=2,  # Specify the row number
+            col=1,  # Specify the column number
+        )
 
     fig.add_traces(bars, rows=2, cols=1)
     fig.update_layout(barmode='stack', legend=dict(x=1, y = 1 - 2 / (5 + upset_plot_height)))
