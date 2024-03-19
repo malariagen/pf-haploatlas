@@ -44,11 +44,14 @@ def _partial_frequency_marker_colour(freq: float) -> str:
 
 def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set):
     """Main function called in main.py to generate and present the abacus plot"""
+
+    # Enrich df_join (ns_changes) with metadata
+    Pf7_metadata = pd.read_excel('app/files/Pf7_metadata.xlsx')
+    df_join = pd.concat([df_join.reset_index(), Pf7_metadata], axis=1)
+
     population_colours = cache_load_population_colours()
 
-    columns_to_remove = ['aa_haplotype', 'nucleotide_haplotype']
-    df_samples_with_ns_changes = df_join.drop(columns=columns_to_remove, axis=1)
-    df_samples_with_ns_changes = df_samples_with_ns_changes.loc[df_samples_with_ns_changes['QC pass']]
+    df_samples_with_ns_changes = df_join.loc[df_join['QC pass']]
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', ['Country']] = 'DRC'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "3D7 REF"
 
