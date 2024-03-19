@@ -81,9 +81,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             hovertemplate='<b>%{customdata}:</b> %{y:0.1f}%<extra></extra>'
         ))
 
-    fig.add_traces(bars, rows=2, cols=1)
     fig.update_yaxes(range=[0, 100], row=2, col=1)
-    fig.update_layout(barmode='stack', legend=dict(x=1, y = 1 - 2 / (5 + upset_plot_height)))
     # Add ref strains as text annotations 
     for i, sample_name in enumerate(df_haplotypes_set['sample_names'].values):
         modified_sample_name = sample_name.replace("\n", "<br>")
