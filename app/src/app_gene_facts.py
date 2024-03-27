@@ -19,9 +19,14 @@ def process_gene_facts(gene_id_selected, job_logs_file="path/to/job_logs.json"):
         gene_info = job_logs[gene_id_selected]
         
     # Display gene facts using job_logs information
+        
     st.subheader(f'Viewing gene: {utility_mappers["gene_ids_to_gene_names"][gene_id_selected]}')
-
-    st.write(f"While {gene_info.get('c_inc_s', 'N/A')} ({gene_info.get('c_inc_s', 'N/A')/16103*100:.2f}%) QC-passed Pf7 samples included in the analysis,")
-    st.write(f"{gene_info.get('c_missing', 'N/A')} ({gene_info.get('c_missing', 'N/A')/16103*100:.2f}%) samples with missing genotype calls,")
-    st.write(f"{gene_info.get('c_het_calls', 'N/A')} ({gene_info.get('c_het_calls', 'N/A')/16103*100:.2f}%) samples with heterozygous calls, and")
-    st.write(f"{gene_info.get('c_stop_codon', 'N/A')}{gene_info.get('c_stop_codon', 'N/A')/16103*100:.2f}%) samples with stop codons excluded from the analysis.")
+    with st.expander("Click to view how many Pf7 samples are included/excluded."):
+        st.write(f"""
+            Included: {gene_info.get('c_inc_s', 'N/A')} ({gene_info.get('c_inc_s', 'N/A')/16103*100:.2f}%)\n
+            Excluded: {20864 - gene_info.get('c_inc_s', 'N/A')} ({(100 - gene_info.get('c_inc_s', 'N/A')/16103*100):.2f}%)\n
+             - QC fail: 4,661 (22.34%)\n
+             - Missing genotype calls: {gene_info.get('c_missing', 'N/A'):.2f} ({gene_info.get('c_missing', 'N/A')/16103*100:.2f}%) \n
+             - Heterozygous calls: {gene_info.get('c_het_calls', 'N/A'):.2f} ({gene_info.get('c_het_calls', 'N/A')/16103*100:.2f}%) \n
+             - Stop codons: {gene_info.get('c_stop_codon', 'N/A'):.2f} ({gene_info.get('c_stop_codon', 'N/A')/16103*100:.2f}%)
+        """)
