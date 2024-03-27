@@ -16,7 +16,6 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     population_colours = cache_load_population_colours()
     utility_mappers = _cache_load_utility_mappers()
     
-    st.subheader(f'Viewing gene: {utility_mappers["gene_ids_to_gene_names"][gene_id_selected]}')
     
     # Inputs for plots
     total_samples = df_haplotypes['Total'].sum()
@@ -82,7 +81,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
         ))
 
     fig.add_traces(bars, rows=2, cols=1)
-    fig.update_layout(barmode='stack', legend=dict(x=1, y = 1 - 2 / (5 + upset_plot_height)))
+    fig.update_layout(barmode='stack', legend=dict(x=1, y = 1 - 2 / (5 + upset_plot_height)), margin=dict(t=10, b=50))
     # 2 is the row height ratio of the first plot, so this calculation places the legend right below the first plot
 
     # ============================================================================================================================================================
