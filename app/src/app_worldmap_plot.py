@@ -123,8 +123,11 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples):
     df_samples_with_ns_changes= df_samples_with_ns_changes[(df_samples_with_ns_changes['Year']>=year[0]) & (df_samples_with_ns_changes['Year']<=year[1])]
     df_samples_with_ns_changes['Year-interval'] = str(year)
 
-    ### AGGREGATION 
-
+    ### AGGREGATION     
+    if len(df_samples_with_ns_changes.groupby(['iso_alpha', 'Country', 'Year-interval', 'Population'])) == 0:
+        st.warning("No haplotype data found.")
+        st.stop()
+        
     df_frequencies = (
         df_samples_with_ns_changes
         .groupby(['iso_alpha', 'Country', 'Year-interval', 'Population'])
@@ -132,13 +135,10 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples):
         .reset_index()
         .set_index(['Country'])
         .reset_index())
-
+    
     # only>min_samples 
     df_frequencies = df_frequencies.loc[(df_frequencies['n'] >= min_samples)]
 
-    if len(df_frequencies) == 0:
-        st.warning("No haplotype data found.")
-        st.stop()
     df_frequencies['frequency'] = np.round(df_frequencies['frequency']*100,2)
     #print(df_frequencies[(df_frequencies['Country']=='Sudan') & (df_frequencies['Year']==2015)])
 
@@ -175,7 +175,7 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples):
         trace = go.Scattergeo(
             locations=[row['iso_alpha']],
             hoverinfo='text',
-            text=f"Country: {row['Country']}<br>Population: {row['Population']}<br>Frequency: %{row['frequency']}",
+            text=f"Country: {row['Country']}<br>Population: {row['Population']}<br>Frequency: {row['frequency']}%",
             marker=dict(
                 size=13,
                 line=dict(
