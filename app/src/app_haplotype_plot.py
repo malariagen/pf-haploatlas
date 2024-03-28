@@ -94,13 +94,11 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             showarrow=False,
             xanchor='center',
             yanchor='top',  # Anchor to the bottom of the text
-            font=dict(size=10 - (len(df_haplotypes_set['ns_changes'].unique()) // 7)),  # Set the font size
+            font=dict(size=abs(10 - (len(df_haplotypes_set['ns_changes'].unique()) // 7))+1),  # Set the font size
             row=2,  # Specify the row number
             col=1,  # Specify the column number
         )
 
-    fig.add_traces(bars, rows=2, cols=1)
-    fig.update_layout(barmode='stack', legend=dict(x=1, y = 1 - 2 / (5 + upset_plot_height)))
     # 2 is the row height ratio of the first plot, so this calculation places the legend right below the first plot
 
     # ============================================================================================================================================================
