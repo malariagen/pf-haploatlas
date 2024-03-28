@@ -69,11 +69,15 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples):
     """Main function called in main.py to generate and present the worldmap plot"""
     year = st.slider(f'Change the year interval to plot {ns_changes} frequency over that time period', 1982, 2024, (2000, 2010))
     population_colours = cache_load_population_colours()
-    df_samples_with_ns_changes = df_join
 
     ### Data pre-processing
     # ideally, in the future, this part needs te be handled by data_formatter
+    if len(df_join) == 0:
+        print(len(df_join))
+        st.warning("No haplotype data found.")
+        st.stop()
     
+    df_samples_with_ns_changes = df_join
     # worldmap map requires iso_alpha values
     plotly_worldmap_df = px.data.gapminder().query("year==2007")
     iso_country_dict = dict(zip(plotly_worldmap_df['country'], plotly_worldmap_df['iso_alpha']))
@@ -132,6 +136,9 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples):
     # only>min_samples 
     df_frequencies = df_frequencies.loc[(df_frequencies['n'] >= min_samples)]
 
+    if len(df_frequencies) == 0:
+        st.warning("No haplotype data found.")
+        st.stop()
     df_frequencies['frequency'] = np.round(df_frequencies['frequency']*100,2)
     #print(df_frequencies[(df_frequencies['Country']=='Sudan') & (df_frequencies['Year']==2015)])
 
@@ -168,7 +175,7 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples):
         trace = go.Scattergeo(
             locations=[row['iso_alpha']],
             hoverinfo='text',
-            text=f"Country: {row['Country']}<br>Population: {row['Population']}<br>Frequency: {row['frequency']}",
+            text=f"Country: {row['Country']}<br>Population: {row['Population']}<br>Frequency: %{row['frequency']}",
             marker=dict(
                 size=13,
                 line=dict(
