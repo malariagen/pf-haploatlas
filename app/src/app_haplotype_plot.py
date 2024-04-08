@@ -43,7 +43,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     total_plot_height = (5 + upset_plot_height) * 100
 
     # Create the plots
-    fig = make_subplots(rows = 3, cols = 1, shared_xaxes = True, row_heights = [2, 3, upset_plot_height], vertical_spacing = 0)
+    fig = make_subplots(rows = 3, cols = 1, shared_xaxes = True, row_heights = [2, 3, upset_plot_height], vertical_spacing = 0.05)
 
     # Plot 1 - sample counts per haplotype
     fig.add_trace(
