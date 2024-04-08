@@ -22,11 +22,21 @@ def process_gene_facts(gene_id_selected, job_logs_file="path/to/job_logs.json"):
         
     st.subheader(f'Viewing gene: {utility_mappers["gene_ids_to_gene_names"][gene_id_selected]}')
     with st.expander("Click to view how many Pf7 samples are included/excluded."):
-        st.write(f"""
-            Included: {gene_info.get('c_inc_s', 'N/A')} ({gene_info.get('c_inc_s', 'N/A')/16103*100:.2f}%)\n
-            Excluded: {20864 - gene_info.get('c_inc_s', 'N/A')} ({(100 - gene_info.get('c_inc_s', 'N/A')/16103*100):.2f}%)\n
-             - QC fail: 4,661 (22.34%)\n
-             - Missing genotype calls: {gene_info.get('c_missing', 'N/A'):.2f} ({gene_info.get('c_missing', 'N/A')/16103*100:.2f}%) \n
-             - Heterozygous calls: {gene_info.get('c_het_calls', 'N/A'):.2f} ({gene_info.get('c_het_calls', 'N/A')/16103*100:.2f}%) \n
-             - Stop codons: {gene_info.get('c_stop_codon', 'N/A'):.2f} ({gene_info.get('c_stop_codon', 'N/A')/16103*100:.2f}%)
+        included_samples = gene_info.get('c_inc_s', 'N/A')
+        excluded_samples = 20864 - included_samples if included_samples != 'N/A' else 'N/A'
+        qc_fail = 4661
+        missing_genotype_calls = gene_info.get('c_missing', 'N/A')
+        heterozygous_calls = gene_info.get('c_het_calls', 'N/A')
+        stop_codons = gene_info.get('c_stop_codon', 'N/A')
+        col1, col2 = st.columns(2)
+        col1.write(f"**Included:** {included_samples} ({included_samples/20864*100:.2f}%)")
+        col2.write(f"""
+            **Excluded:** {excluded_samples} ({excluded_samples/20864*100:.2f}%)
+            | Exclusion Reason           | Count      | Percentage |
+            |----------------------------|------------|------------|
+            | QC fail                    | {qc_fail}   | 22.34%     |
+            | Missing genotype calls     | {missing_genotype_calls} | {missing_genotype_calls/20864*100:.2f}% |
+            | Heterozygous calls         | {heterozygous_calls} | {heterozygous_calls/20864*100:.2f}% |
+            | Stop codons                | {stop_codons} | {stop_codons/20864*100:.2f}% |
+            | Total                 | {excluded_samples} | {excluded_samples/20864*100:.2f}% |
         """)
