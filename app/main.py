@@ -24,7 +24,7 @@ def main():
     
     min_samples, sample_count_mode = process_configs_menu(gene_id_selected)
 
-    process_gene_facts(min_samples, df_haplotypes, gene_id_selected, job_logs_file="work/backend/job_logs.json")
+    process_gene_facts(min_samples, df_haplotypes, df_join, gene_id_selected, job_logs_file="work/backend/job_logs.json")
 
     ns_changes, df_haplotypes_set = generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_changes, min_samples, sample_count_mode)
     
