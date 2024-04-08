@@ -21,16 +21,17 @@ def process_gene_facts(gene_id_selected, job_logs_file="path/to/job_logs.json"):
     # Display gene facts using job_logs information
         
     st.subheader(f'Viewing gene: {utility_mappers["gene_ids_to_gene_names"][gene_id_selected]}')
-    with st.expander("Click to view how many Pf7 samples are included/excluded."):
+    # little trick to adjust the width of expander, since markdown css can not be specifed just for the second expander
+    col1, col2 = st.columns([3, 2])
+    with col1.expander("Click to view how many Pf7 samples are included/excluded."):
         included_samples = gene_info.get('c_inc_s', 'N/A')
         excluded_samples = 20864 - included_samples if included_samples != 'N/A' else 'N/A'
         qc_fail = 4661
         missing_genotype_calls = gene_info.get('c_missing', 'N/A')
         heterozygous_calls = gene_info.get('c_het_calls', 'N/A')
         stop_codons = gene_info.get('c_stop_codon', 'N/A')
-        col1, col2 = st.columns(2)
-        col1.write(f"**Included:** {included_samples} ({included_samples/20864*100:.2f}%)")
-        col2.write(f"""
+        st.write(f"**Included:** {included_samples} ({included_samples/20864*100:.2f}%)")
+        st.write(f"""
             **Excluded:** {excluded_samples} ({excluded_samples/20864*100:.2f}%)
             | Exclusion Reason           | Count      | Percentage |
             |----------------------------|------------|------------|
