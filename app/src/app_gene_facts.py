@@ -29,7 +29,7 @@ def process_gene_facts(min_samples, df_haplotypes, df_join, gene_id_selected, jo
     heterozygous_calls = gene_info.get('c_het_calls', 'N/A')
     stop_codons = gene_info.get('c_stop_codon', 'N/A')
     sample_below_threshold = df_haplotypes.loc[df_haplotypes['Total'] < min_samples].Total.sum()
-    excluded_samples = 20864 - included_samples + sample_below_threshold
+    excluded_samples = pf7_total_samples - included_samples + sample_below_threshold
 
     # Create data for the table
     table_data = [
