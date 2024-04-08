@@ -1,7 +1,7 @@
 import streamlit as st
 import json, os, lzma, pickle, collections
 
-base_path = "app/files/15-02-24_smaller_pkls"
+base_path = "app/files/06-12-23_smaller_pkls"
 
 """
 def _is_core_genome(filename: str):
