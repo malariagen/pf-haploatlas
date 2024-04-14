@@ -2,6 +2,7 @@ import streamlit as st
 import json
 from src.utils import cache_load_population_colours, _cache_load_utility_mappers
 import pandas as pd
+from PIL import Image
 
 def process_gene_facts(min_samples, df_haplotypes, df_join, gene_id_selected, job_logs_file="path/to/job_logs.json"):
     """Main function called in main.py to show gene facts"""
@@ -46,8 +47,37 @@ def process_gene_facts(min_samples, df_haplotypes, df_join, gene_id_selected, jo
     df_table.index += 1  # Start index from 1
 
     # little trick to adjust the width of expander, since markdown css can not be specifed just for the second expander
-    col1, col2 = st.columns([3, 2])
-    
+    col1, col2 = st.columns([3, 3])
     # create the expander
     with col1.expander("Click to view how many Pf7 samples are included/excluded."):
+        st.write(f"{included_samples} ({included_samples / pf7_total_samples * 100:.2f}%) samples remained after {excluded_samples} ({excluded_samples / pf7_total_samples * 100:.2f}%) samples excluded for the reasons listed below. ")
         st.table(df_table)
+
+    # put download data in col2
+    @st.cache_data
+    def convert_df(df):
+        # IMPORTANT: Cache the conversion to prevent computation on every rerun
+        return df.to_csv().encode('utf-8')
+
+    csv1 = convert_df(df_haplotypes)
+    csv2 = convert_df(df_join)
+    # markdown to change css for data download buttons
+    st.markdown("""
+    <style>
+        .css-1phf9an.ef3psqc11 {
+            background-color: white;
+            border: none;
+    }
+        .css-1njjmvq.e1f1d6gn0 {
+            gap: 0rem;
+        }
+        .css-1phf9an.ef3psqc11:hover{
+            color: blue;
+        }
+        }
+    </style>
+                
+     """, unsafe_allow_html=True)
+    # Display download link
+    col2.download_button(' ⬇️Download haplotypes summary data', csv1, file_name='test1.csv')
+    col2.download_button(' ⬇️Download sample level haplotype data', csv2, file_name='test1.csv')
