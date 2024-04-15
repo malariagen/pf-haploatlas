@@ -509,6 +509,13 @@ def prepare_plot_data(
             )
     if verbose:
         print(f"Found {df_haplotypes[df_haplotypes['Total']>0].shape[0]:,} unique haplotypes in QC pass samples")
+    
+    # Store integers of df_haplotype as np.unit16
+    df_haplotypes = df_haplotypes.apply(lambda col: col.astype(np.uint16) if col.dtype == 'int64' else col)
+    
+    # Drop columns and index other than 'ns_changes'
+    df_join = df_join.reset_index().drop(columns=df_join.reset_index().columns.difference(['ns_changes']))
+
     # Don't count lab strains as unique haplotypes if there is any, filter by 'Total' >0 since they dont have a population frequency     
     gene_logs[gene_id]['c_unq_h'] = df_haplotypes[df_haplotypes['Total']>0].shape[0]   
     # Determine background mutations
@@ -565,8 +572,7 @@ def prepare_plot_data(
             'df_join':df_join,
             'background_ns_changes':background_ns_changes, 
             'haplotype_calls':haplotype_calls, 
-            'gene_name':gene_name, 
-            'df_samples':df_samples,
+            'gene_name':gene_name
         }
     )
 

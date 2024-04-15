@@ -1,23 +1,9 @@
 import streamlit as st
 import json, os, lzma, pickle, collections
+import pandas as pd
 
-base_path = "app/files/06-12-23_smaller_pkls"
+base_path = "app/files/2024-03-13_pkl_files"
 
-"""
-def _is_core_genome(filename: str):
-    
-    Temporary function to check if gene is part of 'core genome'.
-    Soon to be deprecated and replaced with backend implementation
-    
-    if "VAR" in filename:
-        return False
-    elif "SURF" in filename:
-        return False
-    elif "RIF" in filename:
-        return False
-    else:
-        return True
-"""
 @st.cache_data
 def _cache_load_utility_mappers(base_path = base_path):
     """
@@ -26,7 +12,7 @@ def _cache_load_utility_mappers(base_path = base_path):
     Caches the objects when first loaded
     """
     
-    with open("app/files/gene_mapping.json", "r") as f:
+    with open("app/files/core_genes.json", "r") as f:
             gene_mapper = json.load(f)
     
     files_to_gene_ids = {f: f.split(".")[0] for f in os.listdir(base_path) if f.endswith("pkl.xz")}
@@ -50,11 +36,18 @@ def _cache_load_utility_mappers(base_path = base_path):
     }
 
 @st.cache_data
+def _cache_load_pf7_metadata():
+    pf7_metadata = pd.read_excel('app/files/Pf7_metadata.xlsx')
+    return pf7_metadata
+
+@st.cache_data
 def cache_load_gene_summary(filename: str, base_path = base_path):
-    """Loads the relevant gene summary file based on provided file path. Caches the objects when first loaded"""
+    """Loads the relevant gene summary file based on provided file path. Caches the objects when first loaded"""    
     with lzma.open(f'{base_path}/{filename}', 'rb') as file:
         loaded_plot_data = pickle.load(file)
-    return loaded_plot_data
+    df_haplotypes, df_join, background_ns_changes, _ = loaded_plot_data
+    df_join = pd.concat([df_join.reset_index(), _cache_load_pf7_metadata()], axis=1)
+    return df_haplotypes, df_join, background_ns_changes
 
 @st.cache_data
 def cache_load_population_colours():
