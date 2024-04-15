@@ -16,7 +16,6 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     population_colours = cache_load_population_colours()
     utility_mappers = _cache_load_utility_mappers()
     
-    st.subheader(f'Viewing gene: {utility_mappers["gene_ids_to_gene_names"][gene_id_selected]}')
     
     # Inputs for plots
     total_samples = df_haplotypes['Total'].sum()
@@ -81,6 +80,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             hovertemplate='<b>%{customdata}:</b> %{y:0.1f}%<extra></extra>'
         ))
 
+<<<<<<< app/src/app_haplotype_plot.py
     fig.update_yaxes(range=[0, 100], row=2, col=1)
     # Add ref strains as text annotations 
     for i, sample_name in enumerate(df_haplotypes_set['sample_names'].values):
@@ -97,8 +97,10 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             col=1,  # Specify the column number
         )
 
+=======
     fig.add_traces(bars, rows=2, cols=1)
-    fig.update_layout(barmode='stack', legend=dict(x=1, y = 1 - 2 / (5 + upset_plot_height)))
+    fig.update_layout(barmode='stack', legend=dict(x=1, y = 1 - 2 / (5 + upset_plot_height)), margin=dict(t=10, b=50))
+>>>>>>> app/src/app_haplotype_plot.py
     # 2 is the row height ratio of the first plot, so this calculation places the legend right below the first plot
 
     # ============================================================================================================================================================
