@@ -1,23 +1,9 @@
 import streamlit as st
 import json, os, lzma, pickle, collections
 import pandas as pd
+
 base_path = "app/files/2024-03-13_pkl_files"
-pf7_metadata = pd.read_excel('app/files/Pf7_metadata.xlsx')
-"""
-def _is_core_genome(filename: str):
-    
-    Temporary function to check if gene is part of 'core genome'.
-    Soon to be deprecated and replaced with backend implementation
-    
-    if "VAR" in filename:
-        return False
-    elif "SURF" in filename:
-        return False
-    elif "RIF" in filename:
-        return False
-    else:
-        return True
-"""
+
 @st.cache_data
 def _cache_load_utility_mappers(base_path = base_path):
     """
@@ -50,12 +36,17 @@ def _cache_load_utility_mappers(base_path = base_path):
     }
 
 @st.cache_data
+def _cache_load_pf7_metadata():
+    pf7_metadata = pd.read_excel('app/files/Pf7_metadata.xlsx')
+    return pf7_metadata
+
+@st.cache_data
 def cache_load_gene_summary(filename: str, base_path = base_path):
     """Loads the relevant gene summary file based on provided file path. Caches the objects when first loaded"""    
     with lzma.open(f'{base_path}/{filename}', 'rb') as file:
         loaded_plot_data = pickle.load(file)
     df_haplotypes, df_join, background_ns_changes, _ = loaded_plot_data
-    df_join = pd.concat([df_join.reset_index(), pf7_metadata], axis=1)
+    df_join = pd.concat([df_join.reset_index(), _cache_load_pf7_metadata()], axis=1)
     return df_haplotypes, df_join, background_ns_changes
 
 @st.cache_data
