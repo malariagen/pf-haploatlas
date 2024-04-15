@@ -20,8 +20,8 @@ def main():
     
     filename, gene_id_selected = file_selector(placeholder)
     
-    df_haplotypes, df_join, background_ns_changes, _ = cache_load_gene_summary(filename)
-    
+    df_haplotypes, df_join, background_ns_changes = cache_load_gene_summary(filename)
+
     min_samples, sample_count_mode = process_configs_menu(gene_id_selected)
 
     process_gene_facts(min_samples, df_haplotypes, df_join, gene_id_selected, job_logs_file="work/backend/job_logs.json")
