@@ -8,6 +8,8 @@ from src.app_gene_facts import process_gene_facts
 from src.app_haplotype_plot import generate_haplotype_plot
 from src.app_abacus_plot import generate_abacus_plot
 from app.src.app_worldmap_plot import generate_worldmap_plot
+import pandas as pd 
+pf7_metadata = pd.read_excel('app/files/Pf7_metadata.xlsx')
 
 if DEVELOPER_MODE:
     import sys, importlib
@@ -21,6 +23,9 @@ def main():
     filename, gene_id_selected = file_selector(placeholder)
     
     df_haplotypes, df_join, background_ns_changes, _ = cache_load_gene_summary(filename)
+    
+    # enrich df_join with metadata
+    df_join = pd.concat([df_join.reset_index(), pf7_metadata], axis=1)
     
     min_samples, sample_count_mode = process_configs_menu(gene_id_selected)
 
