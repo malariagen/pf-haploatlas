@@ -1,7 +1,7 @@
 import streamlit as st
 import json, os, lzma, pickle, collections
 
-base_path = "app/files/06-12-23_smaller_pkls"
+base_path = "app/files/2024-03-13_pkl_files"
 
 """
 def _is_core_genome(filename: str):
@@ -26,7 +26,7 @@ def _cache_load_utility_mappers(base_path = base_path):
     Caches the objects when first loaded
     """
     
-    with open("app/files/gene_mapping.json", "r") as f:
+    with open("app/files/core_genes.json", "r") as f:
             gene_mapper = json.load(f)
     
     files_to_gene_ids = {f: f.split(".")[0] for f in os.listdir(base_path) if f.endswith("pkl.xz")}
