@@ -97,10 +97,8 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             col=1,  # Specify the column number
         )
 
-
     fig.add_traces(bars, rows=2, cols=1)
     fig.update_layout(barmode='stack', legend=dict(x=1, y = 1 - 2 / (5 + upset_plot_height)), margin=dict(t=10, b=50))
-
     # 2 is the row height ratio of the first plot, so this calculation places the legend right below the first plot
 
     # ============================================================================================================================================================
