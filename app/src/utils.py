@@ -65,3 +65,30 @@ def cache_load_population_colours():
     population_colours['OC-NG'] = "#f781bf"
     
     return population_colours
+
+@st.cache_data
+def cache_load_population_colours_kelch():
+    """Pf7 population colour palette. Caches the objects when first loaded"""
+    population_colours = collections.OrderedDict()
+    population_colours['SA'] = "#4daf4a"
+    population_colours['AF-W']= "#e31a1c"
+    population_colours['AF-C'] = "#fd8d3c"
+    population_colours['AF-N'] = "#654321"
+    population_colours['AF-NE'] = "#bb8129" 
+    population_colours['AF-E'] = "#fecc5c"
+    population_colours['AF-S'] = "#800000"
+    population_colours['AS-W'] = "#D3D3D3"
+    population_colours['AS-S-E'] = "#dfc0eb" 
+    population_colours['AS-S-FE'] = "#984ea3" 
+    population_colours['AS-SE-W'] = "#9ecae1"
+    population_colours['AS-SE-E'] = "#3182bd"
+    population_colours['OC-NG'] = "#f781bf"
+    
+    return population_colours
+
+@st.cache_data
+def cache_load_gene_summary_kelch(select_dataset_value, base_path = base_path):
+    """Loads the relevant gene summary file based on provided file path. Caches the objects when first loaded"""
+    with lzma.open(f'app/files/Kelch_all_data.pkl.xz', 'rb') as file:
+        loaded_plot_data = pickle.load(file)
+    return loaded_plot_data[select_dataset_value]
