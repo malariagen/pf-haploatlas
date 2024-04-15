@@ -1,8 +1,8 @@
 import streamlit as st
 import json, os, lzma, pickle, collections
-
+import pandas as pd
 base_path = "app/files/2024-03-13_pkl_files"
-
+pf7_metadata = pd.read_excel('app/files/Pf7_metadata.xlsx')
 """
 def _is_core_genome(filename: str):
     
@@ -51,10 +51,12 @@ def _cache_load_utility_mappers(base_path = base_path):
 
 @st.cache_data
 def cache_load_gene_summary(filename: str, base_path = base_path):
-    """Loads the relevant gene summary file based on provided file path. Caches the objects when first loaded"""
+    """Loads the relevant gene summary file based on provided file path. Caches the objects when first loaded"""    
     with lzma.open(f'{base_path}/{filename}', 'rb') as file:
         loaded_plot_data = pickle.load(file)
-    return loaded_plot_data
+    df_haplotypes, df_join, background_ns_changes, _ = loaded_plot_data
+    df_join = pd.concat([df_join.reset_index(), pf7_metadata], axis=1)
+    return df_haplotypes, df_join, background_ns_changes
 
 @st.cache_data
 def cache_load_population_colours():
