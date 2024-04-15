@@ -24,7 +24,7 @@ def process_gene_facts(min_samples, df_haplotypes, df_join, gene_id_selected, jo
     st.subheader(f'Viewing gene: {utility_mappers["gene_ids_to_gene_names"][gene_id_selected]}')
     included_samples = gene_info.get('c_inc_s', 'N/A')
     pf7_total_samples = len(df_join)
-    qc_fail = (~df_join['QC pass']).sum()
+    qc_fail = len(df_join.loc[df_join['QC pass']==False])
     missing_genotype_calls = gene_info.get('c_missing', 'N/A')
     heterozygous_calls = gene_info.get('c_het_calls', 'N/A')
     stop_codons = gene_info.get('c_stop_codon', 'N/A')
@@ -41,6 +41,7 @@ def process_gene_facts(min_samples, df_haplotypes, df_join, gene_id_selected, jo
         {"Exclusion Reason": "Total no. excluded", "Count": excluded_samples, "Percentage": excluded_samples / pf7_total_samples * 100}
     ]
     df_table = pd.DataFrame.from_dict(table_data)
+    df_table['Count'] = df_table['Count'].astype(int)
     df_table['Percentage'] = df_table['Percentage'].apply(lambda x: '{:.2f}%'.format(x))
     df_table.index += 1  # Start index from 1
 
