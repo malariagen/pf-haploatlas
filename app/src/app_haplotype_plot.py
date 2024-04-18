@@ -8,8 +8,37 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from streamlit_plotly_events import plotly_events
 import io
-from st_btn_group import st_btn_group
 from src.utils import cache_load_population_colours, _cache_load_utility_mappers
+
+
+def generate_download_buttons(fig, gene_id_selected):
+    """
+    Generates download buttons for different image formats (PDF, PNG, SVG) for a given plot.
+    """
+    # Create in-memory buffers to download the plot
+    buffers = {}
+    formats = ["pdf", "png", "svg"]
+    for format in formats:
+        buffer = io.BytesIO()
+        fig.write_image(file=buffer, format=format, width=1000, height=1300)
+        buffers[format] = buffer
+
+    figure_name = f"{gene_id_selected}_haplotypes_figure"
+
+    # Add an empty column before the colon to center it
+    col0, col1, *cols, col4 = st.columns([1, 1, 0.5, 0.5, 0.5, 1])
+
+    col1.write('Download the figure: ')
+
+    for col, format in zip(cols, formats):
+        col.download_button(
+            label=format.upper(),
+            data=buffers[format],
+            file_name=f"{figure_name}.{format}",
+            mime=f"image/{format}",
+            type="primary",
+            key=f'a_{format}'
+        )
 
 def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_changes, min_samples, sample_count_mode):
     """Main function called in main.py to generate and present haplotype plot"""
@@ -163,26 +192,14 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
                      tickvals=df_mutations_set.reset_index()["index"],
                      ticktext=df_mutations_set.reset_index().mutation,
                      row = 3, col = 1)
-    fig.update_layout(hovermode = 'closest')
-    # Download button
-    # Create an in-memory buffer to download the plot
-    buffer = io.BytesIO()
-    # Save the figure as a pdf to the buffer
-    fig.write_image(file=buffer, format="pdf", width=1000, height=1300)
-    figure_name = f"{gene_id_selected}_haplotypes_figure.png"
-    
-    # Download the pdf from the buffer
-    st.download_button(
-    label="Download Figure",
-    data=buffer,
-    file_name=figure_name,
-    mime="application/pdf",
-    type="primary")
+    fig.update_layout(hovermode = 'closest', legend=dict(y=0.76))
 
     # ============================================================================================================================================================
     # ============================================================================================================================================================
 
     selection_dict = plotly_events(fig, override_height = total_plot_height)
+    
+    generate_download_buttons(fig, gene_id_selected)    
 
     if selection_dict == []:
         st.stop()

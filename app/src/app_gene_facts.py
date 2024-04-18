@@ -61,23 +61,6 @@ def process_gene_facts(min_samples, df_haplotypes, df_join, gene_id_selected, jo
 
     csv1 = convert_df(df_haplotypes)
     csv2 = convert_df(df_join)
-    # markdown to change css for data download buttons
-    st.markdown("""
-    <style>
-        .css-1phf9an.ef3psqc11 {
-            background-color: white;
-            border: none;
-    }
-        .css-1njjmvq.e1f1d6gn0 {
-            gap: 0rem;
-        }
-        .css-1phf9an.ef3psqc11:hover{
-            color: blue;
-        }
-        }
-    </style>
-                
-     """, unsafe_allow_html=True)
     # Display download link
     csv1_name = f'{gene_id_selected}_summary.csv'
     csv2_name = f'{gene_id_selected}_persample.csv'

@@ -10,6 +10,7 @@ from plotly.subplots import make_subplots
 
 from src.utils import cache_load_population_colours
 
+import io
 def _plotly_arrow(x0, x1, y):
     """One time function used to generate the arrow in the legend of the abacus plot"""
     a = go.layout.Annotation(
@@ -42,7 +43,34 @@ def _partial_frequency_marker_colour(freq: float) -> str:
 
     return marker_colour
 
-def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set):
+def generate_download_buttons(fig, gene_id_selected):
+    """
+    Generates download buttons for different image formats (PDF, PNG, SVG) for a given plot.
+    """
+    # Create in-memory buffers to download the plot
+    buffers = {}
+    formats = ["pdf", "png", "svg"]
+    for format in formats:
+        buffer = io.BytesIO()
+        fig.write_image(file=buffer, format=format, width=1000, height=1300)
+        buffers[format] = buffer
+
+    figure_name = f"{gene_id_selected}_abacus_figure"
+
+    col0, col1, *cols, col4 = st.columns([1, 1, 0.5, 0.5, 0.5, 1])
+    col1.write('Download the figure: ')
+
+    for col, format in zip(cols, formats):
+        col.download_button(
+            label=format.upper(),
+            data=buffers[format],
+            file_name=f"{figure_name}.{format}",
+            mime=f"image/{format}",
+            type="primary",
+            key=f'b_{format}'
+        )
+
+def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, gene_id_selected):
     """Main function called in main.py to generate and present the abacus plot"""
 
 
@@ -230,3 +258,4 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set):
                      )
 
     st.plotly_chart(fig, config = {"displayModeBar": False})
+    generate_download_buttons(fig, gene_id_selected)

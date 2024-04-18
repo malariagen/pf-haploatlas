@@ -28,9 +28,9 @@ def main():
 
     ns_changes, df_haplotypes_set = generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_changes, min_samples, sample_count_mode)
     
-    generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set)
+    generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, gene_id_selected)
     
-    generate_worldmap_plot(ns_changes, df_join, min_samples)
+    generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected)
 
 if __name__ == "__main__":
     main()
