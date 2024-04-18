@@ -7,7 +7,8 @@ import plotly.graph_objects as go
 
 from plotly.subplots import make_subplots
 from streamlit_plotly_events import plotly_events
-
+import io
+from st_btn_group import st_btn_group
 from src.utils import cache_load_population_colours, _cache_load_utility_mappers
 
 def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_changes, min_samples, sample_count_mode):
@@ -163,6 +164,20 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
                      ticktext=df_mutations_set.reset_index().mutation,
                      row = 3, col = 1)
     fig.update_layout(hovermode = 'closest')
+    # Download button
+    # Create an in-memory buffer to download the plot
+    buffer = io.BytesIO()
+    # Save the figure as a pdf to the buffer
+    fig.write_image(file=buffer, format="pdf", width=1000, height=1300)
+    figure_name = f"{gene_id_selected}_haplotypes_figure.png"
+    
+    # Download the pdf from the buffer
+    st.download_button(
+    label="Download Figure",
+    data=buffer,
+    file_name=figure_name,
+    mime="application/pdf",
+    type="primary")
 
     # ============================================================================================================================================================
     # ============================================================================================================================================================

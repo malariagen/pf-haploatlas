@@ -23,14 +23,14 @@ def process_gene_facts(min_samples, df_haplotypes, df_join, gene_id_selected, jo
     # Display gene facts using job_logs information
         
     st.subheader(f'Viewing gene: {utility_mappers["gene_ids_to_gene_names"][gene_id_selected]}')
-    included_samples = gene_info.get('c_inc_s', 'N/A')
     pf7_total_samples = len(df_join)
     qc_fail = len(df_join.loc[df_join['QC pass']==False])
     missing_genotype_calls = gene_info.get('c_missing', 'N/A')
     heterozygous_calls = gene_info.get('c_het_calls', 'N/A')
     stop_codons = gene_info.get('c_stop_codon', 'N/A')
     sample_below_threshold = df_haplotypes.loc[df_haplotypes['Total'] < min_samples].Total.sum()
-    excluded_samples = pf7_total_samples - included_samples + sample_below_threshold
+    excluded_samples = int(qc_fail + missing_genotype_calls + heterozygous_calls + stop_codons + sample_below_threshold)
+    included_samples = int(pf7_total_samples - excluded_samples)
 
     # Create data for the table
     table_data = [
@@ -79,5 +79,7 @@ def process_gene_facts(min_samples, df_haplotypes, df_join, gene_id_selected, jo
                 
      """, unsafe_allow_html=True)
     # Display download link
-    col2.download_button(' ⬇️Download haplotypes summary data', csv1, file_name='test1.csv')
-    col2.download_button(' ⬇️Download sample level haplotype data', csv2, file_name='test1.csv')
+    csv1_name = f'{gene_id_selected}_summary.csv'
+    csv2_name = f'{gene_id_selected}_persample.csv'
+    col2.download_button(' ⬇️ Download population summary ', csv1, file_name=csv1_name)
+    col2.download_button(' ⬇️ Download haplotype per sample ', csv2, file_name=csv2_name)
