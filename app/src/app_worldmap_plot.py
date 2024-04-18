@@ -7,6 +7,7 @@ import plotly.express as px
 import plotly.graph_objs as go
 from src.utils import cache_load_population_colours
 from plotly.subplots import make_subplots
+import io
 
 def _locations_agg(x, ns_changes):
     """Aggregation function used to reformat dataframe in preparation for worldmap plot"""
@@ -30,6 +31,33 @@ def _partial_frequency_marker_colour(freq: float) -> str:
     marker_colour = f"rgba({colour_intensity}, {colour_intensity}, {colour_intensity}, 1)"
 
     return marker_colour
+
+def generate_download_buttons(fig, gene_id_selected):
+    """
+    Generates download buttons for different image formats (PDF, PNG, SVG) for a given plot.
+    """
+    # Create in-memory buffers to download the plot
+    buffers = {}
+    formats = ["pdf", "png", "svg"]
+    for format in formats:
+        buffer = io.BytesIO()
+        fig.write_image(file=buffer, format=format)
+        buffers[format] = buffer
+
+    figure_name = f"{gene_id_selected}_worldmap_figure"
+
+    col0, col1, *cols, col4 = st.columns([1, 1, 0.5, 0.5, 0.5, 1])
+    col1.write('Download the figure: ')
+
+    for col, format in zip(cols, formats):
+        col.download_button(
+            label=format.upper(),
+            data=buffers[format],
+            file_name=f"{figure_name}.{format}",
+            mime=f"image/{format}",
+            type="primary",
+            key=f'c_{format}'
+        )
 
 def _abacus_scatter(**kwargs):
         """Convenience function for creating scatter points on the haplotype frequency legend"""
@@ -65,7 +93,8 @@ def _plotly_arrow(x0, x1, y):
         axref="x", ayref='y', arrowhead=3, arrowwidth=1.5)
 
     return a    
-def generate_worldmap_plot(ns_changes, df_join, min_samples):
+
+def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
     """Main function called in main.py to generate and present the worldmap plot"""
     year = st.slider(f'Change the year interval to plot {ns_changes} frequency over that time period', 1982, 2024, (2000, 2010))
     population_colours = cache_load_population_colours()
@@ -202,3 +231,4 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples):
     fig.update_layout(height=600, width=800, margin=dict(t=10))
     fig.update_geos(projection_type="natural earth")
     st.plotly_chart(fig, config = {"displayModeBar": False})
+    generate_download_buttons(fig, gene_id_selected)
