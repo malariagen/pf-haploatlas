@@ -1,5 +1,5 @@
 import streamlit as st
-import json, os, lzma, pickle, collections
+import json, os, lzma, pickle, collections, io
 import pandas as pd
 
 base_path = "app/files/2024-03-13_pkl_files"
@@ -65,3 +65,29 @@ def cache_load_population_colours():
     population_colours['OC-NG'] = "#f781bf"
     
     return population_colours
+
+def generate_download_buttons(fig, gene_id_selected, plot_number):
+    """Generates download buttons for different image formats (PDF, PNG, SVG) for a given plot."""
+
+    # Create in-memory buffers to download the plot
+    buffers = {}
+    formats = ["pdf", "png", "svg"]
+    for format in formats:
+        buffer = io.BytesIO()
+        fig.write_image(file=buffer, format=format)
+        buffers[format] = buffer
+
+    figure_name = f"{gene_id_selected}_worldmap_figure"
+
+    col, *button_cols = st.columns([7, 1, 1, 1])
+    col.markdown("<p style='text-align: right; line-height: 40px;'>Download the figure:</p>", unsafe_allow_html=True)
+    
+    for col, format in zip(button_cols, formats):
+        col.download_button(
+            label     = format.upper(),
+            data      = buffers[format],
+            file_name = f"{figure_name}.{format}",
+            mime      = f"image/{format}",
+            type      = "primary",
+            key       = f'{plot_number}_{format}'
+        )

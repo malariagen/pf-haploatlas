@@ -1,44 +1,12 @@
 import streamlit as st
-
 import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-
 from plotly.subplots import make_subplots
 from streamlit_plotly_events import plotly_events
-import io
-from src.utils import cache_load_population_colours, _cache_load_utility_mappers
 
-
-def generate_download_buttons(fig, gene_id_selected):
-    """
-    Generates download buttons for different image formats (PDF, PNG, SVG) for a given plot.
-    """
-    # Create in-memory buffers to download the plot
-    buffers = {}
-    formats = ["pdf", "png", "svg"]
-    for format in formats:
-        buffer = io.BytesIO()
-        fig.write_image(file=buffer, format=format, width=1000, height=1300)
-        buffers[format] = buffer
-
-    figure_name = f"{gene_id_selected}_haplotypes_figure"
-
-    # Add an empty column before the colon to center it
-    col0, col1, *cols, col4 = st.columns([1, 1, 0.5, 0.5, 0.5, 1])
-
-    col1.write('Download the figure: ')
-
-    for col, format in zip(cols, formats):
-        col.download_button(
-            label=format.upper(),
-            data=buffers[format],
-            file_name=f"{figure_name}.{format}",
-            mime=f"image/{format}",
-            type="primary",
-            key=f'a_{format}'
-        )
+from src.utils import cache_load_population_colours, _cache_load_utility_mappers, generate_download_buttons
 
 def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_changes, min_samples, sample_count_mode):
     """Main function called in main.py to generate and present haplotype plot"""
@@ -46,6 +14,8 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     population_colours = cache_load_population_colours()
     utility_mappers = _cache_load_utility_mappers()
     
+    st.divider()
+    st.subheader(f'Viewing gene: {utility_mappers["gene_ids_to_gene_names"][gene_id_selected]}')
     
     # Inputs for plots
     total_samples = df_haplotypes['Total'].sum()
@@ -199,7 +169,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
 
     selection_dict = plotly_events(fig, override_height = total_plot_height)
     
-    generate_download_buttons(fig, gene_id_selected)    
+    generate_download_buttons(fig, gene_id_selected, plot_number = 1)
 
     if selection_dict == []:
         st.stop()
