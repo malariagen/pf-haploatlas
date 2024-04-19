@@ -21,7 +21,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     total_samples = df_haplotypes['Total'].sum()
     df_haplotypes['cum_proportion'] = df_haplotypes['Total'].cumsum() / total_samples 
     df_haplotypes_set = df_haplotypes.loc[df_haplotypes['Total'] >= min_samples] 
-    df_haplotypes_set['ns_changes'] = df_haplotypes_set['ns_changes'].replace('', '3D7 REF')
+    df_haplotypes_set.loc[df_haplotypes_set['ns_changes'] == '', 'ns_changes'] = '3D7 REF'
 
     if len(df_haplotypes_set) == 0:
         st.warning("No haplotype data found.")
