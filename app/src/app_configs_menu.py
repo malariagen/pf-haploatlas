@@ -63,7 +63,7 @@ def _config_download_data_section(gene_id_selected, df_haplotypes, df_join):
     
     st.download_button("Download sample-level summary",
                        _encode_df(df_join),
-                       file_name = f'{gene_id_selected}_summary.csv',
+                       file_name = f'{gene_id_selected}_sample_summary.csv',
                        use_container_width = True)
     return
     
