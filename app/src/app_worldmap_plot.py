@@ -207,4 +207,4 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
     fig.update_geos(projection_type="natural earth")
 
     st.plotly_chart(fig, config = {"displayModeBar": False})
-    generate_download_buttons(fig, gene_id_selected, plot_number = 3)
+    generate_download_buttons(fig, gene_id_selected, 600, plot_number = 3)

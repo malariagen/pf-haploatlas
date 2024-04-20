@@ -228,4 +228,4 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
                      )
 
     st.plotly_chart(fig, config = {"displayModeBar": False})
-    generate_download_buttons(fig, gene_id_selected, plot_number = 2)
+    generate_download_buttons(fig, gene_id_selected, 1300, plot_number = 2)
