@@ -169,7 +169,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
 
     selection_dict = plotly_events(fig, override_height = total_plot_height)
     
-    generate_download_buttons(fig, gene_id_selected, plot_number = 1)
+    generate_download_buttons(fig, gene_id_selected, total_plot_height, plot_number = 1)
 
     if selection_dict == []:
         st.stop()
