@@ -92,7 +92,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             showarrow=False,
             xanchor='center',
             yanchor='top',  # Anchor to the bottom of the text
-            font=dict(size=10 - (len(df_haplotypes_set['ns_changes'].unique()) // 7)),  # Set the font size
+            font=dict(size=abs(10 - (len(df_haplotypes_set['ns_changes'].unique()) // 7))),  # Set the font size
             row=2,  # Specify the row number
             col=1,  # Specify the column number
         )
