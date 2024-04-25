@@ -6,7 +6,7 @@ from src.app_interface import set_up_interface, file_selector
 from src.app_configs_menu import process_configs_menu
 from src.app_haplotype_plot import generate_haplotype_plot
 from src.app_abacus_plot import generate_abacus_plot
-from app.src.app_worldmap_plot import generate_worldmap_plot
+from src.app_worldmap_plot import generate_worldmap_plot
 
 if DEVELOPER_MODE:
     import sys, importlib
