@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 import json, os
 
-from src.utils import _cache_load_utility_mappers
+from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata
 
 def set_up_interface():
     """Main function called in main.py to set up basic page settings, introduction and sidebar"""
@@ -15,6 +15,8 @@ def set_up_interface():
     
     st.title('Pf7.0 Haplotype Explorer (PfHEx7.0)')
     st.subheader("Haplotype summaries for *Plasmodium falciparum* genes across time and space")
+
+    _cache_load_pf7_metadata() # running it here to prevent it from running when new gene selected
     
     st.divider()
     
