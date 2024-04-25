@@ -1,14 +1,12 @@
 import streamlit as st
 import collections
-
 import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
-
 from plotly.subplots import make_subplots
 
-from src.utils import cache_load_population_colours
+from src.utils import cache_load_population_colours, generate_download_buttons
 
 def _plotly_arrow(x0, x1, y):
     """One time function used to generate the arrow in the legend of the abacus plot"""
@@ -42,7 +40,7 @@ def _partial_frequency_marker_colour(freq: float) -> str:
 
     return marker_colour
 
-def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set):
+def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, gene_id_selected):
     """Main function called in main.py to generate and present the abacus plot"""
 
 
@@ -230,3 +228,4 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set):
                      )
 
     st.plotly_chart(fig, config = {"displayModeBar": False})
+    generate_download_buttons(fig, gene_id_selected, 1300, plot_number = 2)

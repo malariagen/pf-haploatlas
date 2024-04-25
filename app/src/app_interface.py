@@ -1,7 +1,6 @@
 import streamlit as st
-import json, os
-
 from PIL import Image
+import json, os
 
 from src.utils import _cache_load_utility_mappers
 
@@ -63,11 +62,9 @@ The shade of the point represents the haplotype frequency from white (0%) to bla
 def file_selector(placeholder):
     """Main function called in main.py to allow for user's gene selection and handle the app's URL"""
     utility_mappers = _cache_load_utility_mappers()
-    
-    current_query_params = st.experimental_get_query_params()
-    gene_id_extracted = current_query_params.get("gene_id", [""])[0]
+    gene_id_extracted = st.query_params.get_all('gene_id')
 
-    if gene_id_extracted not in utility_mappers["gene_ids_to_gene_names"]:
+    if placeholder not in utility_mappers["gene_ids_to_gene_names"]:
         gene_id_extracted = "--"
     
     gene_id_extracted = utility_mappers["gene_ids_to_gene_names"].get(gene_id_extracted, "--")
@@ -84,14 +81,13 @@ def file_selector(placeholder):
     
     if gene_id_selected == "--":
         placeholder.markdown("### Search for a gene below to get started.")
-        st.experimental_set_query_params()
+        st.query_params.get_all('gene_id')
         st.stop()
     
     gene_id_selected = utility_mappers["gene_names_to_gene_ids"].get(gene_id_selected, "--")
     
     if gene_id_selected != gene_id_extracted:
-        current_query_params["gene_id"] = gene_id_selected
-        st.experimental_set_query_params(**current_query_params)
+        st.query_params["gene_id"] = gene_id_selected
 
     filename = utility_mappers["gene_ids_to_files"].get(gene_id_selected, None)
     

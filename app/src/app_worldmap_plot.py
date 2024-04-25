@@ -1,12 +1,12 @@
 import streamlit as st
-import collections
-
 import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objs as go
-from src.utils import cache_load_population_colours
 from plotly.subplots import make_subplots
+import collections
+
+from src.utils import cache_load_population_colours, generate_download_buttons
 
 def _locations_agg(x, ns_changes):
     """Aggregation function used to reformat dataframe in preparation for worldmap plot"""
@@ -65,8 +65,12 @@ def _plotly_arrow(x0, x1, y):
         axref="x", ayref='y', arrowhead=3, arrowwidth=1.5)
 
     return a    
-def generate_worldmap_plot(ns_changes, df_join, min_samples):
+
+def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
     """Main function called in main.py to generate and present the worldmap plot"""
+
+    st.divider()
+    
     year = st.slider(f'Change the year interval to plot {ns_changes} frequency over that time period', 1982, 2024, (2000, 2010))
     population_colours = cache_load_population_colours()
 
@@ -201,4 +205,6 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples):
     # Update layout
     fig.update_layout(height=600, width=800, margin=dict(t=10))
     fig.update_geos(projection_type="natural earth")
+
     st.plotly_chart(fig, config = {"displayModeBar": False})
+    generate_download_buttons(fig, gene_id_selected, 600, plot_number = 3)
