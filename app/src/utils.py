@@ -1,5 +1,5 @@
 import streamlit as st
-import json, os, lzma, pickle, collections
+import json, os, lzma, pickle, collections, io
 import pandas as pd
 
 base_path = "app/files/2024-03-13_pkl_files"
@@ -20,7 +20,7 @@ def _cache_load_utility_mappers(base_path = base_path):
     gene_ids_to_files = dict( zip(files_to_gene_ids.values(), files_to_gene_ids.keys()) )
     
     gene_ids_to_gene_names = {
-        gene: (f'{gene} - {gene_mapper[gene]}' if not gene_mapper[gene] is "." else gene)
+        gene: (f'{gene} - {gene_mapper[gene]}' if gene_mapper[gene] != "." else gene)
             for gene in sorted(files_to_gene_ids.values())
     }
     
@@ -65,3 +65,37 @@ def cache_load_population_colours():
     population_colours['OC-NG'] = "#f781bf"
     
     return population_colours
+
+def generate_download_buttons(fig, gene_id_selected, height, plot_number ):
+    """Generates download buttons for different image formats (PDF, PNG, SVG) for a given plot."""
+
+    plot_name_dictionary = {
+        1: "haplotype_plot",
+        2: "abacus_plot",
+        3: "worldmap_plot"
+    }
+
+    plot_name = plot_name_dictionary[plot_number]
+
+    # Create in-memory buffers to download the plot
+    buffers = {}
+    formats = ["pdf", "png", "svg"]
+    for format in formats:
+        buffer = io.BytesIO()
+        fig.write_image(file=buffer, format=format, height=height)
+        buffers[format] = buffer
+
+    figure_name = f"{gene_id_selected}_{plot_name}"
+
+    col, *button_cols = st.columns([7, 1, 1, 1])
+    col.markdown("<p style='text-align: right; line-height: 40px;'>Download the figure:</p>", unsafe_allow_html=True)
+    
+    for col, format in zip(button_cols, formats):
+        col.download_button(
+            label     = format.upper(),
+            data      = buffers[format],
+            file_name = f"{figure_name}.{format}",
+            mime      = f"image/{format}",
+            type      = "primary",
+            key       = f'{plot_number}_{format}'
+        )
