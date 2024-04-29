@@ -1,0 +1,8 @@
+streamlit==1.31.0
+streamlit-plotly-events==0.0.6
+numpy==1.21.4
+plotly==5.5.0
+Pillow==9.0.0
+pandas==1.5.3
+openpyxl==3.1.2
+kaleido==0.2.1
