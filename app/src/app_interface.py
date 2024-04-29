@@ -32,9 +32,10 @@ def file_selector(placeholder):
     """Main function called in main.py to allow for user's gene selection and handle the app's URL"""
 
     utility_mappers = _cache_load_utility_mappers()
-    gene_id_extracted = st.query_params.get_all('gene_id')
-
-    if placeholder not in utility_mappers["gene_ids_to_gene_names"]:
+    # Check if 'gene_id' key exists in query parameters
+    if 'gene_id' in st.query_params:
+        gene_id_extracted = st.query_params['gene_id']
+    else:
         gene_id_extracted = "--"
     
     gene_id_extracted = utility_mappers["gene_ids_to_gene_names"].get(gene_id_extracted, "--")
