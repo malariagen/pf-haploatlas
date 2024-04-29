@@ -71,7 +71,7 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
 
     st.divider()
     
-    year = st.slider(f'Change the year interval to plot {ns_changes} frequency over that time period', 1982, 2024, (2000, 2010))
+    year = st.slider(f'Change the year interval to plot {ns_changes} frequency over that time period', 1982, 2024, (2010, 2018))
     population_colours = cache_load_population_colours()
 
     ### Data pre-processing
@@ -149,7 +149,10 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
     ### WORLDMAP PLOT (WORLD MAP)
 
     # Create a subplot comprising haplotype frequency (legend) and world map 
-    fig = make_subplots(rows=2, cols=1, specs=[[{"type": "xy"}], [{"type": "scattergeo"}]],vertical_spacing = 0,row_heights = [5, 20], horizontal_spacing=0.05)
+    fig = make_subplots(rows=2, cols=1, specs=[[{"type": "xy"}], [{"type": "scattergeo"}]],
+                        vertical_spacing = 0,
+                        row_heights = [5, 20],
+                        horizontal_spacing=0.05)
 
     # Add haplotype frequency legend as subplot 1
     legend_y = 0.3  # Adjust this value to position the legend vertically
@@ -179,7 +182,7 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
         trace = go.Scattergeo(
             locations=[row['iso_alpha']],
             hoverinfo='text',
-            text=f"Country: {row['Country']}<br>Population: {row['Population']}<br>Frequency: {row['frequency']}%",
+            hovertemplate=f"Country: {row['Country']}<br>Population: {row['Population']}<br>Frequency: {row['frequency']}%",
             marker=dict(
                 size=13,
                 line=dict(
