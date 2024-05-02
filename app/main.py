@@ -1,18 +1,10 @@
-DEVELOPER_MODE = True
-
 from src.utils import cache_load_gene_summary
 
 from src.app_interface import set_up_interface, file_selector
 from src.app_configs_menu import process_configs_menu
 from src.app_haplotype_plot import generate_haplotype_plot
 from src.app_abacus_plot import generate_abacus_plot
-from app.src.app_worldmap_plot import generate_worldmap_plot
-
-if DEVELOPER_MODE:
-    import sys, importlib
-    
-    for module in ["src.utils", "src.app_interface", "src.app_configs_menu", "src.app_haplotype_plot", "src.app_abacus_plot"]:
-        importlib.reload(sys.modules[module])
+from src.app_worldmap_plot import generate_worldmap_plot
 
 def main():
     placeholder = set_up_interface()
