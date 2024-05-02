@@ -2,7 +2,6 @@ import streamlit as st
 import collections
 import pandas as pd
 import numpy as np
-import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
@@ -43,7 +42,6 @@ def _partial_frequency_marker_colour(freq: float) -> str:
 def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, gene_id_selected):
     """Main function called in main.py to generate and present the abacus plot"""
 
-
     population_colours = cache_load_population_colours()
 
     df_samples_with_ns_changes = df_join.loc[df_join['QC pass']]
@@ -73,14 +71,7 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
     # ============================================================================================================================================================
     # ============================================================================================================================================================
 
-
     st.divider()
-
-    # def _haplotype_formatter(h: str) -> str:
-    #     if h.count("/") > 5:
-    #         h = "/".join(h.split("/")[:5]) + "<br>" + "/".join(h.split("/")[5:])
-    #     else:
-    #         return h
 
     st.subheader(f"Viewing haplotype: {ns_changes}")
     st.write("Click and drag to zoom. Double-click to reset.")
@@ -124,9 +115,9 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
             "marker": dict(color="black",
                            size=20,
                            symbol="circle"),
-            "text": "<b>∗</b>",
+            "text": "<b>100</b>",
             "mode": "markers+text",
-            "textfont": dict(size=30,
+            "textfont": dict(size=8,
                              color="white")
         },
     }
@@ -175,10 +166,12 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
                                                         line=dict(
                                                             color='black',
                                                             width=1.5)
-                                                       )
+                                                        )
                                            ), rows = 2, cols = i)
-    fig.update_xaxes(title_text="Year (intervals)", row=2, col=3)
-    fig.update_yaxes(title_text="Countries and first-level administrative divisions", row=2)
+                        
+    fig.update_xaxes(title_text="Year", row=2, col=3)
+    fig.update_yaxes(title_text="Location", row=2)
+
     fig.add_traces(
         go.Scatter(
             x = np.ones(len(labels_list)),
@@ -225,8 +218,9 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
                       yaxis3 = dict(showticklabels = False, tickmode='linear'),
                       yaxis4 = dict(showticklabels = False, tickmode='linear'),
                       yaxis5 = dict(showticklabels = False, tickmode='linear'),
-                        margin= dict(t=0, b=0)
+                      margin=dict(t=5, b=5, l=5, r=5)
                      )
 
     st.plotly_chart(fig, config = {"displayModeBar": False})
+
     generate_download_buttons(fig, gene_id_selected, 1300, plot_number = 2)

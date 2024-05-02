@@ -50,9 +50,9 @@ scatter_config = {
             "marker": dict(color="black",
                            size=20,
                            symbol="circle"),
-            "text": "<b>∗</b>",
+            "text": "<b>100</b>",
             "mode": "markers+text",
-            "textfont": dict(size=30,
+            "textfont": dict(size=10,
                              color="white")
         },
     }
@@ -71,7 +71,7 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
 
     st.divider()
     
-    year = st.slider(f'Change the year interval to plot {ns_changes} frequency over that time period', 1982, 2024, (2010, 2018))
+    year = st.slider(f'See the frequency of the {ns_changes} haplotype over time interval:', 1982, 2024, (2010, 2018))
     population_colours = cache_load_population_colours()
 
     ### Data pre-processing
@@ -144,15 +144,13 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
 
     df_frequencies['frequency'] = np.round(df_frequencies['frequency']*100,2)
     df_frequencies[['n', 'haplo_count']] = df_frequencies[['n', 'haplo_count']].astype('int')
-    #print(df_frequencies[(df_frequencies['Country']=='Sudan') & (df_frequencies['Year']==2015)])
 
     ### WORLDMAP PLOT (WORLD MAP)
 
     # Create a subplot comprising haplotype frequency (legend) and world map 
     fig = make_subplots(rows=2, cols=1, specs=[[{"type": "xy"}], [{"type": "scattergeo"}]],
                         vertical_spacing = 0,
-                        row_heights = [5, 20],
-                        horizontal_spacing=0.05)
+                        row_heights = [1, 10])
 
     # Add haplotype frequency legend as subplot 1
     legend_y = 0.3  # Adjust this value to position the legend vertically
@@ -174,15 +172,19 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
         rows = 1, cols = 1)
 
     fig.add_annotation(_plotly_arrow(0.42, 0.57, legend_y+0.3))
-    fig.update_layout(xaxis = dict(tickvals = [], dtick=1, range = (0, 1), fixedrange=True, zeroline=False),
-                      yaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False))
+    fig.update_layout(xaxis = dict(tickvals = [], dtick=1, range = (0, 1), 
+                                #    fixedrange=True, 
+                                   zeroline=False),
+                      yaxis = dict(tickvals = [], range = (0, 1),
+                                #    fixedrange=True,
+                                   zeroline=False))
 
     # Add worldmap plot (scattergeo subplot)
     for _, row in df_frequencies.iterrows():
         trace = go.Scattergeo(
             locations=[row['iso_alpha']],
             hoverinfo='text',
-            text=f"<b>{row['Country']} in {row['Year-interval'].strip('()')}</b><br>Population: {row['Population']}<br>Samples with selected haplotype: {row['haplo_count']} ({row['frequency']}%) <br>Number of samples: {row['n']}</b>",
+            hovertemplate=f"<b>{row['Country']}: {row['Year-interval'].strip('()').replace(',', ' - ')}</b><br>Population: {row['Population']}<br>Samples with selected haplotype: {row['haplo_count']} ({row['frequency']}%) <br>Number of samples: {row['n']}</b>",
             marker=dict(
                 size=13,
                 line=dict(
@@ -206,8 +208,11 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
         fig.add_trace(trace, row=2, col=1)
 
     # Update layout
-    fig.update_layout(height=600, width=800, margin=dict(t=10, b=0)) # use geo=dict() for further options
+    fig.update_layout(height=600, width=800,
+                      margin=dict(t=5, b=5, l=5, r=5)
+                      )
     fig.update_geos(projection_type="natural earth")
 
-    st.plotly_chart(fig, config = {"displayModeBar": False}) # use 'modeBarButtonsToAdd' for further options
+    st.plotly_chart(fig, config = {"displayModeBar": False})
+
     generate_download_buttons(fig, gene_id_selected, 600, plot_number = 3)
