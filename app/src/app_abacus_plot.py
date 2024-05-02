@@ -124,14 +124,14 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
             "marker": dict(color="black",
                            size=20,
                            symbol="circle"),
-            "text": "<b>!</b>",
+            "text": "<b>∗</b>",
             "mode": "markers+text",
             "textfont": dict(size=30,
                              color="white")
         },
     }
     
-    hovertemplate = '<b>%{y} in %{x}</b><br>Samples with selected haplotype: %{customdata[1]} (%{customdata[2]}%)<br>All samples: %{customdata[0]}<extra></extra>',
+    hovertemplate = '<b>%{y} in %{x}</b><br>Samples with selected haplotype: %{customdata[1]} (%{customdata[2]}%)<br>Number of samples: %{customdata[0]}<extra></extra>',
 
     for i in [2, 3, 4]:
         fig.update_xaxes(range=xlims[i-2], row=2, col=i)
@@ -177,7 +177,8 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
                                                             width=1.5)
                                                        )
                                            ), rows = 2, cols = i)
-
+    fig.update_xaxes(title_text="Year (intervals)", row=2, col=3)
+    fig.update_yaxes(title_text="Countries and first-level administrative divisions", row=2)
     fig.add_traces(
         go.Scatter(
             x = np.ones(len(labels_list)),
@@ -224,7 +225,7 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
                       yaxis3 = dict(showticklabels = False, tickmode='linear'),
                       yaxis4 = dict(showticklabels = False, tickmode='linear'),
                       yaxis5 = dict(showticklabels = False, tickmode='linear'),
-
+                        margin= dict(t=0, b=0)
                      )
 
     st.plotly_chart(fig, config = {"displayModeBar": False})
