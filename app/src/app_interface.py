@@ -15,7 +15,7 @@ def set_up_interface():
     )
     
     st.title('Pf7.0 Haplotype Explorer (PfHEx7.0)')
-    st.subheader("Haplotype summaries for *Plasmodium falciparum* genes across time and space")
+    st.subheader("Haplotype analysis for *Plasmodium falciparum* genes across time and space")
 
     _cache_load_pf7_metadata() # running it here to prevent it from running when new gene selected
     
@@ -105,31 +105,28 @@ def _set_up_sidebar():
         
         st.header("**Samples**")
         st.markdown("""
-
 The Mutation Discovery App uses 16,203 QC pass samples from the [Pf7 dataset.](https://wellcomeopenresearch.org/articles/8-22/v1)
-
 """)
         
         st.header("**Genes**")
         st.markdown("""
-
-The Mutation Discovery App uses **XXX** genes, according to the **XXX** version of the 3D7 Pf genome from *PlasmoDB link?* All genes have a unique identifier, e.g. **PF3D7_XXXXXXX**, and in some cases a gene name, e.g. **MDR1**.
-
+The Mutation Discovery App uses 5102 genes located within the core regions of 3D7 v3 reference genome (available [here](ftp://ngs.sanger.ac.uk/production/malaria/Resource/34/Pfalciparum.genome.fasta)). All genes have a unique identifier, e.g., **PF3D7_1343700**, and in some cases a gene name, e.g., **MDR1**.
 """)
+        
+        st.header("**Subpopulations**")
+        st.markdown("""
+Countries are grouped into ten major sub-populations based on their geographic and genetic characteristics as defined in the [Pf7 paper](https://wellcomeopenresearch.org/articles/8-22/v1). These are colour-coded for easy interpretation. 
+                    """)
         
         st.header("**Plots**")
         st.markdown("""
 
-The app generates four plots per gene:
+The app generates three plots per gene:
 
-**1. Sample counts per haplotype** - cumulative counts of samples per haplotype. Toggle the y-axis between raw values or a log scale.
+**1. Haplotype UpSet plot** - for each haplotype, shows the mutation make-up (bottom), population proportions of its samples (middle), and total number of samples (top). Clicking on a haplotype will generate the two following plots.
 
-**2. Population proportions per haplotype** - relative contributions of each of the major Pf7 sub-populations to each haplotype.
-
-**3. UpSet plot** - view the mutation makeup of each haplotype.
-
-**4. Abacus plot** - click on a haplotype to view its frequency across first-level administrative divisions and years with at least 25 samples.
-
-The shade of the point represents the haplotype frequency from white (0%) to black (100%). Where frequency is exactly 0% or 100% the point is marked with a cross to represent fixation.
+**2. Abacus plot** - for each location, shows the proportion of samples with the selected haplotype in each year
+                    
+**3. World map** - for each country, shows the proportion of samples with the selected haplotype over the selected time period
 
 """)
