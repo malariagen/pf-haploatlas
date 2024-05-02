@@ -38,14 +38,17 @@ The Mutation Discovery App uses 16,203 QC pass samples from the [Pf7 dataset.](h
         st.header("**Genes**")
         st.markdown("""
 
-The Mutation Discovery App uses **XXX** genes, according to the **XXX** version of the 3D7 Pf genome from *PlasmoDB link?* All genes have a unique identifier, e.g. **PF3D7_XXXXXXX**, and in some cases a gene name, e.g. **MDR1**.
+The Mutation Discovery App uses 5102 genes located within the core regions of 3D7 v3 reference genome (available at this [ftp server](ftp://ngs.sanger.ac.uk/production/malaria/Resource/34/Pfalciparum.genome.fasta)). All genes have a unique identifier, e.g. **PF3D7_1343700**, and in some cases a gene name, e.g. **MDR1**.
 
 """)
-        
+        st.header("**Subpopulations**")
+        st.markdown("""
+Countries are grouped into ten major sub-populations based on their geographic and genetic characteristics as defined in the [Pf7 paper](https://wellcomeopenresearch.org/articles/8-22/v1). These are colour-coded for easy interpretation. 
+                    """)
         st.header("**Plots**")
         st.markdown("""
 
-The app generates four plots per gene:
+The app generates five plots per gene:
 
 **1. Sample counts per haplotype** - cumulative counts of samples per haplotype. Toggle the y-axis between raw values or a log scale.
 
@@ -57,6 +60,7 @@ The app generates four plots per gene:
 
 The shade of the point represents the haplotype frequency from white (0%) to black (100%). Where frequency is exactly 0% or 100% the point is marked with a cross to represent fixation.
 
+**5. World map plot** - use the slider to specify a range of years for visualizing haplotype frequencies across countries on a world map with at least 25 samples. For the explanation of points, please refer to Abacus plot.                  
 """)
     
     return placeholder

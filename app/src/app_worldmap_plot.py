@@ -14,10 +14,10 @@ def _locations_agg(x, ns_changes):
     names['n'] = np.count_nonzero(x['ns_changes_homozygous'])
     if names['n'] == 0:
         names[f'frequency'] = 0
+        names['haplo_count'] = 0
     else:
-        names[f'frequency'] = np.count_nonzero(
-            ( x['ns_changes'] == ns_changes)
-        ) / names['n']
+        names['haplo_count'] = np.count_nonzero(( x['ns_changes'] == ns_changes))
+        names[f'frequency'] = names['haplo_count'] / names['n']
 
     return pd.Series(names)
 
@@ -50,7 +50,7 @@ scatter_config = {
             "marker": dict(color="black",
                            size=20,
                            symbol="circle"),
-            "text": "<b>!</b>",
+            "text": "<b>∗</b>",
             "mode": "markers+text",
             "textfont": dict(size=30,
                              color="white")
@@ -71,13 +71,12 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
 
     st.divider()
     
-    year = st.slider(f'Change the year interval to plot {ns_changes} frequency over that time period', 1982, 2024, (2000, 2010))
+    year = st.slider(f'Change the year interval to plot {ns_changes} frequency over that time period', 1982, 2024, (2010, 2020))
     population_colours = cache_load_population_colours()
 
     ### Data pre-processing
     # ideally, in the future, this part needs te be handled by data_formatter
     if len(df_join) == 0:
-        print(len(df_join))
         st.warning("No haplotype data found.")
         st.stop()
     
@@ -144,6 +143,7 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
     df_frequencies = df_frequencies.loc[(df_frequencies['n'] >= min_samples)]
 
     df_frequencies['frequency'] = np.round(df_frequencies['frequency']*100,2)
+    df_frequencies[['n', 'haplo_count']] = df_frequencies[['n', 'haplo_count']].astype('int')
     #print(df_frequencies[(df_frequencies['Country']=='Sudan') & (df_frequencies['Year']==2015)])
 
     ### WORLDMAP PLOT (WORLD MAP)
@@ -179,7 +179,7 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
         trace = go.Scattergeo(
             locations=[row['iso_alpha']],
             hoverinfo='text',
-            text=f"Country: {row['Country']}<br>Population: {row['Population']}<br>Frequency: {row['frequency']}%",
+            text=f"<b>{row['Country']} in {row['Year-interval'].strip('()')}</b><br>Population: {row['Population']}<br>Samples with selected haplotype: {row['haplo_count']} ({row['frequency']}%) <br>Number of samples: {row['n']}</b>",
             marker=dict(
                 size=13,
                 line=dict(
@@ -203,8 +203,8 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
         fig.add_trace(trace, row=2, col=1)
 
     # Update layout
-    fig.update_layout(height=600, width=800, margin=dict(t=10))
+    fig.update_layout(height=600, width=800, margin=dict(t=10, b=0)) # use geo=dict() for further options
     fig.update_geos(projection_type="natural earth")
 
-    st.plotly_chart(fig, config = {"displayModeBar": False})
+    st.plotly_chart(fig, config = {"displayModeBar": False}) # use 'modeBarButtonsToAdd' for further options
     generate_download_buttons(fig, gene_id_selected, 600, plot_number = 3)
