@@ -152,17 +152,20 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             ),
                            rows = 3, cols = 1)
         i = i + 1
-    fig.update_yaxes(title_text="Number of samples", row=1, col=1)
-    fig.update_yaxes(title_text="Proportion of samples", row=2, col=1)
-    #fig.update_yaxes(title_text="Countries and first-level administrative divisions", row=2)
+    
     fig.update_xaxes(tickmode='array', tickvals=[], range = [-0.5, df_haplotypes_set.index.size - 0.5], zeroline = False,
                      showgrid = False, row = 3, col = 1)
 
-    fig.update_yaxes(title_text="Haplotypes", showgrid = True, zeroline = False, gridcolor='rgba(0, 0, 0, 0.15)', 
+    fig.update_yaxes(title_text="Number of samples", title_standoff=20, row=1, col=1)
+    fig.update_yaxes(title_text="Percentage of samples", title_standoff=30, row=2, col=1)
+    fig.update_yaxes(title_text="Haplotypes", title_standoff=20, 
+                     showgrid = True, zeroline = False, gridcolor='rgba(0, 0, 0, 0.15)', 
                      tickvals=df_mutations_set.reset_index()["index"],
                      ticktext=df_mutations_set.reset_index().mutation,
                      row = 3, col = 1)
-    fig.update_layout(hovermode = 'closest', legend=dict(y=0.76))
+    
+    fig.update_layout(hovermode = 'closest', legend=dict(y=0.76),
+                      margin=dict(t=5, b=5, l=70, r=5))
 
     # ============================================================================================================================================================
     # ============================================================================================================================================================

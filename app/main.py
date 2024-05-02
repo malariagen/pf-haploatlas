@@ -1,6 +1,7 @@
 from src.utils import cache_load_gene_summary
 
-from src.app_interface import set_up_interface, file_selector
+from src.app_interface import set_up_interface
+from src.app_interface import file_selector
 from src.app_configs_menu import process_configs_menu
 from src.app_haplotype_plot import generate_haplotype_plot
 from src.app_abacus_plot import generate_abacus_plot
