@@ -52,7 +52,7 @@ scatter_config = {
                            symbol="circle"),
             "text": "<b>100</b>",
             "mode": "markers+text",
-            "textfont": dict(size=10,
+            "textfont": dict(size=8,
                              color="white")
         },
     }
