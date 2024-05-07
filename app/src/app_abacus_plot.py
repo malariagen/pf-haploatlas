@@ -218,9 +218,9 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
                       yaxis3 = dict(showticklabels = False, tickmode='linear'),
                       yaxis4 = dict(showticklabels = False, tickmode='linear'),
                       yaxis5 = dict(showticklabels = False, tickmode='linear'),
-                      margin=dict(t=5, b=5, l=0, r=5)
+                      margin=dict(t=5, b=55, l=0, r=0)
                      )
 
     st.plotly_chart(fig, config = {"displayModeBar": False})
 
-    generate_download_buttons(fig, gene_id_selected, 1300, plot_number = 2)
+    generate_download_buttons(fig, gene_id_selected, 1300, 800, plot_number = 2)
