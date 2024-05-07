@@ -66,7 +66,7 @@ def cache_load_population_colours():
     
     return population_colours
 
-def generate_download_buttons(fig, gene_id_selected, height, plot_number ):
+def generate_download_buttons(fig, gene_id_selected, height, width, plot_number):
     """Generates download buttons for different image formats (PDF, PNG, SVG) for a given plot."""
 
     plot_name_dictionary = {
@@ -82,7 +82,7 @@ def generate_download_buttons(fig, gene_id_selected, height, plot_number ):
     formats = ["pdf", "png", "svg"]
     for format in formats:
         buffer = io.BytesIO()
-        fig.write_image(file=buffer, format=format, height=height)
+        fig.write_image(file=buffer, format=format, height=height, width=width)
         buffers[format] = buffer
 
     figure_name = f"{gene_id_selected}_{plot_name}"
