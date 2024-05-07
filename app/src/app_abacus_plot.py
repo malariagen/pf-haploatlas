@@ -125,7 +125,7 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
     hovertemplate = '<b>%{y} in %{x}</b><br>Samples with selected haplotype: %{customdata[1]} (%{customdata[2]}%)<br>Number of samples: %{customdata[0]}<extra></extra>',
 
     for i in [2, 3, 4]:
-        fig.update_xaxes(range=xlims[i-2], row=2, col=i)
+        fig.update_xaxes(range=xlims[i-2], row=2, col=i, showgrid=False)
 
         for pop in reversed(populations):
 
