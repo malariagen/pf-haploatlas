@@ -209,10 +209,10 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
 
     # Update layout
     fig.update_layout(height=600, width=800,
-                      margin=dict(t=5, b=5, l=5, r=5)
+                      margin=dict(t=15, b=5, l=5, r=5)
                       )
     fig.update_geos(projection_type="natural earth")
 
     st.plotly_chart(fig, config = {"displayModeBar": False})
 
-    generate_download_buttons(fig, gene_id_selected, 600, plot_number = 3)
+    generate_download_buttons(fig, gene_id_selected, 600, 800, plot_number = 3)
