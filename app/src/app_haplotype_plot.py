@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from streamlit_plotly_events import plotly_events
-import streamlit.components.v1 as com
+
 from src.utils import cache_load_population_colours, _cache_load_utility_mappers, generate_download_buttons
 
 def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_changes, min_samples, sample_count_mode):
@@ -170,17 +170,10 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     # ============================================================================================================================================================
     # ============================================================================================================================================================
 
+    st.write("Click on any bar or mutation to generate additional figures for that haplotype below.")
+
     selection_dict = plotly_events(fig, override_height = total_plot_height)
-    text = 'Click on a scatter to view haplotype-specific figures!'
 
-    # Define the iframe HTML string
-    iframe_html = '<iframe src="https://lottie.host/embed/67bd4b2e-35c7-48b6-8173-7cc0170092dc/3lZBO83Pzo.json" width="100" height="100"></iframe>'
-
-    # Combine text and iframe HTML
-    combined_content = f"{text}{iframe_html}"
-
-    # Display using st.markdown()
-    st.markdown(combined_content, unsafe_allow_html=True)
     generate_download_buttons(fig, gene_id_selected, total_plot_height, 800, plot_number = 1)
 
     if selection_dict == []:
