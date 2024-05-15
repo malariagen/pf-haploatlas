@@ -14,7 +14,7 @@ def set_up_interface():
         initial_sidebar_state = "expanded"
     )
     
-    st.title('Pf7.0 Haplotype Explorer (PfHEx7.0)')
+    st.title('Pf Haplo-Atlas')
     st.subheader("Haplotype analysis for *Plasmodium falciparum* genes across time and space")
 
     _cache_load_pf7_metadata() # running it here to prevent it from running when new gene selected
@@ -69,48 +69,31 @@ def file_selector(placeholder):
     placeholder.empty()
     return filename, gene_id_selected
 
-def _show_image_with_url(filepath, url):
-    image_data = b64encode(open(filepath, "rb").read()).decode()
-    html_content = f"""<a href="{url}">
-                    <img src="data:image/png;base64,{image_data}" style="width: 100%;">
-                    </a>"""
-
-    st.markdown(html_content, unsafe_allow_html = True)
+def _show_images_with_urls(filepaths, urls, widths, heights):
+    images_html = "<div style='display: flex; justify-content: center; align-items: flex-end; text-align: center;'>"
+    for filepath, url, width, height in zip(filepaths, urls, widths, heights):
+        image_data = b64encode(open(filepath, "rb").read()).decode()
+        images_html += f"""
+            <div style="margin: 10px;">
+                <a href="{url}">
+                    <img src="data:image/png;base64,{image_data}" style="width: {width}%; height: {height}%; object-fit: contain;">
+                </a>
+            </div>"""
+    images_html += "</div>"
+    st.markdown(images_html, unsafe_allow_html=True)
 
 def _set_up_sidebar():    
     with st.sidebar:
-
-        _show_image_with_url(
-            "app/files/logo_gsu.png",
-            "https://www.sanger.ac.uk/collaboration/genomic-surveillance-unit/"
-        )
-
-        st.divider()
-
-        _show_image_with_url(
-            "app/files/logo_malariagen.png",
-            "https://www.malariagen.net/"
-        )
-
-        st.divider()
-
-        _show_image_with_url(
-            "app/files/logo_sanger.png",
-            "https://www.sanger.ac.uk/"
-        )
-
-        st.divider()
-            
         st.title("**Further Information**")
         
         st.header("**Samples**")
         st.markdown("""
-The Mutation Discovery App uses 16,203 QC pass samples from the [Pf7 dataset.](https://wellcomeopenresearch.org/articles/8-22/v1)
+The Pf Haplo-Atlas uses 16,203 QC pass samples from the [Pf7 dataset.](https://wellcomeopenresearch.org/articles/8-22/v1)
 """)
         
         st.header("**Genes**")
         st.markdown("""
-The Mutation Discovery App uses 5102 genes located within the core regions of 3D7 v3 reference genome (available [here](ftp://ngs.sanger.ac.uk/production/malaria/Resource/34/Pfalciparum.genome.fasta)). All genes have a unique identifier, e.g., **PF3D7_1343700**, and in some cases a gene name, e.g., **MDR1**.
+The Pf Haplo-Atlas uses 5,102 genes located within the core regions of the 3D7 v3 reference genome (available [here](ftp://ngs.sanger.ac.uk/production/malaria/Resource/34/Pfalciparum.genome.fasta)). All genes have a unique identifier, e.g., **PF3D7_1343700**, and in some cases a gene name, e.g., **MDR1**.
 """)
         
         st.header("**Subpopulations**")
@@ -130,3 +113,19 @@ The app generates three plots per gene:
 **3. World map** - for each country, shows the proportion of samples with the selected haplotype over the selected time period
 
 """)
+        
+        st.divider()
+        
+        _show_images_with_urls(
+            ["app/files/logo_malariagen.png"],
+            ["https://www.malariagen.net/"],
+            [50],
+            [100]
+        )
+
+        _show_images_with_urls(
+            ["app/files/logo_gsu.png", "app/files/logo_sanger.png"],
+            ["https://www.sanger.ac.uk/collaboration/genomic-surveillance-unit/", "https://www.sanger.ac.uk/"],
+            [110, 70],
+            [110, 70]
+        )
