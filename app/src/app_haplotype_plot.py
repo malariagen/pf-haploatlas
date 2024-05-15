@@ -153,25 +153,27 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
                            rows = 3, cols = 1)
         i = i + 1
     
-    fig.update_xaxes(tickmode='array', tickvals=[], range = [-0.5, df_haplotypes_set.index.size - 0.5], zeroline = False,
+    fig.update_xaxes(title_text="Haplotypes", tickmode='array', tickvals=[], range = [-0.5, df_haplotypes_set.index.size - 0.5], zeroline = False,
                      showgrid = False, row = 3, col = 1)
 
     fig.update_yaxes(title_text="Number of samples", title_standoff=20, row=1, col=1)
     fig.update_yaxes(title_text="Percentage of samples", title_standoff=30, row=2, col=1)
-    fig.update_yaxes(title_text="Haplotypes", title_standoff=20, 
+    fig.update_yaxes(title_text="Mutations", title_standoff=20, 
                      showgrid = True, zeroline = False, gridcolor='rgba(0, 0, 0, 0.15)', 
                      tickvals=df_mutations_set.reset_index()["index"],
                      ticktext=df_mutations_set.reset_index().mutation,
                      row = 3, col = 1)
     
     fig.update_layout(hovermode = 'closest', legend=dict(y=0.76),
-                      margin=dict(t=5, b=5, l=70, r=5))
+                      margin=dict(t=5, b=70, l=70, r=5))
 
     # ============================================================================================================================================================
     # ============================================================================================================================================================
+
+    st.write("Click on any bar or mutation to generate additional figures for that haplotype below.")
 
     selection_dict = plotly_events(fig, override_height = total_plot_height)
-    
+
     generate_download_buttons(fig, gene_id_selected, total_plot_height, 800, plot_number = 1)
 
     if selection_dict == []:
