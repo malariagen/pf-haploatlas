@@ -16,7 +16,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     
     st.divider()
     st.subheader(f'Viewing gene: {utility_mappers["gene_ids_to_gene_names"][gene_id_selected]}')
-    
+    st.write('Each black bar represents a haplotype. Clicking a bar will display additional figures for that particular haplotype.')
     # Inputs for plots
     total_samples = df_haplotypes['Total'].sum()
     df_haplotypes['cum_proportion'] = df_haplotypes['Total'].cumsum() / total_samples 
@@ -173,7 +173,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     st.write("Click on any bar or mutation to generate additional figures for that haplotype below.")
 
     selection_dict = plotly_events(fig, override_height = total_plot_height)
-
+    
     generate_download_buttons(fig, gene_id_selected, total_plot_height, 800, plot_number = 1)
 
     if selection_dict == []:

@@ -80,6 +80,9 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
         st.warning("No haplotype data found.")
         st.stop()
     
+    # Filter QC fail and missing samples  
+    df_join= df_join[df_join['Exclusion reason'] == 'Analysis_set']
+
     df_samples_with_ns_changes = df_join
     # worldmap map requires iso_alpha values
     plotly_worldmap_df = px.data.gapminder().query("year==2007")
@@ -184,7 +187,7 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
         trace = go.Scattergeo(
             locations=[row['iso_alpha']],
             hoverinfo='text',
-            hovertemplate=f"<b>{row['Country']}: {row['Year-interval'].strip('()').replace(',', ' - ')}</b><br>Population: {row['Population']}<br>Samples with selected haplotype: {row['haplo_count']} ({row['frequency']}%) <br>Number of samples: {row['n']}</b>",
+            hovertemplate=f"<b>{row['Country']}: {row['Year-interval'].strip('()').replace(',', ' - ')}</b><br>Population: {row['Population']}<br>Samples with selected haplotype: {row['haplo_count']} ({row['frequency']}%) <br>Number of samples: {row['n']}</b><extra></extra>",
             marker=dict(
                 size=13,
                 line=dict(
