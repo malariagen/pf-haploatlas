@@ -44,7 +44,9 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
 
     population_colours = cache_load_population_colours()
 
-    df_samples_with_ns_changes = df_join.loc[df_join['QC pass']]
+    # Filter QC fail and missing samples  
+    df_samples_with_ns_changes = df_join[df_join['Exclusion reason'] == 'Analysis_set']
+    
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', ['Country']] = 'DRC'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "3D7 REF"
 

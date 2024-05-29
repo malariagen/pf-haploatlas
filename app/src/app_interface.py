@@ -8,7 +8,7 @@ def set_up_interface():
     """Main function called in main.py to set up basic page settings, introduction and sidebar"""
 
     st.set_page_config(
-        page_title = "Pf7 mutation discovery app",
+        page_title = "Pf Haplo-Atlas",
         layout = "centered",
         page_icon = Image.open("app/files/logo.png"),
         initial_sidebar_state = "expanded"

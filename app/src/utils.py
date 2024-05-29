@@ -2,7 +2,7 @@ import streamlit as st
 import json, os, lzma, pickle, collections, io
 import pandas as pd
 
-base_path = "app/files/2024-03-13_pkl_files"
+base_path = "app/files/2024-05-29_pkl_files"
 
 @st.cache_data
 def _cache_load_utility_mappers(base_path = base_path):
@@ -37,7 +37,7 @@ def _cache_load_utility_mappers(base_path = base_path):
 
 @st.cache_data
 def _cache_load_pf7_metadata():
-    pf7_metadata = pd.read_excel('app/files/Pf7_metadata.xlsx')
+    pf7_metadata = pd.read_excel('app/files/Pf7_metadata.xlsx').drop('Exclusion reason', axis=1).reset_index()
     return pf7_metadata
 
 @st.cache_data

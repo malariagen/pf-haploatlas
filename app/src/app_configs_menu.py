@@ -85,17 +85,15 @@ def _process_gene_facts(min_samples,
     gene_info = job_logs[gene_id_selected]
 
     # Extract statistics
-    pf7_total_samples      = len(df_join)
-    qc_fail                = len(df_join.loc[df_join['QC pass']==False])
+    pf7_qc_pass            = len(df_join.loc[df_join['QC pass']==True])
     missing_genotype_calls = gene_info.get('c_missing', 'N/A')
     heterozygous_calls     = gene_info.get('c_het_calls', 'N/A')
     stop_codons            = gene_info.get('c_stop_codon', 'N/A')
     sample_below_threshold = df_haplotypes.loc[df_haplotypes['Total'] < min_samples].Total.sum()
-    excluded_samples       = int(qc_fail + missing_genotype_calls + heterozygous_calls + stop_codons + sample_below_threshold)
-    included_samples       = int(pf7_total_samples - excluded_samples)
+    excluded_samples       = int(missing_genotype_calls + heterozygous_calls + stop_codons + sample_below_threshold)
+    included_samples       = int(pf7_qc_pass - excluded_samples)
 
     statistics = {
-        "Sample failed QC":                            qc_fail,
         "Sample missing genotype call":                missing_genotype_calls,
         "Heterozygous sample":                         heterozygous_calls,
         "Stop codon found for gene":                   stop_codons,
@@ -105,9 +103,9 @@ def _process_gene_facts(min_samples,
     statistics_table = pd.DataFrame(list(statistics.items()),
                                     columns = ['Exclusion Reason', 'Sample Count'])
     
-    statistics_table["Percentage"] = statistics_table["Sample Count"].apply(lambda x: '{:.1f} %'.format(100 * x / pf7_total_samples))
+    statistics_table["Percentage"] = statistics_table["Sample Count"].apply(lambda x: '{:.1f} %'.format(100 * x / pf7_qc_pass))
 
-    st.write(f"{included_samples} samples ({included_samples / pf7_total_samples * 100:.1f} %) are available for analysis out of {pf7_total_samples} samples, after {excluded_samples} samples ({excluded_samples / pf7_total_samples * 100:.1f} %) have been excluded for the reasons listed below. ")
+    st.write(f"{included_samples} samples ({included_samples / pf7_qc_pass * 100:.1f} %) are available for analysis out of {pf7_qc_pass} QC pass samples, after {excluded_samples} samples ({excluded_samples / pf7_qc_pass * 100:.1f} %) have been excluded for the reasons listed below. ")
     st.dataframe(statistics_table, use_container_width = True, hide_index = True)
 
     return
