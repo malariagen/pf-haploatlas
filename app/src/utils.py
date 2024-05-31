@@ -2,7 +2,7 @@ import streamlit as st
 import json, os, lzma, pickle, collections, io
 import pandas as pd
 
-base_path = "app/files/2024-03-13_pkl_files"
+base_path = "app/files/2024-05-29_pkl_files"
 
 @st.cache_data
 def _cache_load_utility_mappers(base_path = base_path):
@@ -37,7 +37,7 @@ def _cache_load_utility_mappers(base_path = base_path):
 
 @st.cache_data
 def _cache_load_pf7_metadata():
-    pf7_metadata = pd.read_excel('app/files/Pf7_metadata.xlsx')
+    pf7_metadata = pd.read_excel('app/files/Pf7_metadata.xlsx').drop('Exclusion reason', axis=1).reset_index()
     return pf7_metadata
 
 @st.cache_data
@@ -70,7 +70,7 @@ def generate_download_buttons(fig, gene_id_selected, height, width, plot_number)
     """Generates download buttons for different image formats (PDF, PNG, SVG) for a given plot."""
 
     plot_name_dictionary = {
-        1: "haplotype_plot",
+        1: "haplotype_upset_plot",
         2: "abacus_plot",
         3: "worldmap_plot"
     }
@@ -94,8 +94,20 @@ def generate_download_buttons(fig, gene_id_selected, height, width, plot_number)
         col.download_button(
             label     = format.upper(),
             data      = buffers[format],
-            file_name = f"{figure_name}.{format}",
+            file_name = f"pf-haploatlas-{figure_name}.{format}",
             mime      = f"image/{format}",
             type      = "primary",
             key       = f'{plot_number}_{format}'
         )
+
+def haplotype_selection_toast(ns_changes):
+
+    toast_message = f"Haplotype {ns_changes} selected! Scroll down to see Abacus and Worldmap plots"
+
+    if "ns_changes" not in st.session_state:
+        st.session_state["ns_changes"] = ns_changes
+        st.toast(toast_message, icon = "⬇️")
+
+    elif st.session_state["ns_changes"] != ns_changes:
+        st.toast(toast_message, icon = "⬇️")
+        st.session_state["ns_changes"] = ns_changes
