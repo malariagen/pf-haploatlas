@@ -13,10 +13,12 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     
     population_colours = cache_load_population_colours()
     utility_mappers = _cache_load_utility_mappers()
+
+    gene_name_selected = utility_mappers["gene_ids_to_gene_names"][gene_id_selected]
     
     st.divider()
-    st.subheader(f'Viewing gene: {utility_mappers["gene_ids_to_gene_names"][gene_id_selected]}')
-    st.write('Each black bar represents a haplotype. Clicking a bar will display additional figures for that particular haplotype.')
+    st.subheader(f'1. Haplotype UpSet plot: {gene_name_selected}')
+
     # Inputs for plots
     total_samples = df_haplotypes['Total'].sum()
     df_haplotypes['cum_proportion'] = df_haplotypes['Total'].cumsum() / total_samples 
@@ -157,20 +159,44 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
                      showgrid = False, row = 3, col = 1)
 
     fig.update_yaxes(title_text="Number of samples", title_standoff=20, row=1, col=1)
-    fig.update_yaxes(title_text="Percentage of samples", title_standoff=30, row=2, col=1)
+    fig.update_yaxes(title_text="Geographic distribution (%)", title_standoff=30, row=2, col=1)
     fig.update_yaxes(title_text="Mutations", title_standoff=20, 
                      showgrid = True, zeroline = False, gridcolor='rgba(0, 0, 0, 0.15)', 
                      tickvals=df_mutations_set.reset_index()["index"],
                      ticktext=df_mutations_set.reset_index().mutation,
                      row = 3, col = 1)
     
-    fig.update_layout(hovermode = 'closest', legend=dict(y=0.76),
-                      margin=dict(t=5, b=70, l=70, r=5))
+    fig.update_layout(
+        title={
+            'text': f"<b>Pf-HaploAtlas Haplotype UpSet plot: {gene_name_selected}</b>",
+            'y':0.99,
+            'x':0.5,
+            'xanchor': 'center',
+            'yanchor': 'top',
+            'font': {
+                'size': 14,
+
+            }},
+        hovermode = 'closest', legend=dict(y=0.76),
+        margin=dict(t=30, b=70, l=80, r=5)
+    )
 
     # ============================================================================================================================================================
     # ============================================================================================================================================================
 
-    st.write("Click on any bar or mutation to generate additional figures for that haplotype below.")
+    st.markdown(
+        """
+The Haplotype UpSet plot provides an overview of the haplotypes for the gene selected. Each haplotype has three pieces of information displayed:
+- "Number of samples" - the number of samples containing that haplotype
+- "Geographic distribution (%)" - the geographic distribution of that haplotype (see sidebar for details)
+- "Mutations" - the individual amino acid mutations that make up the haplotype
+
+i.e., each stack of 3 subplots corresponds to one haplotype, and these are displayed in order of decreasing prevalence from left to right. Hover your mouse over the data to see details. 
+
+You can <b><u>investigate a specific haplotype by clicking on any of the data elements of the haplotype</b></u>, e.g., clicking on the bar chart. 
+        """,
+        unsafe_allow_html = True
+    )
 
     selection_dict = plotly_events(fig, override_height = total_plot_height)
     

@@ -6,7 +6,7 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import collections
 
-from src.utils import cache_load_population_colours, generate_download_buttons
+from src.utils import cache_load_population_colours, generate_download_buttons, _cache_load_utility_mappers
 
 def _locations_agg(x, ns_changes):
     """Aggregation function used to reformat dataframe in preparation for worldmap plot"""
@@ -70,9 +70,20 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
     """Main function called in main.py to generate and present the worldmap plot"""
 
     st.divider()
-    
-    year = st.slider(f'See the frequency of the {ns_changes} haplotype over time interval:', 1982, 2024, (2010, 2018))
+
+    st.subheader(f'3. Worldmap plot: {ns_changes}')
+    st.markdown(
+        f"""
+The Worldmap plot displays the average haplotype frequency over an interval of time (in years) at a country-level on a global map. As above, the colour intensity of each “bead” corresponds to the frequency, and beads are coloured by geographic distribution (see sidebar for details). Hover your mouse over the data to see details. 
+
+Adjust the slider below to choose your time interval of interest for calculating the proportion of samples containing the {ns_changes} haplotype: 
+        """
+    )
+    year = st.slider('', 1982, 2024, (2010, 2018))
     population_colours = cache_load_population_colours()
+    utility_mappers = _cache_load_utility_mappers()
+
+    gene_name_selected = utility_mappers["gene_ids_to_gene_names"][gene_id_selected]
 
     ### Data pre-processing
     # ideally, in the future, this part needs te be handled by data_formatter
@@ -211,9 +222,19 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
         fig.add_trace(trace, row=2, col=1)
 
     # Update layout
-    fig.update_layout(height=600, width=800,
-                      margin=dict(t=20, b=5, l=5, r=5)
-                      )
+    fig.update_layout(
+        title={
+            'text': f"Pf-HaploAtlas Worldmap plot: {gene_name_selected} ({ns_changes})",
+            'y':0.99,
+            'x':0.5,
+            'xanchor': 'center',
+            'yanchor': 'top',
+            'font': {
+                'size': 14,
+            }},
+        height=600, width=800,
+        margin=dict(t=40, b=5, l=5, r=5)
+    )
     fig.update_geos(projection_type="natural earth")
 
     st.plotly_chart(fig, config = {"displayModeBar": False})
