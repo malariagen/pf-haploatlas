@@ -8,21 +8,36 @@ def set_up_interface():
     """Main function called in main.py to set up basic page settings, introduction and sidebar"""
 
     st.set_page_config(
-        page_title = "Pf7 mutation discovery app",
+        page_title = "Pf-HaploAtlas",
         layout = "centered",
-        page_icon = Image.open("app/files/logo.png"),
         initial_sidebar_state = "expanded"
     )
     
-    st.title('Pf Haplo-Atlas')
-    st.subheader("Haplotype analysis for *Plasmodium falciparum* genes across time and space")
+    st.markdown(
+        """
+        <div style="text-align:center; font-size:4em; font-weight:bold;">
+            Pf-HaploAtlas
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
 
     _cache_load_pf7_metadata() # running it here to prevent it from running when new gene selected
     
     st.divider()
     
     placeholder = st.empty()
-    placeholder.markdown("### Search for a gene below to get started.")
+
+    placeholder.markdown(
+        """
+### Introduction
+The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 5,102 core genes by using data from 16,203 samples, from 33 countries, and spread between the years 1984 and 2018, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf7 whole genome sequencing data release](https://wellcomeopenresearch.org/articles/8-22/v1). This web app was primarily developed for use on a desktop browser. If you would like support for mobile, please request this feature in the feedback form in the sidebar! 
+
+#### Search for a gene below to get started.
+
+If you're new here, try clicking below and typing "AAT1"! Alternatively, choose from the key drug resistance genes we've placed at the top of the list (DHFR-TS, MDR1, CRT, PPPK-DHPS, Kelch13).
+        """
+    )
 
     _set_up_sidebar()
     
@@ -43,15 +58,20 @@ def file_selector(placeholder):
     if gene_id_extracted and "gene_id" not in st.session_state:
         st.session_state["gene_id"] = gene_id_extracted
     
+    priority_gene_ids = [
+        "PF3D7_0417200", "PF3D7_0523000", "PF3D7_0709000", "PF3D7_0810800", "PF3D7_1343700"
+    ]
+    priority_gene_names = [utility_mappers["gene_ids_to_gene_names"][gene_id] for gene_id in priority_gene_ids]
+    
     gene_id_selected = st.selectbox("",
-                                    ["--"] + [utility_mappers["gene_ids_to_gene_names"][gene_id]
+                                    ["--"] + priority_gene_names + ["--"] + [utility_mappers["gene_ids_to_gene_names"][gene_id]
                                               for gene_id in utility_mappers["gene_ids"] 
                                               if gene_id in utility_mappers["gene_ids_to_gene_names"].keys()],
                                     key="gene_id"
                                    )
     
-    if gene_id_selected == "--":
-        placeholder.markdown("### Search for a gene below to get started.")
+    if "--" in gene_id_selected:
+        # placeholder.markdown("### Search for a gene below to get started.")
         st.query_params.get_all('gene_id')
         st.stop()
     
@@ -84,38 +104,58 @@ def _show_images_with_urls(filepaths, urls, widths, heights):
 
 def _set_up_sidebar():    
     with st.sidebar:
-        st.title("**Further Information**")
-        
-        st.header("**Samples**")
-        st.markdown("""
-The Pf Haplo-Atlas uses 16,203 QC pass samples from the [Pf7 dataset.](https://wellcomeopenresearch.org/articles/8-22/v1)
-""")
-        
-        st.header("**Genes**")
-        st.markdown("""
-The Pf Haplo-Atlas uses 5,102 genes located within the core regions of the 3D7 v3 reference genome (available [here](ftp://ngs.sanger.ac.uk/production/malaria/Resource/34/Pfalciparum.genome.fasta)). All genes have a unique identifier, e.g., **PF3D7_1343700**, and in some cases a gene name, e.g., **MDR1**.
-""")
-        
-        st.header("**Subpopulations**")
-        st.markdown("""
-Countries are grouped into ten major sub-populations based on their geographic and genetic characteristics as defined in the [Pf7 paper](https://wellcomeopenresearch.org/articles/8-22/v1). These are colour-coded for easy interpretation. 
-                    """)
-        
-        st.header("**Plots**")
-        st.markdown("""
+        st.title("Additional info")
+        st.divider()
 
-The app generates three plots per gene:
+        st.markdown(
+             """
+## Overview of plots:
 
-**1. Haplotype UpSet plot** - for each haplotype, shows the mutation make-up (bottom), population proportions of its samples (middle), and total number of samples (top). Clicking on a haplotype will generate the two following plots.
+**1. Haplotype UpSet plot** - for each haplotype of your chosen gene, shows the number of samples with that haplotype, the geographic distribution of these samples, and the mutation make-up.
 
-**2. Abacus plot** - for each location, shows the proportion of samples with the selected haplotype in each year
+Clicking on a haplotype will generate the two following plots: 
+
+**2. Abacus plot** - for each location, shows the proportion of samples containing your chosen haplotype each year
                     
-**3. World map** - for each country, shows the proportion of samples with the selected haplotype over the selected time period
+**3. World map** - for each country, shows the proportion of samples with your chosen haplotype over your selected time period
+            """
+        )
 
-""")
+        st.divider()
+
+        st.markdown(
+        """
+## Geographic distribution
+The locations of where samples were collected are grouped into ten major "sub-populations" based on their geographic and genetic characteristics, as defined in the [Pf7 paper](https://wellcomeopenresearch.org/articles/8-22/v1). These are colour-coded as follows:
+                    
+<ul style="list-style-type:none;">
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#f781bf; border-radius:50%;"></span> OC-NG - Oceania, New Guinea</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#3182bd; border-radius:50%;"></span> AS-SE-E - South-East Asia (East)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#9ecae1; border-radius:50%;"></span> AS-SE-W - South-East Asia (West)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#984ea3; border-radius:50%;"></span> AS-S-FE - South Asia (Far East)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#dfc0eb; border-radius:50%;"></span> AS-S-E - South Asia (East)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#fecc5c; border-radius:50%;"></span> AF-E - Africa (East)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#bb8129; border-radius:50%;"></span> AF-NE - Africa (North-East)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#fd8d3c; border-radius:50%;"></span> AF-C - Africa (Central)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#e31a1c; border-radius:50%;"></span> AF-W - Africa (West)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#4daf4a; border-radius:50%;"></span> SA - South America</li>
+</ul>
+
+Below the geographic distribution subplot of the Haplotype UpSet plot, you will also see the names of lab strains which are also of that haplotype (e.g., 3D7, 7G8, Dd2, IT, GB4, HB3). 
+        """, unsafe_allow_html=True)
         
         st.divider()
         
+        st.markdown("""
+        ## Contact us
+        If you'd like to report a bug, request a feature, or give us feedback, check out the following!
+                    
+        - [our GitHub page](https://github.com/malariagen/pf-haploatlas/issues)
+        - [this Google Forms](https://forms.gle/mDwYr2cPL37dDzPs6)
+        """)
+
+        st.divider()
+
         _show_images_with_urls(
             ["app/files/logo_malariagen.png"],
             ["https://www.malariagen.net/"],
@@ -129,3 +169,13 @@ The app generates three plots per gene:
             [110, 70],
             [110, 70]
         )
+
+        st.divider()
+
+        st.markdown(
+            """
+<div style="text-align:center">
+    Copyright © 2021 - 2024 Genome Research Ltd.
+</div>
+            """
+        , unsafe_allow_html = True)

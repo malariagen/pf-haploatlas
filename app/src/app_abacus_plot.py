@@ -5,7 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from src.utils import cache_load_population_colours, generate_download_buttons
+from src.utils import cache_load_population_colours, generate_download_buttons, _cache_load_utility_mappers
 
 def _plotly_arrow(x0, x1, y):
     """One time function used to generate the arrow in the legend of the abacus plot"""
@@ -39,12 +39,18 @@ def _partial_frequency_marker_colour(freq: float) -> str:
 
     return marker_colour
 
+
 def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, gene_id_selected):
     """Main function called in main.py to generate and present the abacus plot"""
-
+    
     population_colours = cache_load_population_colours()
+    utility_mappers = _cache_load_utility_mappers()
 
-    df_samples_with_ns_changes = df_join.loc[df_join['QC pass']]
+    gene_name_selected = utility_mappers["gene_ids_to_gene_names"][gene_id_selected]
+
+    # Filter QC fail and missing samples  
+    df_samples_with_ns_changes = df_join[df_join['Exclusion reason'] == 'Analysis_set']
+    
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', ['Country']] = 'DRC'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "3D7 REF"
 
@@ -73,8 +79,14 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
 
     st.divider()
 
-    st.subheader(f"Viewing haplotype: {ns_changes}")
-    st.write("Click and drag to zoom. Double-click to reset.")
+    st.subheader(f'2. Abacus plot: {ns_changes}')
+    st.markdown(
+        """
+The Abacus plot shows how the haplotype frequency of your selected haplotype changes across locations and time (in years). The colour intensity of each “bead” on the Abacus plot corresponds to its observed frequency in each year and in each location. Haplotypes at fixation are marked with “100” to highlight 100% frequency, whilst “beads” with 0% haplotype frequency are crossed out. Hover your mouse over the data to see details. 
+
+Click and drag to zoom to focus on certain locations. Double-click to reset. 
+        """
+    )
 
     fig = make_subplots(rows = 2, cols = 4,
                         vertical_spacing = 0,
@@ -206,20 +218,30 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
 
     fig.add_annotation(_plotly_arrow(0.42, 0.57, legend_y+0.3))
 
-    fig.update_layout(height = 1300,
-                      xaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
-                      xaxis2 = dict(range = (0, 1), fixedrange=True, tickvals = []),
-                      xaxis3 = dict(fixedrange=True, tickangle=-60),
-                      xaxis4 = dict(fixedrange=True, tickangle=-60),
-                      xaxis5 = dict(fixedrange=True, tickangle=-60, tickvals = np.arange(2000, 2020).astype(int)),
+    fig.update_layout(
+        title={
+            'text': f"Pf-HaploAtlas Abacus plot: {gene_name_selected} ({ns_changes})",
+            'y':0.99,
+            'x':0.5,
+            'xanchor': 'center',
+            'yanchor': 'top',
+            'font': {
+                'size': 14,
+            }},
+        height = 1300,
+        xaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
+        xaxis2 = dict(range = (0, 1), fixedrange=True, tickvals = []),
+        xaxis3 = dict(fixedrange=True, tickangle=-60),
+        xaxis4 = dict(fixedrange=True, tickangle=-60),
+        xaxis5 = dict(fixedrange=True, tickangle=-60, tickvals = np.arange(2000, 2020).astype(int)),
 
-                      yaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
-                      yaxis2 = dict(tickvals = []),
-                      yaxis3 = dict(showticklabels = False, tickmode='linear'),
-                      yaxis4 = dict(showticklabels = False, tickmode='linear'),
-                      yaxis5 = dict(showticklabels = False, tickmode='linear'),
-                      margin=dict(t=5, b=55, l=0, r=0)
-                     )
+        yaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
+        yaxis2 = dict(tickvals = []),
+        yaxis3 = dict(showticklabels = False, tickmode='linear'),
+        yaxis4 = dict(showticklabels = False, tickmode='linear'),
+        yaxis5 = dict(showticklabels = False, tickmode='linear'),
+        margin=dict(t=50, b=55, l=0, r=0)
+    )
 
     st.plotly_chart(fig, config = {"displayModeBar": False})
 
