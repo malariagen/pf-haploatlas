@@ -17,6 +17,10 @@ The accompanying preprint manuscript for the Pf-HaploAtlas will be published soo
 
 
 
+https://github.com/malariagen/pf-haploatlas/assets/92995519/362b3a3a-f0b9-4f0b-bfc2-981c46d1e2a2
+
+
+
 
 
 
