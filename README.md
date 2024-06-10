@@ -1,73 +1,73 @@
-# Mutation Discovery App
+# Pf-HaploAtlas
+The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 5,102 core genes by using data from 16,203 samples, from 33 countries, and spread between the years 1984 and 2018, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. 
 
-A project to develop an interactive web app for eventual public use. The overall aim is to give Pf7(+) users the ability to look at genetic, spatial, and temporal trends for any Pf gene of interest in a quick and intuitive way. 
+Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf7 whole genome sequencing data release](https://wellcomeopenresearch.org/articles/8-22/v1), but will expand with each new MalariaGEN _Plasmodium_ data release. 
 
-## Guide to running app
+We encourage users to access and share the app using the following stable link to prevent outages in service: https://apps.malariagen.net/pf-haploatlas.
 
-Python 3.9.10
-
-cd to this directory
-
-pip install streamlit==1.25.0 and streamlit_plotly_events==0.0.6
-
-run `python3 -m streamlit run app/main.py` in command line
-
-if the app doesn't open by itself, copy the `Network URL` and paste it into your browser (should be something like http://10.160.20.64:8501)
-
-### What will the app do?
-
-We would like the app to be able to acheive the following, for any of the ~5000 genes in the Pf genome:
-
- - Show all discovered haplotypes for a selected gene
- - Generate a bar plot of sample counts per haplotype
- - Generate a stacked bar plot of major subpopulation proportions per haplotype
- - Generate an UpSet plot to detail the mutations within haplotypes
- - Have an area within the above plots which contains clickable features, which lead to:
-   - An abacus plot per haplotype, detailing the haplotype's frequency across administrative divisons and years
-
-### What features are key to the app?
-- It should run very quickly 
-- It will be interactive
-
-## Resources
-This app will be built off of code which exists from generating Figure 3A and Supplementary Figure 9 from the [Pf7 paper](https://wellcomeopenresearch.org/articles/8-22/v1)
-
-The current code for this is located [here](https://github.com/malariagen/PDNA_SP_markers/blob/9b73a05d2c573e66ea70b282adb7055a66e2022e/work/3_haplotype_plots/20221221_haplotype_plots.ipynb)
+The accompanying preprint manuscript for the Pf-HaploAtlas will be published soon.
 
 
-![A mock up of the app workflow](assets/mutapp.jpg)
 
 
-## Project Management
 
-We will use issues to structure the work, and management of issues can be dealt with at the [issue board](https://gitlab.com/malariagen/gsp/mutation-discovery-app/-/boards).
 
-Labels are used to classify issues:
 
-`status::doing` for things people are currently working on.
+# 5-minute demo of the online app
 
-`status::currnt_sprint` for things planned for the current work block
 
-`status::backlog` for things that will be tackled in the future
 
-If you want to work on an issue, assign it to yourself and move it to the status::doing board. This just signals
-other people you are actively working on that issue, and they should not try to tackle it. You can assign yourself an
-issue and leave it in the current-sprint/backlog boards to signal other people you'd like to work on those in the future
-(but other people may take it if required for a deadline).
 
-## Working in the Repo
 
-There is currently a folder `work` to contain code for this project. We can add new folders as required. 
 
-We envision that the work will require two steps:
-1. Precomputing data summaries for use by the app
-2. Building the app 
 
-### Branches and issues
 
-As with most other malariagen/gsp work, we will complete work within the scope of a single issue, and create a branch to work on each. Name the branch using the format `<issue_number>_<issue_name>`, for example: 01_sample_summary_table. Use common sense to compress very long issue names into something meaningful.
 
-Before closing an issue, please report your findings or a summary of the analysis results in a comment, it could also be a good idea to include links to any relevant notebook.
+# How to run the app locally
+This repository contains a Streamlit app. Follow the steps below to clone the repository and run the app locally.
 
-Please write meaningful commit messages (which issue number it addresses, etc.).
+### Prerequisites
+- Python 3.10
+- pip (Python package installer)
 
+### 1. Clone the Repository
+Open your terminal or command prompt and clone the repository using the following command:
+
+```
+git clone git@github.com:malariagen/pf-haploatlas.git
+cd pf-haploatlas
+```
+
+### 2. Create a virtual environment (optional but recommended)
+```
+python -m venv .venv
+```
+Then, activate the virtual environment:
+- On Windows: ```.venv\Scripts\activate```
+- On macOS/Linux: ```source .venv/bin/activate```
+
+### 3. Install dependencies
+```
+pip install -r requirements.txt
+```
+
+### 4. Run the app
+```
+python -m streamlit run app/main.py
+```
+The app should naturally open in your browser but if not, click on the ```Network URL``` that appears in the terminal. For further details, please refer to the [Streamlit documentation](https://streamlit.io/). 
+
+
+
+
+
+# Contributing
+We strongly you to submit features requests! Please open an issue [here](https://github.com/malariagen/pf-haploatlas/issues) where you will see a list of features suggested by our community, or fill out our [Google Forms](https://docs.google.com/forms/d/e/1FAIpQLSd2Bbr47PU85esj1_vA07EMmhySApjaRkVQSYK2yZ6o4Udd7w/viewform)!
+
+
+
+
+
+
+# License
+This project is licensed under the MIT License. See the LICENSE file for details.
