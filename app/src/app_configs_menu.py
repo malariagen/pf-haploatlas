@@ -68,6 +68,7 @@ def _config_download_data_section(gene_id_selected, df_haplotypes, df_join):
     def _encode_df(df):
         return df.to_csv().encode('utf-8')
     
+    st.markdown("Hover over the download buttons for more information on the data.")
 
     # Hacky quickfix to the dataframe exporting
     st.download_button("Download population-level summary",
