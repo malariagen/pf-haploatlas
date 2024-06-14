@@ -79,7 +79,7 @@ The Worldmap plot displays the average haplotype frequency over an interval of t
 Adjust the slider below to choose your time interval of interest for calculating the proportion of samples containing the {ns_changes} haplotype: 
         """
     )
-    year = st.slider('', 1982, 2024, (2010, 2018))
+    year = st.slider(' ', 1982, 2024, (2010, 2018))
     population_colours = cache_load_population_colours()
     utility_mappers = _cache_load_utility_mappers()
 
@@ -94,12 +94,11 @@ Adjust the slider below to choose your time interval of interest for calculating
     # Filter QC fail and missing samples  
     df_join= df_join[df_join['Exclusion reason'] == 'Analysis_set']
 
-    df_samples_with_ns_changes = df_join
+    df_samples_with_ns_changes = df_join.copy()
     # worldmap map requires iso_alpha values
     plotly_worldmap_df = px.data.gapminder().query("year==2007")
     iso_country_dict = dict(zip(plotly_worldmap_df['country'], plotly_worldmap_df['iso_alpha']))
-    df_samples_with_ns_changes['iso_alpha'] = df_samples_with_ns_changes['Country'].map(iso_country_dict)
-    df_samples_with_ns_changes['iso_alpha'] = df_samples_with_ns_changes['Country'].map(iso_country_dict)
+    df_samples_with_ns_changes.loc[:,'iso_alpha'] = df_samples_with_ns_changes['Country'].map(iso_country_dict)
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Papua New Guinea', 'iso_alpha'] = 'PNG'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Laos', 'iso_alpha'] = 'LAO'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', 'iso_alpha'] = 'COD'
@@ -117,7 +116,7 @@ Adjust the slider below to choose your time interval of interest for calculating
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Yemen', 'iso_alpha'] = 'YEM'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Suriname', 'iso_alpha'] = 'SUR'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Cape Verde', 'iso_alpha'] = 'CPV'
-    df_samples_with_ns_changes['iso_alpha'] = df_samples_with_ns_changes['iso_alpha'].astype(object)
+    df_samples_with_ns_changes.loc[:,'iso_alpha'] = df_samples_with_ns_changes['iso_alpha'].astype(object)
 
     # Fix for population of vietnam
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Vietnam", ['Population']] = 'AS-SE-E'

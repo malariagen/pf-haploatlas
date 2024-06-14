@@ -65,11 +65,11 @@ def file_selector(placeholder):
     ]
     priority_gene_names = [utility_mappers["gene_ids_to_gene_names"][gene_id] for gene_id in priority_gene_ids]
     
-    gene_id_selected = st.selectbox("",
+    gene_id_selected = st.selectbox(" ",
                                     ["--"] + priority_gene_names + ["--"] + [utility_mappers["gene_ids_to_gene_names"][gene_id]
                                               for gene_id in utility_mappers["gene_ids"] 
                                               if gene_id in utility_mappers["gene_ids_to_gene_names"].keys()],
-                                    key="gene_id"
+                                    key="gene_id", label_visibility='collapsed'
                                    )
     
     if "--" in gene_id_selected:
@@ -148,6 +148,15 @@ Below the geographic distribution subplot of the Haplotype UpSet plot, you will 
         
         st.divider()
         
+        st.markdown("""
+        ## How to cite?
+        When publishing with the data and/or plots presented here, please cite this resource.
+                    
+        - https://apps.malariagen.net/pf-haploatlas
+        """)
+
+        st.divider()
+
         st.markdown("""
         ## Contact us
         If you'd like to report a bug, request a feature, or give us feedback, check out the following!
