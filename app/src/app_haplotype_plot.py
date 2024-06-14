@@ -24,11 +24,13 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     df_haplotypes['cum_proportion'] = df_haplotypes['Total'].cumsum() / total_samples 
     df_haplotypes_set = df_haplotypes.loc[df_haplotypes['Total'] >= min_samples] 
     df_haplotypes_set.loc[df_haplotypes_set['ns_changes'] == '', 'ns_changes'] = '3D7 REF'
-
-    if len(df_haplotypes_set) == 0:
+    different_haplotypes= len(df_haplotypes_set)
+    if different_haplotypes == 0:
         st.warning("No haplotype data found.")
         st.stop()
-
+    elif different_haplotypes >100:
+        st.warning(f"{different_haplotypes} different haplotypes found, which is too many to show here. You can download the data or increase the minimum sample size from 'Click to see more about the data'.")
+        st.stop()
     mutations = pd.Series(np.unique(np.concatenate(df_haplotypes_set['ns_changes_list'].values)))
     mutations = mutations.loc[mutations != '']
     mutations_np_ref = mutations.apply(lambda x: x[1:])
@@ -82,7 +84,9 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             hovertemplate='<b>%{customdata}:</b> %{y:0.1f}%<extra></extra>'
         ))
 
-
+    annotation_font_size = abs(10 - different_haplotypes // 7)
+    # Make sure the font size is within [1, 10]
+    annotation_font_size = max(1, min(10, annotation_font_size))
     fig.update_yaxes(range=[0, 100], row=2, col=1)
     # Add ref strains as text annotations 
     for i, sample_name in enumerate(df_haplotypes_set['sample_names'].values):
@@ -94,7 +98,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             showarrow=False,
             xanchor='center',
             yanchor='top',  # Anchor to the bottom of the text
-            font=dict(size=abs(10 - (len(df_haplotypes_set['ns_changes'].unique()) // 7))),  # Set the font size
+            font=dict(size=annotation_font_size),  # Set the font size
             row=2,  # Specify the row number
             col=1,  # Specify the column number
         )

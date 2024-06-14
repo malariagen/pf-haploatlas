@@ -49,12 +49,12 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
     gene_name_selected = utility_mappers["gene_ids_to_gene_names"][gene_id_selected]
 
     # Filter QC fail and missing samples  
-    df_samples_with_ns_changes = df_join[df_join['Exclusion reason'] == 'Analysis_set']
+    df_samples_with_ns_changes = df_join[df_join['Exclusion reason'] == 'Analysis_set'].copy()
     
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', ['Country']] = 'DRC'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "3D7 REF"
 
-    df_samples_with_ns_changes['ns_changes_homozygous'] = ( df_samples_with_ns_changes['ns_changes'] == df_samples_with_ns_changes['ns_changes'].str.upper() )
+    df_samples_with_ns_changes.loc[:,'ns_changes_homozygous'] = ( df_samples_with_ns_changes['ns_changes'] == df_samples_with_ns_changes['ns_changes'].str.upper() )
 
     aggregated_locations = df_samples_with_ns_changes.groupby(['Population', 'Country', 'Admin level 1']).apply(lambda x: len(x) >= min_samples)
     locations = aggregated_locations.index[aggregated_locations.values].values
