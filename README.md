@@ -71,6 +71,12 @@ We strongly encourage you to submit feature requests! Please open an issue [here
 
 
 
+# How to cite
+When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite the following sources while the app's preprint and journal manuscript are still in preparation: 
+
+- https://apps.malariagen.net/pf-haploatlas
+
+
 
 
 # License
