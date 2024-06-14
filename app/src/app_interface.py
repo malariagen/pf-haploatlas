@@ -149,10 +149,12 @@ Below the geographic distribution subplot of the Haplotype UpSet plot, you will 
         st.divider()
         
         st.markdown("""
-        ## How to cite?
-        When publishing with the data and/or plots presented here, please cite this resource.
+        ## How to cite
+        When publishing work using the data and/or plots from the Pf-HaploAtlas, please cite the following: 
                     
         - https://apps.malariagen.net/pf-haploatlas
+
+        The preprint and journal manuscript are still in preparation. 
         """)
 
         st.divider()
