@@ -1,9 +1,17 @@
 # Outputting .pkl files with reduced size (omitting df_clonal)
-# Command for submitting array job - enter this on the command line
+# Code will output 1st isoforms for all core genes
 # 5740 genes in the gff file
+# 5102 core genes 
+
+# Command for submitting array job - enter this on the command line:
+"""
+For farm5 / gen3:
+bsub -J "gene_sums[1-5102]%500" -o output.%J%I -e error.%J%I -M6000 -R "select[mem>6000] rusage[mem=6000] span[hosts=1]" -G team342 '/software/isg/languages/Python-3.9.10/bin/python3 generate_gene_summary.py ${LSB_JOBINDEX}'
+"""
 
 """
-bsub -J "gene_sums[1-5102]%500" -o output.%J%I -e error.%J%I -M6000 -R "select[mem>6000] rusage[mem=6000] span[hosts=1]" -G team342 '/software/isg/languages/Python-3.9.10/bin/python3 generate_gene_summary.py ${LSB_JOBINDEX}'
+For farm22:
+bsub -J "gene_sums[1-5102]%500" -o output.%J%I -e error.%J%I -M6000 -R "select[mem>6000] rusage[mem=6000] span[hosts=1]" -G team342 'python3 generate_gene_summary.py ${LSB_JOBINDEX}'
 """
 
 # Imports
@@ -21,6 +29,7 @@ import lzma
 import json
 import time
 from filelock import FileLock
+from datetime import datetime
 
 # Array job info
 LSB_JOBINDEX = int(sys.argv[1]) - 1
@@ -29,8 +38,14 @@ LSB_JOBINDEX = int(sys.argv[1]) - 1
 gff_fn = '/lustre/scratch124/gsu/legacy/pfalciparum/resources/snpEff/data/Pfalciparum_GeneDB_Feb2020/Pfalciparum_replace_Pf3D7_MIT_v3_with_Pf_M76611.gff'
 df_gff = allel.gff3_to_dataframe(gff_fn, attributes=['ID', 'Name'])
 
+# Get the file path to the app/files directory from /backend
+# Enables any user to execute this script from /backend
+backend_dir = os.getcwd()
+base_dir = os.path.abspath(os.path.join(backend_dir, '..', '..'))
+appfiles_dir = os.path.join(base_dir, 'app', 'files')
+
 # Read IDs in json as into a list
-Pf3D7_core_genes_list = pd.read_json('/nfs/users/nfs_e/eu1/mutation-discovery-app/app/files/core_genes.json', orient='index').index.to_list()
+Pf3D7_core_genes_list = pd.read_json(f'{appfiles_dir}/core_genes.json', orient='index').index.to_list()
 
 # Array job setup
 gene_id = Pf3D7_core_genes_list[LSB_JOBINDEX]
@@ -45,6 +60,12 @@ if LSB_JOBINDEX==1:
     current_time = time.strftime("%Y-%m-%d %H:%M:%S")
     gene_logs['run_time']= current_time
 
+# Set up a directory to receive .pkl.xz files
+pkl_dir = 'out_pkls'
+# Create the directory if it doesn't exist
+if not os.path.exists(pkl_dir):
+    os.makedirs(pkl_dir)
+    
 # Read in data files
 vcf_file_format = "/lustre/scratch124/gsu/legacy/pipelines/builds/pf_70_build/pf_70_internal_release/vcf/%s.pf7.vcf.gz"
 samples_fn = '/lustre/scratch126/gsu/team112/pf7/ftp_20221021/Pf7_samples.txt'
@@ -52,8 +73,9 @@ ref_genome_fn = '/lustre/scratch124/gsu/legacy/pfalciparum/resources/Pfalciparum
 gff_fn = '/lustre/scratch124/gsu/legacy/pfalciparum/resources/snpEff/data/Pfalciparum_GeneDB_Feb2020/Pfalciparum_replace_Pf3D7_MIT_v3_with_Pf_M76611.gff'
 
 # Function 1 - determine coding sequence
+# Handle multiple isoforms by always returning the 1st, using the parent field
 def determine_cds(gene_id='PF3D7_0709000', gff_fn=gff_fn):
-    df_gff = allel.gff3_to_dataframe(gff_fn, attributes=['ID', 'Name'])
+    df_gff = allel.gff3_to_dataframe(gff_fn, attributes=['ID', 'Name', 'Parent'])
     gene_name = df_gff.loc[df_gff['ID'] == gene_id, 'Name'].values[0]
     if (gene_name == '') or (gene_name == '.'):
         gene_name=gene_id
@@ -61,7 +83,9 @@ def determine_cds(gene_id='PF3D7_0709000', gff_fn=gff_fn):
     strand = df_gff.loc[df_gff['ID'] == gene_id, 'strand'].values[0]
     df_cds = df_gff.loc[
         ( df_gff['ID'].str.startswith(gene_id) )
-        & ( df_gff['type'] == 'CDS' )
+        & ( df_gff['type'] == 'CDS' ) 
+        & ( df_gff['Parent'].str.endswith('.1'))
+        
     ]
     return(
         {
@@ -571,9 +595,9 @@ def prepare_plot_data(
         gene_name = None
         
     # Save pickle file
-    prep_plot_pickle_fn = f'{gene_id}.pkl.xz'
+    prep_plot_pickle_fn = os.path.join(pkl_dir, f'{gene_id}.pkl.xz')
     with lzma.open(prep_plot_pickle_fn, 'wb') as file:
-        plot_data = (df_haplotypes, df_join, background_ns_changes, gene_name) # The actual, reduced output to .pkl file
+        plot_data = (df_haplotypes, df_join, background_ns_changes, gene_name)  # The actual, reduced output to .pkl file
         pickle.dump(plot_data, file)
     
     if verbose:
@@ -598,8 +622,8 @@ prepare_plot_data(gene_id=gene_id)
 # Write gene_log dictionary to a JSON file
 # Try to read existing logs from the JSON file
 
-json_file_path = '/nfs/users/nfs_e/eu1/mutation-discovery-app/work/backend/gene_logs.json'
-        
+json_file_path = f'{backend_dir}/gene_logs.json'
+
 lock_path = json_file_path + ".lock"
 lock = FileLock(lock_path)
 
