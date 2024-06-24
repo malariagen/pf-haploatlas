@@ -61,7 +61,7 @@ Now new pkl.xzs have been generated, we want to remove the older set from the re
 ## Step 4: Point Pf-HaploAtlas frontend to new .pkl directory
 - Navigate to `pf-haploatlas/app/src/`
 - Open `utils.py`
-- Update the `base_path` on Line 5 with the new directory name which contains the new .pkl.xz files: e.g. `base_path = "app/files/2024-05-29_pkl_files"``
+- Update the `base_path` on Line 5 with the new directory name which contains the new .pkl.xz files: e.g. `base_path = "app/files/2024-05-29_pkl_files"`
 
 ## Step 5: Add, commit, push changes to repo
 Make a PR to submit these changes for review. 
