@@ -73,7 +73,6 @@ script_file="generate_gene_summary.py"
 # Destination folder
 destination_folder="script_archive"
 
-
 # Destination path with the new filename
 destination_path="$destination_folder/${today_date}_${script_file%.py}.py"
 
@@ -84,16 +83,47 @@ echo "Script copied to: $destination_path"
 
 #### MOVE PKL FILES
 
+# # Source folder where your pkl.xz files are located
+# source_folder="."
+
+# # Destination folder for pkl files
+# destination_folder="pkl_files"
+
+# # Create the destination folder if it doesn't exist
+# mkdir -p "$destination_folder"
+
+# # Move all files ending with "pkl.xz" to the destination folder
+# mv "$source_folder"/*.pkl.xz "$destination_folder/"
+
+# echo "Files moved to: $destination_folder"
+
 # Source folder where your pkl.xz files are located
-source_folder="."
+source_folder="out_pkls"
 
 # Destination folder for pkl files
-destination_folder="pkl_files"
+destination_folder=../../app/files/"${today_date}_pkl_files"
 
 # Create the destination folder if it doesn't exist
 mkdir -p "$destination_folder"
 
 # Move all files ending with "pkl.xz" to the destination folder
-mv "$source_folder"/*.pkl.xz "$destination_folder/"
+# First, copy the files
+scp "$source_folder"/*.pkl.xz "$destination_folder/"
 
-echo "Files moved to: $destination_folder"
+# Check if the copy was successful
+if [ $? -eq 0 ]; then
+    # Count the number of files in the destination folder
+    file_count=$(ls -1 "$destination_folder"/*.pkl.xz 2>/dev/null | wc -l)
+
+    # Check if the file count is 5102
+    if [ "$file_count" -eq 5102 ]; then
+        # If there are exactly 5102 files, delete the files from the source folder
+        rm "$source_folder"/*.pkl.xz
+        rmdir ${source_fol}
+        echo "Files moved to: $destination_folder and deleted from source."
+    else
+        echo "File copy succeeded, but the destination folder does not contain exactly 5102 files. No files were deleted from the source."
+    fi
+else
+    echo "File copy failed. No files were deleted from the source."
+fi
