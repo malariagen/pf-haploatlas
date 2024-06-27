@@ -111,3 +111,31 @@ def haplotype_selection_toast(ns_changes):
     elif st.session_state["ns_changes"] != ns_changes:
         st.toast(toast_message, icon = "⬇️")
         st.session_state["ns_changes"] = ns_changes
+
+def _st_justify_markdown_html(text: str, location = None):
+
+    justify_css = """
+<style>
+    .justify-text {
+        text-align: justify;
+    }
+</style>
+"""
+
+    text = f"""<div class="justify-text">
+    {text}
+</div>
+"""
+
+    if location == None:
+        st.markdown(
+            justify_css + text, 
+            unsafe_allow_html = True
+        )
+    
+    else:
+        location.markdown(
+            justify_css + text, 
+            unsafe_allow_html = True
+        )
+    return
