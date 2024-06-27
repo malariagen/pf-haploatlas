@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from streamlit_plotly_events import plotly_events
@@ -114,7 +113,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     marker_size = 5 + np.sqrt(len(df_haplotypes_set))
 
     i = 0
-    if ( not '' in background_ns_changes ) and background_ns_changes in df_haplotypes_set['ns_changes'].values:
+    if ( '' not in background_ns_changes ) and background_ns_changes in df_haplotypes_set['ns_changes'].values:
         background_mutation_indices = df_mutations_set.loc[
             df_haplotypes_set.loc[
                 df_haplotypes_set['ns_changes'] == background_ns_changes,
@@ -173,7 +172,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     fig.update_layout(
         title={
             'text': f"<b>Pf-HaploAtlas Haplotype UpSet plot: {gene_name_selected}</b>",
-            'y':0.99,
+            'y':0.97,
             'x':0.5,
             'xanchor': 'center',
             'yanchor': 'top',
@@ -182,7 +181,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
 
             }},
         hovermode = 'closest', legend=dict(y=0.76),
-        margin=dict(t=30, b=70, l=80, r=5)
+        margin=dict(t=80, b=70, l=80, r=5)
     )
 
     # ============================================================================================================================================================
