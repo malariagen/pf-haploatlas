@@ -115,19 +115,26 @@ def haplotype_selection_toast(ns_changes):
 def _st_justify_markdown_html(text: str, location = None):
 
     justify_css = """
-<style>
-    .justify-text {
-        text-align: justify;
-    }
-</style>
-"""
+    <style>
+        .justify-text {
+            text-align: justify;
+        }
+        .justify-text code {
+            white-space: pre-wrap !important;
+            word-break: break-word;
+            font-size: 11px; /* Adjust this value to your desired font size */
+        }
+    </style>
+    """
 
-    text = f"""<div class="justify-text">
-    {text}
+
+    text = f"""
+<div class="justify-text">
+{text}
 </div>
 """
 
-    if location == None:
+    if location is None:
         st.markdown(
             justify_css + text, 
             unsafe_allow_html = True

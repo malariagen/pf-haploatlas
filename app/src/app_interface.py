@@ -1,5 +1,4 @@
 import streamlit as st
-from PIL import Image
 from base64 import b64encode
 
 from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata, _st_justify_markdown_html
@@ -33,9 +32,9 @@ def set_up_interface():
     _st_justify_markdown_html("""
 ### Introduction
 
-The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 5,102 core genes by using data from 16,203 samples, from 33 countries, and spread between the years 1984 and 2018, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. Please check out our [short 5-minute tutorial video](https://github.com/malariagen/pf-haploatlas) to learn how to use the app. This web app was primarily developed for use on a desktop browser. If you would like support for mobile, please request this feature in the feedback form in the sidebar! We also encourage users to access and share the app using the following stable link to prevent outages in service: https://apps.malariagen.net/pf-haploatlas.
+The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 5,102 core genes by using data from 16,203 samples, from 33 countries, and spread between the years 1984 and 2018, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. Please check out our tutorial video in the sidebar to learn how to use the app. This web app was primarily developed for use on a desktop browser. If you would like support for mobile, please request this feature in the feedback form in the sidebar! We also encourage users to access and share the app using the following stable link to prevent outages in service: https://apps.malariagen.net/pf-haploatlas.
 
-Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf7 whole genome sequencing data release](https://wellcomeopenresearch.org/articles/8-22/v1), but will expand with each new MalariaGEN _Plasmodium_ data release. The Pf-HaploAtlas manuscript will be published soon.
+The Pf-HaploAtlas journal manuscript can be found in the sidebar. Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf7 whole genome sequencing data release](https://wellcomeopenresearch.org/articles/8-22/v1), and will expand with each new MalariaGEN _Plasmodium_ data release. 
 
 #### Search for a gene below to get started.
 
@@ -120,7 +119,7 @@ def _set_up_sidebar():
                 
         st.title("How to use")
 
-        st.video("https://youtu.be/J0w0t4Qn6LY")
+        st.video("https://www.youtube.com/watch?v=XLGL1xqZEQk")
         st.divider()
 
         _st_justify_markdown_html("""
@@ -161,15 +160,26 @@ The locations of where samples were collected are grouped into ten major "sub-po
         _st_justify_markdown_html("""
 On the x-axis of the geographic distribution subplot of the Haplotype UpSet plot, you will also see the names of lab strains which are also of that haplotype (e.g., 3D7, 7G8, Dd2, IT, GB4, HB3). 
 """)
-        
         st.divider()
-        
+
         _st_justify_markdown_html("""
 ## How to cite
 
 When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite the following:
 
-Lee C, Unlu E, White NFD et al. Pf-HaploAtlas: an interactive web app for spatiotemporal analysis of _P. falciparum_ genes. Placeholder 2024;1425.
+```
+Lee C, Unlu E, White NFD et al. Pf-HaploAtlas: an interactive web app for spatiotemporal analysis of P. falciparum genes. BioRxiv 123456 [Preprint]. January 01, 2024 [cited 2030 Jan 01]. Available from: https://doi.org/10.1234/123456.
+```
+
+""")
+
+        st.divider()
+
+        _st_justify_markdown_html("""
+## Acknowledgements
+
+Pf-HaploAtlas currently uses data generated using the [Pf7 data release](https://wellcomeopenresearch.org/articles/8-22/v1) from the MalariaGEN _Plasmodium falciparum_ Community Project, which was made possible by clinical parasite samples contributed by partner studies, whose investigators are represented in the data release's author list.
+
 """)
 
         st.divider()
