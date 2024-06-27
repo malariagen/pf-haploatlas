@@ -1,6 +1,6 @@
 streamlit==1.31.0
 streamlit-plotly-events==0.0.6
-numpy==1.21.4
+numpy==1.22.0
 plotly==5.5.0
 pandas==1.5.3
 openpyxl==3.1.2
