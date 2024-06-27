@@ -6,7 +6,7 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import collections
 
-from src.utils import cache_load_population_colours, generate_download_buttons, _cache_load_utility_mappers
+from src.utils import cache_load_population_colours, generate_download_buttons, _cache_load_utility_mappers, _st_justify_markdown_html
 
 def _locations_agg(x, ns_changes):
     """Aggregation function used to reformat dataframe in preparation for worldmap plot"""
@@ -72,13 +72,11 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
     st.divider()
 
     st.subheader(f'3. Worldmap plot: {ns_changes}')
-    st.markdown(
-        f"""
+    _st_justify_markdown_html(f"""
 The Worldmap plot displays the average haplotype frequency over an interval of time (in years) at a country-level on a global map. As above, the colour intensity of each “bead” corresponds to the frequency, and beads are coloured by geographic distribution (see sidebar for details). Hover your mouse over the data to see details. 
 
 Adjust the slider below to choose your time interval of interest for calculating the proportion of samples containing the {ns_changes} haplotype: 
-        """
-    )
+""")
     year = st.slider(' ', 1982, 2024, (2010, 2018))
     population_colours = cache_load_population_colours()
     utility_mappers = _cache_load_utility_mappers()
