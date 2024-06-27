@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from streamlit_plotly_events import plotly_events
 
-from src.utils import cache_load_population_colours, _cache_load_utility_mappers, generate_download_buttons
+from src.utils import cache_load_population_colours, _cache_load_utility_mappers, generate_download_buttons, _st_justify_markdown_html
 
 def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_changes, min_samples, sample_count_mode):
     """Main function called in main.py to generate and present haplotype plot"""
@@ -188,18 +188,16 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     # ============================================================================================================================================================
     # ============================================================================================================================================================
 
-    st.markdown(
-        """
+    _st_justify_markdown_html("""
 The Haplotype UpSet plot provides an overview of the haplotypes for the gene selected. Each haplotype has three pieces of information displayed:
 - "Number of samples" - the number of samples containing that haplotype
 - "Geographic distribution (%)" - the geographic distribution of that haplotype (see sidebar for details)
 - "Mutations" - the individual amino acid mutations that make up the haplotype
 
-i.e., each stack of 3 subplots corresponds to one haplotype, and these are displayed in order of decreasing prevalence from left to right. Hover your mouse over the data to see details. 
+Each stack of 3 subplots corresponds to one haplotype, and these are displayed in order of decreasing prevalence from left to right. Hover your mouse over the data to see details. 
 
 You can <b><u>investigate a specific haplotype by clicking on any of the data elements of the haplotype</b></u>, e.g., clicking on the bar chart. 
-        """,
-        unsafe_allow_html = True
+        """
     )
 
     selection_dict = plotly_events(fig, override_height = total_plot_height)

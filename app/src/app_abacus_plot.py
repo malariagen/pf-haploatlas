@@ -5,7 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-from src.utils import cache_load_population_colours, generate_download_buttons, _cache_load_utility_mappers
+from src.utils import cache_load_population_colours, generate_download_buttons, _cache_load_utility_mappers, _st_justify_markdown_html
 
 def _plotly_arrow(x0, x1, y):
     """One time function used to generate the arrow in the legend of the abacus plot"""
@@ -80,13 +80,11 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
     st.divider()
 
     st.subheader(f'2. Abacus plot: {ns_changes}')
-    st.markdown(
-        """
+    _st_justify_markdown_html("""
 The Abacus plot shows how the haplotype frequency of your selected haplotype changes across locations and time (in years). The colour intensity of each “bead” on the Abacus plot corresponds to its observed frequency in each year and in each location. Haplotypes at fixation are marked with “100” to highlight 100% frequency, whilst “beads” with 0% haplotype frequency are crossed out. Hover your mouse over the data to see details. 
 
 Click and drag to zoom to focus on certain locations. Double-click to reset. 
-        """
-    )
+""")
 
     fig = make_subplots(rows = 2, cols = 4,
                         vertical_spacing = 0,

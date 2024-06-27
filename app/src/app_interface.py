@@ -2,7 +2,9 @@ import streamlit as st
 from PIL import Image
 from base64 import b64encode
 
-from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata
+from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata, _st_justify_markdown_html
+
+
 
 def set_up_interface():
     """Main function called in main.py to set up basic page settings, introduction and sidebar"""
@@ -28,9 +30,9 @@ def set_up_interface():
     
     placeholder = st.empty()
 
-    placeholder.markdown(
-        """
+    _st_justify_markdown_html("""
 ### Introduction
+
 The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 5,102 core genes by using data from 16,203 samples, from 33 countries, and spread between the years 1984 and 2018, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. Please check out our [short 5-minute tutorial video](https://github.com/malariagen/pf-haploatlas) to learn how to use the app. This web app was primarily developed for use on a desktop browser. If you would like support for mobile, please request this feature in the feedback form in the sidebar! We also encourage users to access and share the app using the following stable link to prevent outages in service: https://apps.malariagen.net/pf-haploatlas.
 
 Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf7 whole genome sequencing data release](https://wellcomeopenresearch.org/articles/8-22/v1), but will expand with each new MalariaGEN _Plasmodium_ data release. The Pf-HaploAtlas manuscript will be published soon.
@@ -38,8 +40,8 @@ Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf7 whole geno
 #### Search for a gene below to get started.
 
 If you're new here, try clicking below and typing "AAT1"! Alternatively, choose from the key drug resistance genes we've placed at the top of the list (DHFR-TS, MDR1, CRT, PPPK-DHPS, Kelch13).
-        """
-    )
+
+""", location = placeholder)
 
     _set_up_sidebar()
     
@@ -104,13 +106,24 @@ def _show_images_with_urls(filepaths, urls, widths, heights):
     images_html += "</div>"
     st.markdown(images_html, unsafe_allow_html=True)
 
-def _set_up_sidebar():    
+def _set_up_sidebar():
+    # This fixes the width of the sidebar to a specified number of pixels
+    st.markdown("""
+<style>
+    section[data-testid="stSidebar"] {
+        width: 350px !important;
+    }
+</style>
+    """, unsafe_allow_html=True)
+
     with st.sidebar:
-        st.title("Additional info")
+                
+        st.title("How to use")
+
+        st.video("https://youtu.be/J0w0t4Qn6LY")
         st.divider()
 
-        st.markdown(
-             """
+        _st_justify_markdown_html("""
 ## Overview of plots:
 
 **1. Haplotype UpSet plot** - for each haplotype of your chosen gene, shows the number of samples with that haplotype, the geographic distribution of these samples, and the mutation make-up.
@@ -118,18 +131,19 @@ def _set_up_sidebar():
 Clicking on a haplotype will generate the two following plots: 
 
 **2. Abacus plot** - for each location, shows the proportion of samples containing your chosen haplotype each year
-                    
+
 **3. World map** - for each country, shows the proportion of samples with your chosen haplotype over your selected time period
-            """
-        )
+""")
 
         st.divider()
 
-        st.markdown(
-        """
+        _st_justify_markdown_html("""
 ## Geographic distribution
-The locations of where samples were collected are grouped into ten major "sub-populations" based on their geographic and genetic characteristics, as defined in the [Pf7 paper](https://wellcomeopenresearch.org/articles/8-22/v1). These are colour-coded as follows:
-                    
+
+The locations of where samples were collected are grouped into ten major "sub-populations" based on their geographic and genetic characteristics, as defined in the <a href="https://wellcomeopenresearch.org/articles/8-22/v1" target="_blank">Pf7 paper</a>. These are colour-coded as follows:
+""")
+
+        st.markdown("""
 <ul style="list-style-type:none;">
     <li><span style="display:inline-block; width:10px; height:10px; background-color:#f781bf; border-radius:50%;"></span> OC-NG - Oceania, New Guinea</li>
     <li><span style="display:inline-block; width:10px; height:10px; background-color:#3182bd; border-radius:50%;"></span> AS-SE-E - South-East Asia (East)</li>
@@ -142,29 +156,31 @@ The locations of where samples were collected are grouped into ten major "sub-po
     <li><span style="display:inline-block; width:10px; height:10px; background-color:#e31a1c; border-radius:50%;"></span> AF-W - Africa (West)</li>
     <li><span style="display:inline-block; width:10px; height:10px; background-color:#4daf4a; border-radius:50%;"></span> SA - South America</li>
 </ul>
+""", unsafe_allow_html=True)
 
-Below the geographic distribution subplot of the Haplotype UpSet plot, you will also see the names of lab strains which are also of that haplotype (e.g., 3D7, 7G8, Dd2, IT, GB4, HB3). 
-        """, unsafe_allow_html=True)
+        _st_justify_markdown_html("""
+On the x-axis of the geographic distribution subplot of the Haplotype UpSet plot, you will also see the names of lab strains which are also of that haplotype (e.g., 3D7, 7G8, Dd2, IT, GB4, HB3). 
+""")
         
         st.divider()
         
-        st.markdown("""
-        ## How to cite
-        When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite the following sources while the app's preprint and journal manuscript are still in preparation: 
-                    
-        - https://apps.malariagen.net/pf-haploatlas
+        _st_justify_markdown_html("""
+## How to cite
 
-        """)
+When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite the following:
+
+Lee C, Unlu E, White NFD et al. Pf-HaploAtlas: an interactive web app for spatiotemporal analysis of _P. falciparum_ genes. Placeholder 2024;1425.
+""")
 
         st.divider()
 
-        st.markdown("""
-        ## Contact us
-        If you'd like to report a bug, request a feature, or give us feedback, check out the following!
-                    
-        - [our GitHub page](https://github.com/malariagen/pf-haploatlas/issues)
-        - [this Google Forms](https://forms.gle/mDwYr2cPL37dDzPs6)
-        """)
+        _st_justify_markdown_html("""
+## Contact us
+If you'd like to report a bug, request a feature, or give us feedback, check out the following!
+
+- [our GitHub page](https://github.com/malariagen/pf-haploatlas/issues)
+- [this Google Forms](https://forms.gle/mDwYr2cPL37dDzPs6)
+""")
 
         st.divider()
 
