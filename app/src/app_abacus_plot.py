@@ -234,10 +234,10 @@ Click and drag to zoom to focus on certain locations. Double-click to reset.
         xaxis5 = dict(fixedrange=True, tickangle=-60, tickvals = np.arange(2000, 2020).astype(int)),
 
         yaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
-        yaxis2 = dict(tickvals = []),
-        yaxis3 = dict(showticklabels = False, tickmode='linear'),
-        yaxis4 = dict(showticklabels = False, tickmode='linear'),
-        yaxis5 = dict(showticklabels = False, tickmode='linear'),
+        yaxis2 = dict(fixedrange=True, tickvals = []),
+        yaxis3 = dict(fixedrange=True, showticklabels = False, tickmode='linear'),
+        yaxis4 = dict(fixedrange=True, showticklabels = False, tickmode='linear'),
+        yaxis5 = dict(fixedrange=True, showticklabels = False, tickmode='linear'),
         margin=dict(t=50, b=55, l=0, r=0)
     )
 
