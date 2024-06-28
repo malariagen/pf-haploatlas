@@ -118,8 +118,9 @@ Adjust the slider below to choose your time interval of interest for calculating
 
     # Fix for population of vietnam
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Vietnam", ['Population']] = 'AS-SE-E'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "India", ['Population']] = 'AF-E'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Kenya", ['Population']] = 'AS-S-E'
+    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "India", ['Population']] = 'AS-S-E'
+    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Kenya", ['Population']] = 'AF-E'
+    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Thailand", ['Population']] = 'AS-SE-W'
 
     # deal with encoding of 'wildtype' in literature dataset
     if 'wildtype' in df_samples_with_ns_changes['ns_changes'].values:
