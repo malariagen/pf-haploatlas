@@ -1,12 +1,11 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from streamlit_plotly_events import plotly_events
 
-from src.utils import cache_load_population_colours, _cache_load_utility_mappers, generate_download_buttons
+from src.utils import cache_load_population_colours, _cache_load_utility_mappers, generate_download_buttons, _st_justify_markdown_html
 
 def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_changes, min_samples, sample_count_mode):
     """Main function called in main.py to generate and present haplotype plot"""
@@ -114,7 +113,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     marker_size = 5 + np.sqrt(len(df_haplotypes_set))
 
     i = 0
-    if ( not '' in background_ns_changes ) and background_ns_changes in df_haplotypes_set['ns_changes'].values:
+    if ( '' not in background_ns_changes ) and background_ns_changes in df_haplotypes_set['ns_changes'].values:
         background_mutation_indices = df_mutations_set.loc[
             df_haplotypes_set.loc[
                 df_haplotypes_set['ns_changes'] == background_ns_changes,
@@ -173,7 +172,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     fig.update_layout(
         title={
             'text': f"<b>Pf-HaploAtlas Haplotype UpSet plot: {gene_name_selected}</b>",
-            'y':0.99,
+            'y':0.97,
             'x':0.5,
             'xanchor': 'center',
             'yanchor': 'top',
@@ -182,24 +181,22 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
 
             }},
         hovermode = 'closest', legend=dict(y=0.76),
-        margin=dict(t=30, b=70, l=80, r=5)
+        margin=dict(t=80, b=70, l=80, r=5)
     )
 
     # ============================================================================================================================================================
     # ============================================================================================================================================================
 
-    st.markdown(
-        """
+    _st_justify_markdown_html("""
 The Haplotype UpSet plot provides an overview of the haplotypes for the gene selected. Each haplotype has three pieces of information displayed:
 - "Number of samples" - the number of samples containing that haplotype
 - "Geographic distribution (%)" - the geographic distribution of that haplotype (see sidebar for details)
 - "Mutations" - the individual amino acid mutations that make up the haplotype
 
-i.e., each stack of 3 subplots corresponds to one haplotype, and these are displayed in order of decreasing prevalence from left to right. Hover your mouse over the data to see details. 
+Each stack of 3 subplots corresponds to one haplotype, and these are displayed in order of decreasing prevalence from left to right. Hover your mouse over the data to see details. 
 
 You can <b><u>investigate a specific haplotype by clicking on any of the data elements of the haplotype</b></u>, e.g., clicking on the bar chart. 
-        """,
-        unsafe_allow_html = True
+        """
     )
 
     selection_dict = plotly_events(fig, override_height = total_plot_height)
