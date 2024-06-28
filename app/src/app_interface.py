@@ -189,7 +189,7 @@ Pf-HaploAtlas currently uses data generated using the [Pf7 data release](https:/
 If you'd like to report a bug, request a feature, or give us feedback, check out the following!
 
 - [our GitHub page](https://github.com/malariagen/pf-haploatlas/issues)
-- [this Google Forms](https://forms.gle/mDwYr2cPL37dDzPs6)
+- [this Google Form](https://forms.gle/mDwYr2cPL37dDzPs6)
 """)
 
         st.divider()
