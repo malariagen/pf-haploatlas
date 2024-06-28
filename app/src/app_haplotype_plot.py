@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from streamlit_plotly_events import plotly_events
+from streamlit_plotly_events2 import plotly_events
 
 from src.utils import cache_load_population_colours, _cache_load_utility_mappers, generate_download_buttons, _st_justify_markdown_html
 
@@ -42,8 +42,8 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     ).sort_values('aa').reset_index(drop=True).reset_index().set_index('mutation')
 
     # Some arbitrary plot-scaling calculations
-    upset_plot_height = 1.5 + len(df_mutations_set) / 5
-    total_plot_height = (5 + upset_plot_height) * 100
+    upset_plot_height = int(1.5 + len(df_mutations_set) / 5)
+    total_plot_height = int((5 + upset_plot_height) * 100)
 
     # Create the plots
     fig = make_subplots(rows = 3, cols = 1, shared_xaxes = True, row_heights = [2, 3, upset_plot_height], vertical_spacing = 0.05)
@@ -58,7 +58,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             showlegend=False,
             hoverinfo = 'x',
             hovertemplate = "<b>%{x}:</b> %{y}<extra></extra>"
-        )
+        ), row = 1, col = 1
     )
 
     if sample_count_mode == "Sample counts on a log scale":
@@ -158,21 +158,23 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
                            rows = 3, cols = 1)
         i = i + 1
     
+    fig.update_xaxes(row = 1, col = 1, fixedrange = True)
+    fig.update_xaxes(row = 2, col = 1, fixedrange = True)
     fig.update_xaxes(title_text="Haplotypes", tickmode='array', tickvals=[], range = [-0.5, df_haplotypes_set.index.size - 0.5], zeroline = False,
-                     showgrid = False, row = 3, col = 1)
+                     showgrid = False, row = 3, col = 1, fixedrange = True)
 
-    fig.update_yaxes(title_text="Number of samples", title_standoff=20, row=1, col=1)
-    fig.update_yaxes(title_text="Geographic distribution (%)", title_standoff=30, row=2, col=1)
+    fig.update_yaxes(title_text="Number of samples", title_standoff=20, row=1, col=1, fixedrange = True)
+    fig.update_yaxes(title_text="Geographic distribution (%)", title_standoff=30, row=2, col=1, fixedrange = True)
     fig.update_yaxes(title_text="Mutations", title_standoff=20, 
                      showgrid = True, zeroline = False, gridcolor='rgba(0, 0, 0, 0.15)', 
                      tickvals=df_mutations_set.reset_index()["index"],
                      ticktext=df_mutations_set.reset_index().mutation,
-                     row = 3, col = 1)
+                     row = 3, col = 1, fixedrange = True)
     
     fig.update_layout(
         title={
             'text': f"<b>Pf-HaploAtlas Haplotype UpSet plot: {gene_name_selected}</b>",
-            'y':0.97,
+            'y':0.98,
             'x':0.5,
             'xanchor': 'center',
             'yanchor': 'top',
@@ -181,7 +183,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
 
             }},
         hovermode = 'closest', legend=dict(y=0.76),
-        margin=dict(t=80, b=70, l=80, r=5)
+        margin=dict(t=40, b=70, l=80, r=5)
     )
 
     # ============================================================================================================================================================
@@ -199,13 +201,13 @@ You can <b><u>investigate a specific haplotype by clicking on any of the data el
         """
     )
 
-    selection_dict = plotly_events(fig, override_height = total_plot_height)
-    
+    selection_dict = plotly_events(fig, override_height = total_plot_height, config = {"displayModeBar": False})
+
     generate_download_buttons(fig, gene_id_selected, total_plot_height, 800, plot_number = 1)
 
     if selection_dict == []:
         st.stop()
-
+    
     ns_changes = selection_dict[0]["x"]
     if isinstance(ns_changes, int):
         ns_changes = df_haplotypes_set.ns_changes.values[ns_changes]
