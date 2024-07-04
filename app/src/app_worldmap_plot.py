@@ -9,7 +9,7 @@ import collections
 from src.utils import cache_load_population_colours, generate_download_buttons, _cache_load_utility_mappers, _st_justify_markdown_html
 
 def _locations_agg(x, ns_changes):
-    """Aggregation function used to reformat dataframe in preparation for worldmap plot"""
+    """Aggregation function used to reformat dataframe in preparation for world map plot"""
     names = collections.OrderedDict()
     names['n'] = np.count_nonzero(x['ns_changes_homozygous'])
     if names['n'] == 0:
@@ -24,7 +24,7 @@ def _locations_agg(x, ns_changes):
 def _partial_frequency_marker_colour(freq: float) -> str:
     """
     Convenience function which takes haplotype frequency and returns an rgba string for the grey colour used to
-    colour the marker in the worldmap plot. The higher the frequency, the darker the grey
+    colour the marker in the world map plot. The higher the frequency, the darker the grey
     """
     colour_intensity = max(0, min(255, 255 - int(255 * freq/100)))
     marker_colour = f"rgba({colour_intensity}, {colour_intensity}, {colour_intensity}, 1)"
@@ -58,7 +58,7 @@ scatter_config = {
     }
 
 def _plotly_arrow(x0, x1, y):
-    """One time function used to generate the arrow in the legend of the worldmap plot"""
+    """One time function used to generate the arrow in the legend of the world map plot"""
     a = go.layout.Annotation(
         x = x1, ax = x0, y = y, ay = y,
         xref="x", yref="y", text="", showarrow=True,
@@ -71,9 +71,9 @@ def generate_worldmap_plot(ns_changes, df_join, min_samples, gene_id_selected):
 
     st.divider()
 
-    st.subheader(f'3. Worldmap plot: {ns_changes}')
+    st.subheader(f'3. World map plot: {ns_changes}')
     _st_justify_markdown_html(f"""
-The Worldmap plot displays the average haplotype frequency over an interval of time (in years) at a country-level on a global map. As above, the colour intensity of each “bead” corresponds to the frequency, and beads are coloured by geographic distribution (see sidebar for details). Hover your mouse over the data to see details. 
+The world map plot displays the average haplotype frequency over an interval of time (in years) at a country-level on a global map. As above, the colour intensity of each “bead” corresponds to the frequency, and beads are coloured by geographic distribution (see sidebar for details). Hover your mouse over the data to see details. 
 
 Adjust the slider below to choose your time interval of interest for calculating the proportion of samples containing the {ns_changes} haplotype: 
 """)
@@ -222,7 +222,7 @@ Adjust the slider below to choose your time interval of interest for calculating
     # Update layout
     fig.update_layout(
         title={
-            'text': f"Pf-HaploAtlas Worldmap plot: {gene_name_selected} ({ns_changes})",
+            'text': f"Pf-HaploAtlas world map plot: {gene_name_selected} ({ns_changes})",
             'y':0.99,
             'x':0.5,
             'xanchor': 'center',
