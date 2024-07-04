@@ -102,7 +102,7 @@ def generate_download_buttons(fig, gene_id_selected, height, width, plot_number)
 
 def haplotype_selection_toast(ns_changes):
 
-    toast_message = f"Haplotype {ns_changes} selected! Scroll down to see Abacus and Worldmap plots"
+    toast_message = f"Haplotype {ns_changes} selected! Scroll down to see the Abacus and world map plots"
 
     if "ns_changes" not in st.session_state:
         st.session_state["ns_changes"] = ns_changes
