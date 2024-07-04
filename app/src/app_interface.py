@@ -160,7 +160,7 @@ The locations of where samples were collected are grouped into ten major "sub-po
         _st_justify_markdown_html("""
 On the x-axis of the geographic distribution subplot of the Haplotype UpSet plot, you will also see the names of lab strains which are also of that haplotype (e.g., 3D7, 7G8, Dd2, IT, GB4, HB3). 
 
-Due to the country-level aggregation used in the Worldmap plot, countries containing more than one sub-population were allocated their majority sub-population (i.e., Kenya, India, Thailand). 
+Due to the country-level aggregation used in the world map plot, countries containing more than one sub-population were allocated their majority sub-population (i.e., Kenya, India, Thailand). 
 """)
         st.divider()
 
