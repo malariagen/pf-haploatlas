@@ -180,7 +180,7 @@ Lee C, Unlu E, White NFD et al. Pf-HaploAtlas: an interactive web app for spatio
         _st_justify_markdown_html("""
 ## Acknowledgements
 
-Pf-HaploAtlas currently uses data generated using the [Pf7 data release](https://wellcomeopenresearch.org/articles/8-22/v1) from the MalariaGEN _Plasmodium falciparum_ Community Project, which was made possible by clinical parasite samples contributed by partner studies, whose investigators are represented in the data release's author list.
+Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf7 data release](https://wellcomeopenresearch.org/articles/8-22/v1) which was made possible by clinical parasite samples contributed by partner studies, whose investigators are represented in the data release's author list.
 
 """)
 
