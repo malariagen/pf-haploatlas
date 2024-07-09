@@ -85,7 +85,7 @@ def _config_download_data_section(gene_id_selected, df_haplotypes, df_join):
     return
     
 def _config_plot_settings_section():
-    sample_count_mode = st.radio("Select x-axis mode for Haplotype UpSet plot:", 
+    sample_count_mode = st.radio("Select y-axis mode for Haplotype UpSet plot:", 
                                  ["Sample counts", "Sample counts on a log scale"],
                                  index = 0)
     return sample_count_mode
