@@ -8,7 +8,7 @@ We encourage users to access and share the app using the following stable link t
 The accompanying preprint manuscript for the Pf-HaploAtlas will be published soon.
 
 
-# 5-minute demo of the online app
+# 10-minute demo of the online app (also available in the [app](https://apps.malariagen.net/pf-haploatlas))
 
 [![Pf-HaploAtlas Demo](https://img.youtube.com/vi/48f4r2frcdk/0.jpg)](https://www.youtube.com/watch?v=48f4r2frcdk)
 
