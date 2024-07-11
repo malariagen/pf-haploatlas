@@ -8,22 +8,9 @@ We encourage users to access and share the app using the following stable link t
 The accompanying preprint manuscript for the Pf-HaploAtlas will be published soon.
 
 
-
-
-
-
-
 # 5-minute demo of the online app
 
-
-
-https://github.com/malariagen/pf-haploatlas/assets/92995519/362b3a3a-f0b9-4f0b-bfc2-981c46d1e2a2
-
-
-
-
-
-
+[![Pf-HaploAtlas Demo](https://youtu.be/48f4r2frcdk/0.jpg)](https://youtu.be/48f4r2frcdk/0.jpg)
 
 
 
