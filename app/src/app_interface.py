@@ -119,7 +119,7 @@ def _set_up_sidebar():
                 
         st.title("How to use")
 
-        st.video("https://youtu.be/ajIGiFpYsRk")
+        st.video("https://youtu.be/48f4r2frcdk")
         st.divider()
 
         _st_justify_markdown_html("""
