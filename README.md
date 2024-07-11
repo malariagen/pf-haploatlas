@@ -10,7 +10,7 @@ The accompanying preprint manuscript for the Pf-HaploAtlas will be published soo
 
 # 5-minute demo of the online app
 
-[![Pf-HaploAtlas Demo](https://youtu.be/48f4r2frcdk/0.jpg)](https://youtu.be/48f4r2frcdk)
+[![Pf-HaploAtlas Demo](https://img.youtube.com/vi/48f4r2frcdk/0.jpg)](https://www.youtube.com/watch?v=48f4r2frcdk)
 
 
 
