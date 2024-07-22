@@ -167,11 +167,10 @@ Due to the country-level aggregation used in the world map plot, countries conta
         _st_justify_markdown_html("""
 ## How to cite
 
-When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite the following:
+When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite the following: 
 
-```
-Lee C, Unlu E, White NFD et al. Pf-HaploAtlas: an interactive web app for spatiotemporal analysis of P. falciparum genes. BioRxiv 123456 [Preprint]. January 01, 2024 [cited 2030 Jan 01]. Available from: https://doi.org/10.1234/123456.
-```
+> Lee C, Ünlü ES, White NFD, Almagro-Garcia J, Ariani C, Pearson RD. Pf-HaploAtlas: An interactive web app for spatiotemporal analysis of _P. falciparum_ genes. BioRxiv 603783 **[Preprint]** July 16, 2024. Available from: https://doi.org/10.1101/2024.07.16.603783.
+
 
 """)
 
