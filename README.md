@@ -14,6 +14,17 @@ The accompanying preprint manuscript for the Pf-HaploAtlas will be published soo
 
 
 
+
+
+# Pf-HaploAtlas preprint on bioRxiv
+When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite the following: 
+
+> Lee C, Ünlü ES, White NFD, Almagro-Garcia J, Ariani C, Pearson RD. Pf-HaploAtlas: An interactive web app for spatiotemporal analysis of _P. falciparum_ genes. BioRxiv 603783 **[Preprint]** July 16, 2024. Available from: https://doi.org/10.1101/2024.07.16.603783.
+
+
+
+
+
 # How to run the app locally
 This repository contains a Streamlit app. Follow the steps below to clone the repository and run the app locally.
 
@@ -56,12 +67,6 @@ The app should naturally open in your browser but if not, click on the ```Networ
 We strongly encourage you to submit feature requests! Please open an issue [here](https://github.com/malariagen/pf-haploatlas/issues) where you will see a list of features already requested within our community, or fill out our [Google Forms](https://docs.google.com/forms/d/e/1FAIpQLSd2Bbr47PU85esj1_vA07EMmhySApjaRkVQSYK2yZ6o4Udd7w/viewform)!
 
 
-
-
-# How to cite
-When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite the following sources while the app's preprint and journal manuscript are still in preparation: 
-
-- https://apps.malariagen.net/pf-haploatlas
 
 
 
