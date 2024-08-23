@@ -1,18 +1,26 @@
 import streamlit as st
 from base64 import b64encode
 
-from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata, _st_justify_markdown_html
-
+from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata, _st_justify_markdown_html, _show_cookie_banner_upon_visit, present_changelog
 
 
 def set_up_interface():
     """Main function called in main.py to set up basic page settings, introduction and sidebar"""
 
     st.set_page_config(
-        page_title = "Pf-HaploAtlas",
-        layout = "centered",
-        initial_sidebar_state = "expanded"
+        page_title            = "Pf-HaploAtlas",
+        layout                = "centered",
+        page_icon             = "app/files/favicon.svg",
+        initial_sidebar_state = "expanded",
     )
+
+    hide_streamlit_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            </style>
+            """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
     
     st.markdown(
         """
@@ -43,6 +51,8 @@ If you're new here, try clicking below and typing "AAT1"! Alternatively, choose 
 """, location = placeholder)
 
     _set_up_sidebar()
+
+    _show_cookie_banner_upon_visit()
     
     return placeholder
 
@@ -120,6 +130,7 @@ def _set_up_sidebar():
         st.title("How to use")
 
         st.video("https://youtu.be/48f4r2frcdk")
+
         st.divider()
 
         _st_justify_markdown_html("""
@@ -164,13 +175,16 @@ Due to the country-level aggregation used in the world map plot, countries conta
 """)
         st.divider()
 
+        st.markdown("## See what's new")
+        present_changelog()
+        st.divider()
+
         _st_justify_markdown_html("""
 ## How to cite
 
 When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite the following: 
 
 > Lee C, Ünlü ES, White NFD, Almagro-Garcia J, Ariani C, Pearson RD. Pf-HaploAtlas: An interactive web app for spatiotemporal analysis of _P. falciparum_ genes. BioRxiv 603783 **[Preprint]** July 16, 2024. Available from: https://doi.org/10.1101/2024.07.16.603783.
-
 
 """)
 
@@ -195,18 +209,29 @@ If you'd like to report a bug, request a feature, or give us feedback, check out
 
         st.divider()
 
+        st.markdown("## Created by")
         _show_images_with_urls(
             ["app/files/logo_malariagen.png"],
             ["https://www.malariagen.net/"],
-            [50],
+            [70],
             [100]
         )
 
         _show_images_with_urls(
             ["app/files/logo_gsu.png", "app/files/logo_sanger.png"],
             ["https://www.sanger.ac.uk/collaboration/genomic-surveillance-unit/", "https://www.sanger.ac.uk/"],
-            [110, 70],
-            [110, 70]
+            [130, 80],
+            [130, 80]
+        )
+
+        st.divider()
+
+        st.markdown("## Funded by")
+        _show_images_with_urls(
+            ["app/files/logo_bmgf.png"],
+            ["https://www.gatesfoundation.org/"],
+            [60],
+            [100]
         )
 
         st.divider()

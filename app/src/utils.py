@@ -2,6 +2,8 @@ import streamlit as st
 import json, os, lzma, pickle, collections, io
 import pandas as pd
 
+from streamlit_gtag import st_gtag
+
 base_path = "app/files/2024-06-24_pkl_files"
 
 @st.cache_data
@@ -65,6 +67,10 @@ def cache_load_population_colours():
     population_colours['OC-NG'] = "#f781bf"
     
     return population_colours
+
+def _cache_load_changelog():
+    with open("app/files/changelog.md", "r") as f:
+        return f.read()
 
 def generate_download_buttons(fig, gene_id_selected, height, width, plot_number):
     """Generates download buttons for different image formats (PDF, PNG, SVG) for a given plot."""
@@ -141,3 +147,80 @@ def _st_justify_markdown_html(text: str, location = None):
             unsafe_allow_html = True
         )
     return
+
+@st.dialog("Cookies 🍪")
+def _present_cookie_banner():
+    tab1, tab2 = st.tabs(["Consent", "Details"])
+    tab1.write("We'd like to use analytics cookies to improve our services by learning how you're using the Pf-HaploAtlas!")
+
+    _, tab1col1, tab1col2, _  = tab1.columns([1, 2, 2, 1])
+    if tab1col1.button("Accept", use_container_width = True, key = "tab1col1"):
+        st_gtag(
+            key="gtag_send_event_a",
+            id="G-4XZZ9XXZ21",
+            event_name="cookies_accepted",
+            params={
+                "event_category": "test_category_a",
+                "event_label": "test_label_a",
+                "value": "test",
+            },
+        )
+        st.rerun()
+
+    if tab1col2.button("Reject", use_container_width = True, key = "tab1col2"):
+        st.rerun()
+    
+    with tab2:
+        _st_justify_markdown_html("""
+## Cookie Statement:
+
+This site uses cookies to store information on your computer.
+
+### What are cookies?
+Cookies are small data files that are sent from a website you visit to your browser and stored on the device you use to access the internet.
+
+### Why do we use cookies?
+Cookies perform a variety of functions that enable our websites to operate efficiently, help us improve their performance, and provide the best user experience.
+
+### What cookies do we use?
+
+Session Cookies: These cookies allow us to understand how you've used our website during a browsing session. Session cookies expire once your browsing session ends and are not stored beyond this point.
+
+Google Analytics Cookies: We use Google Analytics to help us understand how visitors navigate our websites. Google Analytics uses analytics cookies to collect information and report website usage statistics without personally identifying individual visitors. The information collected is stored for 26 months and includes:
+- Number of users to our website
+- The country you are accessing the website from
+- Details of your browser and device
+- User behavior
+- The website which directed you to our website
+
+Learn more about who we are, how you can contact us, and how we process personal data in the [MalariaGEN website's privacy policy](https://www.malariagen.net/privacy-policy/).
+""")
+        
+        _, tab2col1, tab2col2, _  = tab2.columns([1, 2, 2, 1])
+        if tab2col1.button("Accept", use_container_width = True, key = "tab2col1"):
+            st_gtag(
+                key="gtag_send_event_a",
+                id="G-4XZZ9XXZ21",
+                event_name="cookies_accepted",
+                params={
+                    "event_category": "test_category_a",
+                    "event_label": "test_label_a",
+                    "value": "test",
+                },
+            )
+            st.rerun()
+
+        if tab2col2.button("Reject", use_container_width = True, key = "tab2col2"):
+            st.rerun()
+
+def _show_cookie_banner_upon_visit():
+    if "banner_shown" not in st.session_state:
+        _present_cookie_banner()
+        st.session_state["banner_shown"] = True
+    else:
+        pass
+
+def present_changelog():
+    with st.expander("Click to see change log"):
+        logs = _cache_load_changelog()
+        st.write(logs)
