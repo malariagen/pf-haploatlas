@@ -1,7 +1,7 @@
 import streamlit as st
 from base64 import b64encode
 
-from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata, _st_justify_markdown_html
+from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata, _st_justify_markdown_html, _show_cookie_banner_upon_visit
 
 
 
@@ -43,6 +43,8 @@ If you're new here, try clicking below and typing "AAT1"! Alternatively, choose 
 """, location = placeholder)
 
     _set_up_sidebar()
+
+    _show_cookie_banner_upon_visit()
     
     return placeholder
 
