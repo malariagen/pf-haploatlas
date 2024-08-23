@@ -68,6 +68,10 @@ def cache_load_population_colours():
     
     return population_colours
 
+def _cache_load_changelog():
+    with open("app/files/changelog.md", "r") as f:
+        return f.read()
+
 def generate_download_buttons(fig, gene_id_selected, height, width, plot_number):
     """Generates download buttons for different image formats (PDF, PNG, SVG) for a given plot."""
 
@@ -189,8 +193,6 @@ Google Analytics Cookies: We use Google Analytics to help us understand how visi
 - User behavior
 - The website which directed you to our website
 
-Third-Party Cookies: We may use third-party cookies to support our research and public engagement. These may include embedding photos and/or video content from third-party websites. When you visit a page with photos or video content embedded, you may be presented with cookies from these third party websites. We do not control the dissemination of these cookies. You should check the relevant third party website for more information about these cookies.
-
 Learn more about who we are, how you can contact us, and how we process personal data in the [MalariaGEN website's privacy policy](https://www.malariagen.net/privacy-policy/).
 """)
         
@@ -217,3 +219,8 @@ def _show_cookie_banner_upon_visit():
         st.session_state["banner_shown"] = True
     else:
         pass
+
+def present_changelog():
+    with st.expander("Click to see change log"):
+        logs = _cache_load_changelog()
+        st.write(logs)
