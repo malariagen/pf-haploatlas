@@ -28,18 +28,8 @@ class TagManager {
       const gtag = document.createElement("script");
       gtag.innerHTML = `
         window.dataLayer = window.dataLayer || [];
-  
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-  
-        window.addEventListener("message", function(event) {
-            if (event.data.source === "streamlit-ga") {
-              gtag("event", event.data.eventName, event.data.eventData)
-            }
-          }
-        )
-  
+        function gtag(){dataLayer.push(arguments);}
+        
         gtag("js", new Date());
         gtag("config", '${this.id}');
   
