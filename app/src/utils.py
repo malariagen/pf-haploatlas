@@ -2,9 +2,6 @@ import streamlit as st
 import json, os, lzma, pickle, collections, io
 import pandas as pd
 
-from streamlit_gtag import st_gtag
-import streamlit.components.v1 as components
-
 base_path = "app/files/2024-06-24_pkl_files"
 
 @st.cache_data
@@ -156,16 +153,6 @@ def _present_cookie_banner():
 
     _, tab1col1, tab1col2, _  = tab1.columns([1, 2, 2, 1])
     if tab1col1.button("Accept", use_container_width = True, key = "tab1col1"):
-        st_gtag(
-            key="gtag_send_event_a",
-            id="G-4XZZ9XXZ21",
-            event_name="cookies_accepted",
-            params={
-                "event_category": "test_category_a",
-                "event_label": "test_label_a",
-                "value": "test",
-            },
-        )
         st.session_state["cookies_accepted"] = True
         st.rerun()
 
@@ -200,16 +187,6 @@ Learn more about who we are, how you can contact us, and how we process personal
         
         _, tab2col1, tab2col2, _  = tab2.columns([1, 2, 2, 1])
         if tab2col1.button("Accept", use_container_width = True, key = "tab2col1"):
-            st_gtag(
-                key="gtag_send_event_a",
-                id="G-4XZZ9XXZ21",
-                event_name="cookies_accepted",
-                params={
-                    "event_category": "test_category_a",
-                    "event_label": "test_label_a",
-                    "value": "test",
-                },
-            )
             st.session_state["cookies_accepted"] = True
             st.rerun()
 
@@ -217,7 +194,7 @@ Learn more about who we are, how you can contact us, and how we process personal
             st.rerun()
 
 def _show_cookie_banner_upon_visit():
-    if "banner_shown" not in st.session_state and not gtag_is_present():
+    if "banner_shown" not in st.session_state:
         _present_cookie_banner()
         st.session_state["banner_shown"] = True
     else:
@@ -227,37 +204,3 @@ def present_changelog():
     with st.expander("Click to see change log"):
         logs = _cache_load_changelog()
         st.write(logs)
-
-def gtag_is_present():
-    components.html("""
-    <script>
-    (function() {
-        function checkGtag() {
-            var gtagExists = typeof window.gtag === 'function';
-            window.parent.postMessage({ gtagPresent: gtagExists }, "*");
-        }
-        setTimeout(checkGtag, 500);
-    })();
-    window.addEventListener('message', (event) => {
-        if (event.data.gtagPresent !== undefined) {
-            const gtagStatus = event.data.gtagPresent ? 'true' : 'false';
-            window.parent.document.dispatchEvent(new CustomEvent("gtag_status", { detail: gtagStatus }));
-        }
-    });
-    </script>
-    <input id="gtag-status" style="display:none" onchange="window.gtagStatus = this.value" />
-    """, height = 0)
-
-    if "gtag_present" not in st.session_state:
-        st.session_state.gtag_present = False
-
-    st.write("""
-    <script>
-    document.addEventListener("gtag_status", (event) => {
-        const gtagPresent = event.detail === 'true';
-        window.parent.postMessage({ gtagPresent }, "*");
-    });
-    </script>
-    """, unsafe_allow_html = True)
-
-    return st.session_state.gtag_present

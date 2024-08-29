@@ -15,16 +15,18 @@ def set_up_interface():
     )
 
     if "cookies_accepted" in st.session_state:
-        st_gtag(
-            key="gtag_send_event_a",
-            id="G-4XZZ9XXZ21",
-            event_name="cookies_accepted",
-            params={
-                "event_category": "test_category_a",
-                "event_label": "test_label_a",
-                "value": "test",
-            },
-        )
+        if "gtag_injected" not in st.session_state:
+            st_gtag(
+                key="gtag_send_event_a",
+                id="G-4XZZ9XXZ21",
+                event_name="cookies_accepted",
+                params={
+                    "event_category": "test_category_a",
+                    "event_label": "test_label_a",
+                    "value": "test",
+                },
+            )
+            st.session_state["gtag_injected"] = True
 
     hide_streamlit_style = """
             <style>
