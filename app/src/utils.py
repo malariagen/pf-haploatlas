@@ -166,6 +166,7 @@ def _present_cookie_banner():
                 "value": "test",
             },
         )
+        st.session_state["cookies_accepted"] = True
         st.rerun()
 
     if tab1col2.button("Reject", use_container_width = True, key = "tab1col2"):
@@ -209,6 +210,7 @@ Learn more about who we are, how you can contact us, and how we process personal
                     "value": "test",
                 },
             )
+            st.session_state["cookies_accepted"] = True
             st.rerun()
 
         if tab2col2.button("Reject", use_container_width = True, key = "tab2col2"):
