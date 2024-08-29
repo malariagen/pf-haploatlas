@@ -2,6 +2,7 @@ import streamlit as st
 from base64 import b64encode
 
 from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata, _st_justify_markdown_html, _show_cookie_banner_upon_visit, present_changelog
+from streamlit_gtag import st_gtag
 
 def set_up_interface():
     """Main function called in main.py to set up basic page settings, introduction and sidebar"""
@@ -12,6 +13,18 @@ def set_up_interface():
         page_icon             = "app/files/favicon.svg",
         initial_sidebar_state = "expanded",
     )
+
+    if "cookies_accepted" in st.session_state:
+        st_gtag(
+            key="gtag_send_event_a",
+            id="G-4XZZ9XXZ21",
+            event_name="cookies_accepted",
+            params={
+                "event_category": "test_category_a",
+                "event_label": "test_label_a",
+                "value": "test",
+            },
+        )
 
     hide_streamlit_style = """
             <style>
