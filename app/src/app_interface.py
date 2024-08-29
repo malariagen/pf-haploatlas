@@ -2,7 +2,6 @@ import streamlit as st
 from base64 import b64encode
 
 from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata, _st_justify_markdown_html, _show_cookie_banner_upon_visit, present_changelog
-from streamlit_gtag import st_gtag
 
 def set_up_interface():
     """Main function called in main.py to set up basic page settings, introduction and sidebar"""
