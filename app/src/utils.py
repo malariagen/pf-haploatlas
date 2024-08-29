@@ -3,6 +3,7 @@ import json, os, lzma, pickle, collections, io
 import pandas as pd
 
 from streamlit_gtag import st_gtag
+import extra_streamlit_components as stx
 
 base_path = "app/files/2024-06-24_pkl_files"
 
@@ -155,16 +156,16 @@ def _present_cookie_banner():
 
     _, tab1col1, tab1col2, _  = tab1.columns([1, 2, 2, 1])
     if tab1col1.button("Accept", use_container_width = True, key = "tab1col1"):
-        # st_gtag(
-        #     key="gtag_send_event_a",
-        #     id="G-4XZZ9XXZ21",
-        #     event_name="cookies_accepted",
-        #     params={
-        #         "event_category": "test_category_a",
-        #         "event_label": "test_label_a",
-        #         "value": "test",
-        #     },
-        # )
+        st_gtag(
+            key="gtag_send_event_a",
+            id="G-4XZZ9XXZ21",
+            event_name="cookies_accepted",
+            params={
+                "event_category": "test_category_a",
+                "event_label": "test_label_a",
+                "value": "test",
+            },
+        )
         st.rerun()
 
     if tab1col2.button("Reject", use_container_width = True, key = "tab1col2"):
@@ -198,23 +199,29 @@ Learn more about who we are, how you can contact us, and how we process personal
         
         _, tab2col1, tab2col2, _  = tab2.columns([1, 2, 2, 1])
         if tab2col1.button("Accept", use_container_width = True, key = "tab2col1"):
-            # st_gtag(
-            #     key="gtag_send_event_a",
-            #     id="G-4XZZ9XXZ21",
-            #     event_name="cookies_accepted",
-            #     params={
-            #         "event_category": "test_category_a",
-            #         "event_label": "test_label_a",
-            #         "value": "test",
-            #     },
-            # )
+            st_gtag(
+                key="gtag_send_event_a",
+                id="G-4XZZ9XXZ21",
+                event_name="cookies_accepted",
+                params={
+                    "event_category": "test_category_a",
+                    "event_label": "test_label_a",
+                    "value": "test",
+                },
+            )
             st.rerun()
 
         if tab2col2.button("Reject", use_container_width = True, key = "tab2col2"):
             st.rerun()
 
+def cookie_already_present(gtag):
+    gtag_numerical_id = gtag.split("_")[-1]
+    cookies = stx.CookieManager().get_all().keys()
+    ALREADY_PRESENT = any([c.endswith(gtag_numerical_id) for c in cookies])
+    return ALREADY_PRESENT
+
 def _show_cookie_banner_upon_visit():
-    if "banner_shown" not in st.session_state:
+    if "banner_shown" not in st.session_state and not cookie_already_present("G-4XZZ9XXZ21"):
         _present_cookie_banner()
         st.session_state["banner_shown"] = True
     else:
