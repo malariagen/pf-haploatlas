@@ -38,7 +38,7 @@ def set_up_interface():
 
     st.warning("""🚨 This is the Pf7 version of Pf-HaploAtlas which is no longer actively maintained. 
 
-The latest version of Pf-HaploAtlas uses MalariaGEN Pf8 data, which you can access at [https://apps.malariagen.net/pf-haploatlas](https://apps.malariagen.net/pf-haploatlas). """)
+The latest version of Pf-HaploAtlas uses more recent releases of _Plasmodium_ MalariaGEN data, which you can access at [https://apps.malariagen.net/pf-haploatlas](https://apps.malariagen.net/pf-haploatlas). """)
     
     st.markdown(
         """

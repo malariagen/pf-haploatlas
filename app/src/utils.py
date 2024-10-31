@@ -208,4 +208,4 @@ def present_changelog():
 
 @st.dialog("🚨 This is the Pf7 version of Pf-HaploAtlas which is no longer actively maintained!", width = "large")
 def _show_migration_message():
-    st.write("""The latest version of Pf-HaploAtlas uses MalariaGEN Pf8 data, which you can access at [https://apps.malariagen.net/pf-haploatlas](https://apps.malariagen.net/pf-haploatlas). """)
+    st.write("""The latest version of Pf-HaploAtlas uses more recent releases of _Plasmodium_ MalariaGEN data, which you can access at [https://apps.malariagen.net/pf-haploatlas](https://apps.malariagen.net/pf-haploatlas). """)
