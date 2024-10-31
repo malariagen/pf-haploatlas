@@ -1,3 +1,7 @@
+# This branch is no longer actively maintained
+
+This is the Pf7 version of Pf-HaploAtlas which is no longer actively maintained. The latest version of Pf-HaploAtlas uses MalariaGEN Pf8 data, which you can access at https://apps.malariagen.net/pf-haploatlas.
+
 # Pf-HaploAtlas
 The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 5,102 core genes by using data from 16,203 samples, from 33 countries, and spread between the years 1984 and 2018, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. 
 

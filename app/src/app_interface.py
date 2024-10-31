@@ -1,7 +1,7 @@
 import streamlit as st
 from base64 import b64encode
 
-from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata, _st_justify_markdown_html, _show_cookie_banner_upon_visit, present_changelog
+from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata, _st_justify_markdown_html, _show_cookie_banner_upon_visit, present_changelog, _show_migration_message
 from streamlit_gtag import st_gtag
 
 def set_up_interface():
@@ -14,19 +14,19 @@ def set_up_interface():
         initial_sidebar_state = "expanded",
     )
 
-    if "cookies_accepted" in st.session_state:
-        if "gtag_injected" not in st.session_state:
-            st_gtag(
-                key="gtag_send_event_a",
-                id="G-4XZZ9XXZ21",
-                event_name="cookies_accepted",
-                params={
-                    "event_category": "test_category_a",
-                    "event_label": "test_label_a",
-                    "value": "test",
-                },
-            )
-            st.session_state["gtag_injected"] = True
+    # if "cookies_accepted" in st.session_state:
+    #     if "gtag_injected" not in st.session_state:
+    #         st_gtag(
+    #             key="gtag_send_event_a",
+    #             id="G-4XZZ9XXZ21",
+    #             event_name="cookies_accepted",
+    #             params={
+    #                 "event_category": "test_category_a",
+    #                 "event_label": "test_label_a",
+    #                 "value": "test",
+    #             },
+    #         )
+    #         st.session_state["gtag_injected"] = True
 
     hide_streamlit_style = """
             <style>
@@ -34,7 +34,11 @@ def set_up_interface():
             footer {visibility: hidden;}
             </style>
             """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+    st.warning("""🚨 This is the Pf7 version of Pf-HaploAtlas which is no longer actively maintained. 
+
+The latest version of Pf-HaploAtlas uses MalariaGEN Pf8 data, which you can access at [https://apps.malariagen.net/pf-haploatlas](https://apps.malariagen.net/pf-haploatlas). """)
     
     st.markdown(
         """
@@ -66,7 +70,11 @@ If you're new here, try clicking below and typing "AAT1"! Alternatively, choose 
 
     _set_up_sidebar()
 
-    _show_cookie_banner_upon_visit()
+    if "migration_message_shown" not in st.session_state:
+        st.session_state["migration_message_shown"] = True
+        _show_migration_message()
+    
+    # _show_cookie_banner_upon_visit()
     
     return placeholder
 
@@ -218,7 +226,7 @@ Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf7 data relea
 If you'd like to report a bug, request a feature, or give us feedback, check out the following!
 
 - [our GitHub page](https://github.com/malariagen/pf-haploatlas/issues)
-- [this Google Form](https://forms.gle/mDwYr2cPL37dDzPs6)
+# - [this Google Form](https://forms.gle/mDwYr2cPL37dDzPs6)
 """)
 
         st.divider()
