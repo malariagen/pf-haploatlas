@@ -59,7 +59,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             showlegend=False,
             hoverinfo = 'x',
             hovertemplate = "<b>%{x}:</b> %{y:,.0f}<extra></extra>"
-        ), row = 1, col = 1, row = 1, col = 1
+        ), row = 1, col = 1
     )
 
     if sample_count_mode == "Sample counts on a log scale":
