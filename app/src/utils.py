@@ -149,7 +149,7 @@ def _st_justify_markdown_html(text: str, location = None):
 def _present_cookie_banner():
     tab1, tab2 = st.tabs(["Welcome", "Cookie details"])
 
-    tab1.markdown("We now use **MalariaGEN Pf8**, which means that the Pf-HaploAtlas now contains data from **24,410** QC-passed samples! That's _8,207_ more, or over _50%_ more than the last version! Happy haplotype hunting!")
+    tab1.markdown("We now use **MalariaGEN Pf8**, which means that the Pf-HaploAtlas now contains data from **24,410** QC-passed samples. That's _8,207_ more, or over _50%_ more than the last version. Happy haplotype hunting!")
 
     tab1.markdown("""<p style="text-align: right;"><i>- the HaploAtlas team</i></p>""", unsafe_allow_html = True)
 
