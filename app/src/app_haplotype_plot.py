@@ -58,7 +58,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
             textposition='auto',
             showlegend=False,
             hoverinfo = 'x',
-            hovertemplate = "<b>%{x}:</b> %{y}<extra></extra>"
+            hovertemplate = "<b>%{x}:</b> %{y:,.0f}<extra></extra>"
         ), row = 1, col = 1
     )
 

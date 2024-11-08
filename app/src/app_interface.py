@@ -94,7 +94,8 @@ def file_selector(placeholder):
                                     ["--"] + priority_gene_names + ["--"] + [utility_mappers["gene_ids_to_gene_names"][gene_id]
                                               for gene_id in utility_mappers["gene_ids"] 
                                               if gene_id in utility_mappers["gene_ids_to_gene_names"].keys()],
-                                    key="gene_id", label_visibility='collapsed'
+                                    key = "gene_id",
+                                    help = """This list of core genes was created using "protein coding genes" (as defined by the GFF of PlasmoDB version 55) based on core genome region annotations from Miles et al., 2016. Gene IDs are accompanied by values from the GFF's "ID" field value or if unavailable, from the "description" field (in which case it is enclosed by quotation marks). """
                                    )
     
     if "--" in gene_id_selected:

@@ -148,17 +148,21 @@ def _st_justify_markdown_html(text: str, location = None):
 @st.dialog("Pf-HaploAtlas now uses Pf8! 🎉")
 def _present_cookie_banner():
     tab1, tab2 = st.tabs(["Welcome", "Cookie details"])
-    tab1.markdown("We now use **MalariaGEN Pf8**, which means that the Pf-HaploAtlas now contains data from **24,410** QC-passed samples! That's _8,207_ more, or over _50%_ more than the last version! Happy haplotype hunting!")
+    tab1.markdown("We now use **MalariaGEN Pf8**, which means that the Pf-HaploAtlas now contains data from **24,410** QC-passed samples. That's _8,207_ more, or over _50%_ more than the last version. Happy haplotype hunting!")
 
     tab1.markdown("""<p style="text-align: right;"><i>- the HaploAtlas team</i></p>""", unsafe_allow_html = True)
 
     tab1.divider()
     
-    tab1.write("We'd also like to use analytics cookies to help improve our page!")
+    tab1.write("We'd also like to use analytics cookies to help improve our page.")
 
-    _, tab1button, _  = tab1.columns([1, 1, 1])
-    if tab1button.button("Ok!", use_container_width = True, key = "tab1col1"):
+    _, tab1col1, tab1col2, _  = tab1.columns([1, 2, 2, 1])
+    if tab1col1.button("Accept", use_container_width = True, key = "tab1col1"):
         st.session_state["cookies_accepted"] = True
+        st.rerun()
+    
+    if tab1col2.button("Reject", use_container_width = True, key = "tab1col2"):
+        st.session_state["cookies_accepted"] = False
         st.rerun()
     
     with tab2:
