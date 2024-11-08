@@ -59,12 +59,38 @@ def _config_data_filtering_section():
     return min_samples
 
 def _config_data_statistics_section(min_samples, df_haplotypes, df_join, gene_id_selected):
-    _process_gene_facts(min_samples, df_haplotypes, df_join, gene_id_selected)
+    job_logs_file="app/files/datapack/auxiliary/gene_log.tsv"
+    gene_log = pd.read_csv(job_logs_file, sep = "\t")
+    sample_exclusion_count_columns = ["c_exc_s", "c_inc_s", "c_missing", "c_het_calls", "c_stop_codon", "c_unq_h"]
+    gene_info = {col: int(gene_log.loc[gene_log.gene_id == gene_id_selected, col].values[0]) for col in sample_exclusion_count_columns}
+
+    # Extract statistics
+    n_qc_pass_samples      = len(df_join.loc[df_join['QC_pass']==True])
+    missing_genotype_calls = gene_info.get('c_missing', 'N/A')
+    heterozygous_calls     = gene_info.get('c_het_calls', 'N/A')
+    stop_codons            = gene_info.get('c_stop_codon', 'N/A')
+    sample_below_threshold = df_haplotypes.loc[df_haplotypes['Total'] < min_samples].Total.sum()
+    excluded_samples       = int(missing_genotype_calls + heterozygous_calls + stop_codons + sample_below_threshold)
+    included_samples       = int(n_qc_pass_samples - excluded_samples)
+
+    statistics = {
+        "Sample missing genotype call":                missing_genotype_calls,
+        "Heterozygous sample":                         heterozygous_calls,
+        "Stop codon found for gene":                   stop_codons,
+        f"Less than sample threshold ({min_samples})": sample_below_threshold
+    }
+
+    statistics_table = pd.DataFrame(list(statistics.items()),
+                                    columns = ['Exclusion Reason', 'Sample Count'])
+    
+    statistics_table["Percentage"] = statistics_table["Sample Count"].apply(lambda x: '{:.1f} %'.format(100 * x / n_qc_pass_samples))
+
+    st.write(f"{included_samples} samples ({included_samples / n_qc_pass_samples * 100:.1f} %) are available for analysis out of {n_qc_pass_samples} QC pass samples for this gene, after {excluded_samples} samples ({excluded_samples / n_qc_pass_samples * 100:.1f} %) have been excluded for the reasons listed below. ")
+    st.dataframe(statistics_table, use_container_width = True, hide_index = True)
+
     return
 
 def _config_download_data_section(gene_id_selected, df_haplotypes, df_join):
-
-    @st.cache_data
     def _encode_df(df):
         return df.to_csv().encode('utf-8')
     
@@ -78,9 +104,9 @@ def _config_download_data_section(gene_id_selected, df_haplotypes, df_join):
                        use_container_width = True)
     
     st.download_button("Download sample-level summary",
-                       _encode_df(df_join.drop(columns = ["index"])),
+                       _encode_df(df_join),
                        file_name = f'pf-haploatlas-{gene_id_selected}_sample_summary.csv',
-                       help = '''Explanation of columns: "Exclusion reason" describes the reason for a sample's removal from analysis;	"ns_changes" describes the amino acid changes of the sample for the gene selected; "Sample" is the sample name; "Study" is the clinical study of origin; "Country" of sample collection; "Admin level"	is the location of sample collection; "latitude", "longitude, "Year" of sample collection; "ENA" is the ID in the European Nucleotide Archive; "All samples same case" is reformatted sample name, "Population" refers to geographic distribution (see sidebar for details); "% callable" of SNPs, "QC pass" is whether the sample passed quality control for Pf7, "Sample type" for sequencing, "Sample was in Pf6" is whether the sample was in the previous Pf6 data resource''',
+                       help = '''Explanation of columns: "Exclusion reason" describes the reason for a sample's removal from analysis;	"ns_changes" describes the amino acid changes of the sample for the gene selected; "Sample" is the sample name; "Study" is the clinical study of origin; "Country" of sample collection; "Admin level"	is the location of sample collection; "latitude", "longitude, "Year" of sample collection; "ENA" is the ID in the European Nucleotide Archive; "All samples same case" is reformatted sample name, "Population" refers to geographic distribution (see sidebar for details); "% callable" of SNPs, "QC pass" is whether the sample passed quality control for Pf8, "Sample type" for sequencing, "Sample was in Pf6" is whether the sample was in the previous Pf6 data resource''',
                        use_container_width = True)
     return
     
@@ -89,40 +115,3 @@ def _config_plot_settings_section():
                                  ["Sample counts", "Sample counts on a log scale"],
                                  index = 0)
     return sample_count_mode
-
-def _process_gene_facts(min_samples,
-                        df_haplotypes,
-                        df_join,
-                        gene_id_selected,
-                        job_logs_file="app/files/job_logs.json"):
-
-    with open(job_logs_file, "r") as file:
-        job_logs = json.load(file)
-    
-    gene_info = job_logs[gene_id_selected]
-
-    # Extract statistics
-    pf7_qc_pass            = len(df_join.loc[df_join['QC pass']==True])
-    missing_genotype_calls = gene_info.get('c_missing', 'N/A')
-    heterozygous_calls     = gene_info.get('c_het_calls', 'N/A')
-    stop_codons            = gene_info.get('c_stop_codon', 'N/A')
-    sample_below_threshold = df_haplotypes.loc[df_haplotypes['Total'] < min_samples].Total.sum()
-    excluded_samples       = int(missing_genotype_calls + heterozygous_calls + stop_codons + sample_below_threshold)
-    included_samples       = int(pf7_qc_pass - excluded_samples)
-
-    statistics = {
-        "Sample missing genotype call":                missing_genotype_calls,
-        "Heterozygous sample":                         heterozygous_calls,
-        "Stop codon found for gene":                   stop_codons,
-        f"Less than sample threshold ({min_samples})": sample_below_threshold
-    }
-
-    statistics_table = pd.DataFrame(list(statistics.items()),
-                                    columns = ['Exclusion Reason', 'Sample Count'])
-    
-    statistics_table["Percentage"] = statistics_table["Sample Count"].apply(lambda x: '{:.1f} %'.format(100 * x / pf7_qc_pass))
-
-    st.write(f"{included_samples} samples ({included_samples / pf7_qc_pass * 100:.1f} %) are available for analysis out of {pf7_qc_pass} QC pass samples for this gene, after {excluded_samples} samples ({excluded_samples / pf7_qc_pass * 100:.1f} %) have been excluded for the reasons listed below. ")
-    st.dataframe(statistics_table, use_container_width = True, hide_index = True)
-
-    return

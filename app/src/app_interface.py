@@ -1,7 +1,7 @@
 import streamlit as st
 from base64 import b64encode
 
-from src.utils import _cache_load_utility_mappers, _cache_load_pf7_metadata, _st_justify_markdown_html, _show_cookie_banner_upon_visit, present_changelog
+from src.utils import _cache_load_utility_mappers, _cache_load_sample_metadata, _st_justify_markdown_html, _show_cookie_banner_upon_visit, present_changelog
 from streamlit_gtag import st_gtag
 
 def set_up_interface():
@@ -45,7 +45,7 @@ def set_up_interface():
         unsafe_allow_html=True
     )
 
-    _cache_load_pf7_metadata() # running it here to prevent it from running when new gene selected
+    _cache_load_sample_metadata() # running it here to prevent it from running when new gene selected
     
     st.divider()
     
@@ -54,9 +54,9 @@ def set_up_interface():
     _st_justify_markdown_html("""
 ### Introduction
 
-The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 5,102 core genes by using data from 16,203 samples, from 33 countries, and spread between the years 1984 and 2018, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. Please check out our tutorial video in the sidebar to learn how to use the app. This web app was primarily developed for use on a desktop browser. If you would like support for mobile, please request this feature in the feedback form in the sidebar! We also encourage users to access and share the app using the following stable link to prevent outages in service: https://apps.malariagen.net/pf-haploatlas.
+The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 4,952 core genes by using data from 24,410 samples, from 33 countries, and spread between the years 1966 and 2022, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. Please check out our tutorial video in the sidebar to learn how to use the app. This web app was primarily developed for use on a desktop browser. If you would like support for mobile, please request this feature in the feedback form in the sidebar! We also encourage users to access and share the app using the following stable link to prevent outages in service: https://apps.malariagen.net/pf-haploatlas.
 
-The Pf-HaploAtlas journal manuscript can be found in the sidebar. Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf7 whole genome sequencing data release](https://wellcomeopenresearch.org/articles/8-22/v1), and will expand with each new MalariaGEN _Plasmodium_ data release. 
+The Pf-HaploAtlas journal manuscript can be found in the sidebar. Pf-HaploAtlas currently uses data generated using the MalariaGEN Pf8 whole genome sequencing data release, and will expand with each new MalariaGEN _Plasmodium_ data release. 
 
 #### Search for a gene below to get started.
 
@@ -207,7 +207,7 @@ When publishing work that uses data and/or plots from the Pf-HaploAtlas, please 
         _st_justify_markdown_html("""
 ## Acknowledgements
 
-Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf7 data release](https://wellcomeopenresearch.org/articles/8-22/v1) which was made possible by clinical parasite samples contributed by partner studies, whose investigators are represented in the data release's author list.
+Pf-HaploAtlas currently uses data generated using the MalariaGEN Pf8 data release which was made possible by clinical parasite samples contributed by partner studies, whose investigators are represented in the data release's author list.
 
 """)
 

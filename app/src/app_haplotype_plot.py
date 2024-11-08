@@ -44,9 +44,10 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     # Some arbitrary plot-scaling calculations
     upset_plot_height = int(1.5 + len(df_mutations_set) / 5)
     total_plot_height = int((5 + upset_plot_height) * 100)
+    vertical_spacing = max(0.01, total_plot_height / upset_plot_height / 10000)
 
     # Create the plots
-    fig = make_subplots(rows = 3, cols = 1, shared_xaxes = True, row_heights = [2, 3, upset_plot_height], vertical_spacing = 0.05)
+    fig = make_subplots(rows = 3, cols = 1, shared_xaxes = True, row_heights = [2, 3, upset_plot_height], vertical_spacing = vertical_spacing)
 
     # Plot 1 - sample counts per haplotype
     fig.add_trace(
@@ -110,7 +111,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     # ============================================================================================================================================================
     # Plot 3 - UpSet plot
 
-    marker_size = 5 + np.sqrt(len(df_haplotypes_set))
+    marker_size = min(5 + np.sqrt(len(df_haplotypes_set)), 10)
 
     i = 0
     if ( '' not in background_ns_changes ) and background_ns_changes in df_haplotypes_set['ns_changes'].values:
