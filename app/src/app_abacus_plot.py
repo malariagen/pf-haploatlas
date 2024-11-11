@@ -49,7 +49,7 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
     gene_name_selected = utility_mappers["gene_ids_to_gene_names"][gene_id_selected]
 
     # Filter QC fail and missing samples
-    df_samples_with_ns_changes = df_join.loc[(df_join.exclusion_reason == 'Analysis_set') & pd.isnull(df_join["HaploAtlas exclusion reason"])].copy()
+    df_samples_with_ns_changes = df_join.loc[(df_join["Exclusion reason"] == 'Analysis_set') & pd.isnull(df_join["HaploAtlas exclusion reason"])].copy()
 
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', ['Country']] = 'DRC'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "3D7 REF"

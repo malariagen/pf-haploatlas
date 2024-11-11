@@ -37,7 +37,7 @@ def _cache_load_utility_mappers(base_path = DATAPACK_BASE_PATH):
 
 @st.cache_data
 def _cache_load_sample_metadata():
-    return pd.read_csv(f'{DATAPACK_BASE_PATH}/auxiliary/pf8_post_qc_metadata_20241105.txt.gz', sep = "\t", low_memory = False)
+    return pd.read_csv(f'{DATAPACK_BASE_PATH}/auxiliary/Pf_8_samples_20241111.txt.gz', sep = "\t", low_memory = False)
 
 @st.cache_data
 def cache_load_gene_summary(filename: str, base_path = DATAPACK_BASE_PATH):
@@ -46,6 +46,7 @@ def cache_load_gene_summary(filename: str, base_path = DATAPACK_BASE_PATH):
         df_haplotypes, df_join, background_ns_changes = pickle.load(file)
     df_join = df_join.rename(columns = {"Exclusion reason": "HaploAtlas exclusion reason"})
     df_join = pd.concat([_cache_load_sample_metadata(), df_join], axis = 1)
+    
     return df_haplotypes, df_join, background_ns_changes
 
 @st.cache_data

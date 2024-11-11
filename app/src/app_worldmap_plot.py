@@ -90,7 +90,7 @@ Adjust the slider below to choose your time interval of interest for calculating
         st.stop()
     
     # Filter QC fail and missing samples  
-    df_join = df_join[(df_join.exclusion_reason == 'Analysis_set') & pd.isnull(df_join["HaploAtlas exclusion reason"])]
+    df_join = df_join[(df_join["Exclusion reason"] == 'Analysis_set') & pd.isnull(df_join["HaploAtlas exclusion reason"])]
 
     df_samples_with_ns_changes = df_join.copy()
     # worldmap map requires iso_alpha values
@@ -126,7 +126,7 @@ Adjust the slider below to choose your time interval of interest for calculating
     if 'wildtype' in df_samples_with_ns_changes['ns_changes'].values:
         df_samples_with_ns_changes.loc[df_samples_with_ns_changes['ns_changes'] == 'wildtype', 'ns_changes'] = ''
 
-    df_samples_with_ns_changes = df_samples_with_ns_changes.loc[df_samples_with_ns_changes['QC_pass']]
+    df_samples_with_ns_changes = df_samples_with_ns_changes.loc[df_samples_with_ns_changes['QC pass']]
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', ['Country']] = 'DRC'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'United Republic of Tanzania', ['Country']] = 'Tanzania'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Lao People's Democratic Republic", ['Country']] = 'Laos'
