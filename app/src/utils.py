@@ -37,7 +37,7 @@ def _cache_load_utility_mappers(base_path = DATAPACK_BASE_PATH):
 
 @st.cache_data
 def _cache_load_sample_metadata():
-    return pd.read_csv(f'{DATAPACK_BASE_PATH}/auxiliary/Pf_8_samples_20241111.txt.gz', sep = "\t", low_memory = False)
+    return pd.read_csv(f'{DATAPACK_BASE_PATH}/auxiliary/Pf_8_samples_20241212.txt.gz', sep = "\t", low_memory = False)
 
 @st.cache_data
 def cache_load_gene_summary(filename: str, base_path = DATAPACK_BASE_PATH):
