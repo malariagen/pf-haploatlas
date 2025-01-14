@@ -4,6 +4,8 @@ import json
 
 from src.utils import _cache_load_utility_mappers
 
+DATAPACK_BASE_PATH = "app/files/datapack-2025-01-14"
+
 def process_configs_menu(gene_id_selected, df_haplotypes, df_join):
     """Main function called in main.py to handle user config settings in the expander"""
     
@@ -60,7 +62,7 @@ def _config_data_filtering_section():
     return min_samples
 
 def _config_data_statistics_section(min_samples, df_haplotypes, df_join, gene_id_selected):
-    job_logs_file = "app/files/datapack/auxiliary/gene_log.tsv"
+    job_logs_file = f"{DATAPACK_BASE_PATH}/auxiliary/gene_log.tsv"
     gene_log = pd.read_csv(job_logs_file, sep = "\t")
     sample_exclusion_count_columns = ["c_exc_s", "c_inc_s", "c_missing", "c_het_calls", "c_stop_codon", "c_unq_h"]
     gene_info = {col: int(gene_log.loc[gene_log.gene_id == gene_id_selected, col].values[0]) for col in sample_exclusion_count_columns}
