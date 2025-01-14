@@ -54,7 +54,7 @@ def set_up_interface():
     _st_justify_markdown_html("""
 ### Introduction
 
-The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 4,952 core genes by using data from 24,410 samples, from 33 countries, and spread between the years 1966 and 2022, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. Please check out our tutorial video in the sidebar to learn how to use the app. This web app was primarily developed for use on a desktop browser. If you would like support for mobile, please request this feature in the feedback form in the sidebar! We also encourage users to access and share the app using the following stable link to prevent outages in service: https://apps.malariagen.net/pf-haploatlas.
+The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 4,952 core genes by using data from 24,409 samples, from 34 countries, and spread between the years 1966 and 2022, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. Please check out our tutorial video in the sidebar to learn how to use the app. This web app was primarily developed for use on a desktop browser. If you would like support for mobile, please request this feature in the feedback form in the sidebar! We also encourage users to access and share the app using the following stable link to prevent outages in service: https://apps.malariagen.net/pf-haploatlas.
 
 The Pf-HaploAtlas journal manuscript can be found in the sidebar. Pf-HaploAtlas currently uses data generated using the MalariaGEN Pf8 whole genome sequencing data release, and will expand with each new MalariaGEN _Plasmodium_ data release. 
 
@@ -197,10 +197,9 @@ Due to the country-level aggregation used in the world map plot, countries conta
         _st_justify_markdown_html("""
 ## How to cite
 
-When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite the following: 
+When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite our manuscript on Bioinformatics: 
 
-> Lee C, Ünlü ES, White NFD, Almagro-Garcia J, Ariani C, Pearson RD. Pf-HaploAtlas: An interactive web app for spatiotemporal analysis of _P. falciparum_ genes. BioRxiv 603783 **[Preprint]** July 16, 2024. Available from: https://doi.org/10.1101/2024.07.16.603783.
-
+> Chiyun Lee, Eyyüb S Ünlü, Nina F D White, Jacob Almagro-Garcia, Cristina V Ariani, Richard D Pearson, Pf-HaploAtlas: an interactive web app for spatiotemporal analysis of Plasmodium falciparum genes, Bioinformatics, Volume 40, Issue 11, November 2024, btae673, https://doi.org/10.1093/bioinformatics/btae673
 """)
 
         st.divider()
