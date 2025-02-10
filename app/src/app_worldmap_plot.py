@@ -90,8 +90,8 @@ Adjust the slider below to choose your time interval of interest for calculating
         st.stop()
     
     # Filter QC fail and missing samples  
-    df_join = df_join[(df_join["Exclusion reason"] == 'Analysis_set') & pd.isnull(df_join["HaploAtlas exclusion reason"])]
-
+    df_join.loc[(df_join["Exclusion reason"] == 'Analysis_set') & (df_join["HaploAtlas exclusion reason"] == "Analysis_set")].copy()
+    
     df_samples_with_ns_changes = df_join.copy()
     # worldmap map requires iso_alpha values
     plotly_worldmap_df = px.data.gapminder().query("year==2007")
