@@ -103,7 +103,9 @@ Click and drag to zoom to focus on certain locations. Double-click to reset.
     def _abacus_scatter(**kwargs):
         """Convenience function for creating scatter points on the abacus plot"""
         return go.Scatter(
-            customdata = [[row.n, int(row.n * row[ns_changes + ' frequency']), np.round(row[ns_changes + ' frequency'] * 100, 1)]],
+            customdata = [[row.n,
+                           np.rint(row.n * row[ns_changes + ' frequency']), # int casting occasionally rounded floats to 0.0, so using `np.rint`
+                           np.round(row[ns_changes + ' frequency'] * 100, 1)]],
             showlegend = False,
             **kwargs
         )
