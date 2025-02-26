@@ -4,7 +4,7 @@ import json
 
 from src.utils import _cache_load_utility_mappers
 
-DATAPACK_BASE_PATH = "app/files/datapack-2025-02-08"
+DATAPACK_BASE_PATH = "app/files/datapack-2025-02-26"
 
 def process_configs_menu(gene_id_selected, df_haplotypes, df_join):
     """Main function called in main.py to handle user config settings in the expander"""
