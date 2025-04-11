@@ -196,9 +196,9 @@ The Haplotype UpSet plot provides an overview of the haplotypes for the gene sel
 - "Geographic distribution (%)" - the geographic distribution of that haplotype (see sidebar for details)
 - "Mutations" - the individual amino acid mutations that make up the haplotype
 
-Each stack of 3 subplots corresponds to one haplotype, and these are displayed in order of decreasing prevalence from left to right. Hover your mouse over the data to see details. 
+Each vertical stack of 3 subplots corresponds to one haplotype. Hover your mouse over the data to see details. 
 
-You can <b><u>investigate a specific haplotype by clicking on any of the data elements of the haplotype</b></u>, e.g., clicking on the bar chart. If you've chosen one of the key genes associated with drug resistance, you can also find more information on each haplotype in [this guide from the Pf7 data release](https://www.malariagen.net/wp-content/uploads/2023/11/Pf7_resistance_classification.pdf). 
+You can <b><u>investigate a specific haplotype by clicking on any of the data elements of the haplotype</b></u>, e.g., clicking on the bar chart, and scrolling down. If you've chosen one of the key genes linked to drug resistance, you can also find more information on each haplotype in [this guide from the Pf8 data release](https://pf8-release.cog.sanger.ac.uk/Pf8_resistance_classification.pdf). 
         """
     )
 

@@ -51,7 +51,7 @@ def cache_load_gene_summary(filename: str, base_path = DATAPACK_BASE_PATH):
 
 @st.cache_data
 def cache_load_population_colours():
-    """Pf7 population colour palette. Caches the objects when first loaded"""
+    """Pf8 population colour palette. Caches the objects when first loaded"""
     population_colours = collections.OrderedDict()
     population_colours['SA']      = "#4daf4a"
     population_colours['AF-W']    = "#e31a1c"
