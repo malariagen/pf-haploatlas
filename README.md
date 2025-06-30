@@ -1,7 +1,7 @@
 # Pf-HaploAtlas
-The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 5,102 core genes by using data from 16,203 samples, from 33 countries, and spread between the years 1984 and 2018, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. 
+The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 4,952 core genes by using data from 24,409 samples, from 34 countries, and spread between the years 1966 and 2022, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. 
 
-Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf7 whole genome sequencing data release](https://wellcomeopenresearch.org/articles/8-22/v1), but will expand with each new MalariaGEN _Plasmodium_ data release. 
+Pf-HaploAtlas currently uses data generated using the MalariaGEN Pf8 whole genome sequencing data release, but will expand with each new MalariaGEN _Plasmodium_ data release. 
 
 We encourage users to access and share the app using the following stable link to prevent outages in service: https://apps.malariagen.net/pf-haploatlas.
 
@@ -16,10 +16,10 @@ The accompanying preprint manuscript for the Pf-HaploAtlas will be published soo
 
 
 
-# Pf-HaploAtlas preprint on bioRxiv
+# Pf-HaploAtlas manuscript on Bioinformatics
 When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite the following: 
 
-> Lee C, Ünlü ES, White NFD, Almagro-Garcia J, Ariani C, Pearson RD. Pf-HaploAtlas: An interactive web app for spatiotemporal analysis of _P. falciparum_ genes. BioRxiv 603783 **[Preprint]** July 16, 2024. Available from: https://doi.org/10.1101/2024.07.16.603783.
+> Chiyun Lee, Eyyüb S Ünlü, Nina F D White, Jacob Almagro-Garcia, Cristina V Ariani, Richard D Pearson, Pf-HaploAtlas: an interactive web app for spatiotemporal analysis of Plasmodium falciparum genes, Bioinformatics, Volume 40, Issue 11, November 2024, btae673, https://doi.org/10.1093/bioinformatics/btae673
 
 
 
@@ -57,7 +57,7 @@ pip install -r requirements.txt
 ```
 python -m streamlit run app/main.py
 ```
-The app should naturally open in your browser but if not, click on the ```Network URL``` that appears in the terminal. For further details, please refer to the [Streamlit documentation](https://streamlit.io/). 
+The app should naturally open in your browser but if not, click on the appropriate URL that appears in the terminal. For further details, please refer to the [Streamlit documentation](https://streamlit.io/). 
 
 
 

@@ -48,8 +48,8 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
 
     gene_name_selected = utility_mappers["gene_ids_to_gene_names"][gene_id_selected]
 
-    # Filter QC fail and missing samples  
-    df_samples_with_ns_changes = df_join[df_join['Exclusion reason'] == 'Analysis_set'].copy()
+    # Filter QC fail and missing samples
+    df_samples_with_ns_changes = df_join.loc[(df_join["Exclusion reason"] == 'Analysis_set') & (df_join["HaploAtlas exclusion reason"] == "Analysis_set")].copy()
     
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', ['Country']] = 'DRC'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "3D7 REF"
@@ -72,7 +72,6 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
     df_frequencies['Label'] = df_frequencies['Country'] + ', ' + df_frequencies['Admin level 1']
 
     populations = [col for col in df_haplotypes_set.columns if col not in ["number_of_mutations", "ns_changes", "Total", "ns_changes_list", "sample_names", "cum_proportion"]]
-    label = {p: df_frequencies.loc[df_frequencies['Population'] == p, 'Admin level 1'].nunique() for p in populations}
 
     # ============================================================================================================================================================
     # ============================================================================================================================================================
@@ -85,30 +84,28 @@ The Abacus plot shows how the haplotype frequency of your selected haplotype cha
 
 Click and drag to zoom to focus on certain locations. Double-click to reset. 
 """)
-
-    fig = make_subplots(rows = 2, cols = 4,
+    
+    fig = make_subplots(rows = 2, cols = 2,
                         vertical_spacing = 0,
-                        horizontal_spacing = 0.05,
+                        horizontal_spacing = 0,
                         specs = [
-                            [{"colspan": 4}, None, None, None],
-                            [{}, {}, {}, {}],
+                            [{"colspan": 2}, None],
+                            [{}, {}],
                         ],
                         row_heights = [1, 20],
-                        column_widths = [3, 1, 1, 5],
+                        column_widths = [1, 3],
                         shared_yaxes = "rows"
                        )
-
-
-    xlims = [(1982, 1986), (1994,1998), (2000,2019)]
 
     labels_list = []
     population_colours_list = []
 
-
     def _abacus_scatter(**kwargs):
         """Convenience function for creating scatter points on the abacus plot"""
         return go.Scatter(
-            customdata = [[row.n, int(row.n * row[ns_changes + ' frequency']), np.round(row[ns_changes + ' frequency'] * 100, 1)]],
+            customdata = [[row.n,
+                           np.rint(row.n * row[ns_changes + ' frequency']), # int casting occasionally rounded floats to 0.0, so using `np.rint`
+                           np.round(row[ns_changes + ' frequency'] * 100, 1)]],
             showlegend = False,
             **kwargs
         )
@@ -116,14 +113,14 @@ Click and drag to zoom to focus on certain locations. Double-click to reset.
     scatter_config = {
         "zero_frequency": {
             "marker": dict(color="white",
-                           size=13,
+                           size=11,
                            symbol="circle-x",
                            line=dict(color='gray',
                                      width=1))
         },
         "full_frequency": {
             "marker": dict(color="black",
-                           size=20,
+                           size=16,
                            symbol="circle"),
             "text": "<b>100</b>",
             "mode": "markers+text",
@@ -131,56 +128,55 @@ Click and drag to zoom to focus on certain locations. Double-click to reset.
                              color="white")
         },
     }
-    
+
     hovertemplate = '<b>%{y} in %{x}</b><br>Samples with selected haplotype: %{customdata[1]} (%{customdata[2]}%)<br>Number of samples: %{customdata[0]}<extra></extra>',
+    for pop in reversed(populations):
 
-    for i in [2, 3, 4]:
-        fig.update_xaxes(range=xlims[i-2], row=2, col=i, showgrid=False)
+        country = df_frequencies.loc[df_frequencies['Population'] == pop, 'Country']
+        _, idx = np.unique(country, return_index=True)
+        country = country.reset_index(drop=True)
 
-        for pop in reversed(populations):
+        for c in country[np.sort(idx)]:
 
-            country = df_frequencies.loc[df_frequencies['Population'] == pop, 'Country']
-            _, idx = np.unique(country, return_index=True)
-            country = country.reset_index(drop=True)
+            data = df_frequencies[(df_frequencies['Population'] == pop) & (df_frequencies['Country'] == c)]
 
-            for c in country[np.sort(idx)]:
+            for index, row in data.iterrows():
 
-                data = df_frequencies[(df_frequencies['Population'] == pop) & (df_frequencies['Country'] == c)]
+                if row.Label not in labels_list:
+                    labels_list.append(row.Label)
+                    population_colours_list.append(population_colours[row.Population])
 
-                for index, row in data.iterrows():
+                if row[ns_changes + ' frequency'] == 0:
+                    fig.add_traces(
+                        _abacus_scatter(x = [row.Year], y = [row.Label],
+                                        hovertemplate = hovertemplate,
+                                        **scatter_config["zero_frequency"]
+                                        ), rows = 2, cols = 2)
 
-                    if row.Label not in labels_list:
-                        labels_list.append(row.Label)
-                        population_colours_list.append(population_colours[row.Population])
+                elif row[ns_changes + ' frequency'] == 1:
+                    fig.add_traces(
+                        _abacus_scatter(x = [row.Year], y = [row.Label],
+                                        hovertemplate = hovertemplate,
+                                        **scatter_config["full_frequency"]
+                                        ), rows = 2, cols = 2)
 
-                    if row[ns_changes + ' frequency'] == 0:
-                        fig.add_traces(
-                            _abacus_scatter(x = [row.Year], y = [row.Label],
-                                            hovertemplate = hovertemplate,
-                                            **scatter_config["zero_frequency"]
-                                           ), rows = 2, cols = i)
+                else:
+                    fig.add_traces(
+                        _abacus_scatter(x = [row.Year], y = [row.Label],
+                                        hovertemplate = hovertemplate,
+                                        marker=dict(color = _partial_frequency_marker_colour(row[ns_changes + ' frequency']),
+                                                    size = 16, symbol = "circle",
+                                                    line=dict(
+                                                        color='black',
+                                                        width=1.5)
+                                                    )
+                                        ), rows = 2, cols = 2)
+    
+    min_year, max_year = df_frequencies.Year.min(), df_frequencies.Year.max()
+    n_locations = df_frequencies.Label.nunique()
 
-                    elif row[ns_changes + ' frequency'] == 1:
-                        fig.add_traces(
-                            _abacus_scatter(x = [row.Year], y = [row.Label],
-                                            hovertemplate = hovertemplate,
-                                            **scatter_config["full_frequency"]
-                                           ), rows = 2, cols = i)
-
-                    else:
-                        fig.add_traces(
-                            _abacus_scatter(x = [row.Year], y = [row.Label],
-                                            hovertemplate = hovertemplate,
-                                            marker=dict(color = _partial_frequency_marker_colour(row[ns_changes + ' frequency']),
-                                                        size = 16, symbol = "circle",
-                                                        line=dict(
-                                                            color='black',
-                                                            width=1.5)
-                                                        )
-                                           ), rows = 2, cols = i)
-                        
-    fig.update_xaxes(title_text="Year", row=2, col=3)
-    fig.update_yaxes(title_text="Location", row=2, col=1)
+    fig.update_xaxes(title_text=  "Year", range = (min_year - 1, max_year + 1), row = 2, col = 2)
+    fig.update_yaxes(title_text = "Location", range = (-0.5, n_locations - 0.5), row = 2, col = 1)
 
     fig.add_traces(
         go.Scatter(
@@ -229,15 +225,11 @@ Click and drag to zoom to focus on certain locations. Double-click to reset.
         height = 1300,
         xaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
         xaxis2 = dict(range = (0, 1), fixedrange=True, tickvals = []),
-        xaxis3 = dict(fixedrange=True, tickangle=-60),
-        xaxis4 = dict(fixedrange=True, tickangle=-60),
-        xaxis5 = dict(fixedrange=True, tickangle=-60, tickvals = np.arange(2000, 2020).astype(int)),
+        xaxis3 = dict(fixedrange=True, tickangle=-60, tickvals = np.arange(min_year, max_year).astype(int)),
 
         yaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
         yaxis2 = dict(fixedrange=True, tickvals = []),
         yaxis3 = dict(fixedrange=True, showticklabels = False, tickmode='linear'),
-        yaxis4 = dict(fixedrange=True, showticklabels = False, tickmode='linear'),
-        yaxis5 = dict(fixedrange=True, showticklabels = False, tickmode='linear'),
         margin=dict(t=50, b=55, l=0, r=0)
     )
 
