@@ -58,7 +58,7 @@ The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone wit
                               
 The Pf-HaploAtlas has been designed to be user-friendly and intuitive, so that you can <b><u>learn how to use the app by simply continuing to read this page</b></u>. If you prefer, refer to our tutorial video or manuscript in the sidebar for a quick demo. To request a feature, get involved on our GitHub Issues or feedback form in the sidebar. We also encourage users to access and share the app using the following stable link to prevent outages in service: https://apps.malariagen.net/pf-haploatlas.
 
-Pf-HaploAtlas currently uses data generated using the MalariaGEN Pf8 whole genome sequencing data release, and will expand with each new MalariaGEN _Plasmodium_ data release. 
+Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf8 whole genome sequencing data release](https://wellcomeopenresearch.org/articles/10-325), and will expand with each new MalariaGEN _Plasmodium_ data release. 
 
 #### Search for a gene below to get started.
 
@@ -166,7 +166,7 @@ Clicking on a haplotype will generate the two following plots:
         _st_justify_markdown_html("""
 ## Geographic distribution
 
-The locations of where samples were collected are grouped into ten major "sub-populations" based on their geographic and genetic characteristics, as defined in the <a href="https://wellcomeopenresearch.org/articles/8-22/v1" target="_blank">Pf7 paper</a>. These are colour-coded as follows:
+The locations of where samples were collected are grouped into ten major "sub-populations" based on their geographic and genetic characteristics, as defined in the <a href="https://wellcomeopenresearch.org/articles/10-325" target="_blank">Pf8 paper</a>. These are colour-coded as follows:
 """)
 
         st.markdown("""
