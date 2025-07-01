@@ -1,7 +1,7 @@
 ## Version Pf8.0.0
 - Ingested MalariaGEN Pf8 - now 24,409 QC-passed samples
 - Updated backend with new GFF - now 4,952 core genes
-- Static instance of the previous Pf-HaploAtlas Pf7 version has been made available [here](https://pf7-haploatlas.streamlit.app/)
+- Previous Pf-HaploAtlas Pf7 version has been made available [here](https://pf7-haploatlas.streamlit.app/) (it may require waking up the app!)
 - Minor aesthetic changes and updates with new data release
 
 
