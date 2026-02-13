@@ -248,20 +248,11 @@ If you'd like to report a bug, request a feature, or give us feedback, please us
             [100]
         )
 
-        _show_images_with_urls(
-            ["app/files/logo_gsu.png", "app/files/logo_sanger.png"],
-            ["https://www.sanger.ac.uk/collaboration/genomic-surveillance-unit/", "https://www.sanger.ac.uk/"],
-            [130, 80],
-            [130, 80]
-        )
-
-        st.divider()
-
         st.markdown("## Funded by")
         _show_images_with_urls(
-            ["app/files/logo_bmgf.png"],
+            ["app/files/logo_gates.png"],
             ["https://www.gatesfoundation.org/"],
-            [60],
+            [70],
             [100]
         )
 
@@ -270,7 +261,7 @@ If you'd like to report a bug, request a feature, or give us feedback, please us
         st.markdown(
             """
 <div style="text-align:center">
-    Copyright © 2021 - 2025 Genome Research Ltd.
+    Copyright © MalariaGEN at the Liverpool School of Tropical Medicine.
 </div>
             """
         , unsafe_allow_html = True)
