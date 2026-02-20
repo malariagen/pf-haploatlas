@@ -166,21 +166,24 @@ Clicking on a haplotype will generate the two following plots:
         _st_justify_markdown_html("""
 ## Geographic distribution
 
-The locations of where samples were collected are grouped into ten major "sub-populations" based on their geographic and genetic characteristics, as defined in the <a href="https://wellcomeopenresearch.org/articles/10-325" target="_blank">Pf8 paper</a>. These are colour-coded as follows:
+The locations of where samples were collected are grouped into 13 major "sub-populations" based on their geographic and genetic characteristics, as defined in the <a href="https://wellcomeopenresearch.org/articles/10-325" target="_blank">Pf8 paper</a>. These are colour-coded as follows:
 """)
 
         st.markdown("""
 <ul style="list-style-type:none;">
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#f781bf; border-radius:50%;"></span> OC-NG - Oceania, New Guinea</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#3182bd; border-radius:50%;"></span> AS-SE-E - South-East Asia (East)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#9ecae1; border-radius:50%;"></span> AS-SE-W - South-East Asia (West)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#984ea3; border-radius:50%;"></span> AS-S-FE - South Asia (Far East)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#dfc0eb; border-radius:50%;"></span> AS-S-E - South Asia (East)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#fecc5c; border-radius:50%;"></span> AF-E - Africa (East)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#bb8129; border-radius:50%;"></span> AF-NE - Africa (North-East)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#fd8d3c; border-radius:50%;"></span> AF-C - Africa (Central)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#b8e186; border-radius:50%;"></span> LA-W - Latin America (West)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#4dac26; border-radius:50%;"></span> LA-E - Latin America (East)</li>
     <li><span style="display:inline-block; width:10px; height:10px; background-color:#e31a1c; border-radius:50%;"></span> AF-W - Africa (West)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#4daf4a; border-radius:50%;"></span> SA - South America</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#fd8d3c; border-radius:50%;"></span> AF-C - Africa (Central)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#bb8129; border-radius:50%;"></span> AF-NE - Africa (North-East)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#fecc5c; border-radius:50%;"></span> AF-E - Africa (East)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#dfc0eb; border-radius:50%;"></span> AS-S-E - South Asia (East)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#984ea3; border-radius:50%;"></span> AS-S-FE - South Asia (Far East)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#9ecae1; border-radius:50%;"></span> AS-SE-W - South-East Asia (West)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#3182bd; border-radius:50%;"></span> AS-SE-E - South-East Asia (East)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#02818a; border-radius:50%;"></span> AS-SE-M - South-East Asia (Maritime)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#f781bf; border-radius:50%;"></span> OC-NG - Oceania, New Guinea</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#003399; border-radius:50%;"></span> EU - Europe</li>
 </ul>
 """, unsafe_allow_html=True)
 
@@ -225,7 +228,7 @@ When publishing work that uses data and/or plots from the Pf-HaploAtlas, please 
         _st_justify_markdown_html("""
 ## Acknowledgements
 
-Pf-HaploAtlas currently uses data generated using the MalariaGEN Pf8 data release which was made possible by clinical parasite samples contributed by partner studies, whose investigators are represented in the data release's author list.
+Pf-HaploAtlas currently uses data generated using the MalariaGEN Pf9 data release which was made possible by clinical parasite samples contributed by partner studies, whose investigators are represented in the data release's author list.
 
 """)
         st.divider()

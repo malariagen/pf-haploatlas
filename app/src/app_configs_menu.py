@@ -1,10 +1,7 @@
 import streamlit as st
 import pandas as pd
-import json
 
-from src.utils import _cache_load_utility_mappers
-
-DATAPACK_BASE_PATH = "app/files/datapack-2025-02-26"
+DATAPACK_BASE_PATH = "app/files/pf9-datapack-2026-02-19"
 
 def process_configs_menu(gene_id_selected, df_haplotypes, df_join):
     """Main function called in main.py to handle user config settings in the expander"""
@@ -88,7 +85,7 @@ def _config_data_statistics_section(min_samples, df_haplotypes, df_join, gene_id
     
     statistics_table["Percentage"] = statistics_table["Sample Count"].apply(lambda x: '{:.1f} %'.format(100 * x / n_qc_pass_samples))
 
-    st.write(f"{included_samples} samples ({included_samples / n_qc_pass_samples * 100:.1f} %) are available for analysis out of {n_qc_pass_samples} QC pass samples for this gene, after {excluded_samples} samples ({excluded_samples / n_qc_pass_samples * 100:.1f} %) have been excluded for the reasons listed below. ")
+    st.write(f"{included_samples:,} samples ({included_samples / n_qc_pass_samples * 100:.1f} %) are available for analysis out of {n_qc_pass_samples:,} QC pass samples for this gene, after {excluded_samples:,} samples ({excluded_samples / n_qc_pass_samples * 100:.1f} %) have been excluded for the reasons listed below. ")
     st.dataframe(statistics_table, use_container_width = True, hide_index = True)
 
     return
@@ -100,14 +97,14 @@ def _config_download_data_section(gene_id_selected, df_haplotypes, df_join):
         "Download population-level summary",
         df_haplotypes.reset_index(drop = True).to_csv().encode('utf-8'),
         file_name = f'pf-haploatlas-{gene_id_selected}_population_summary.csv',
-        help = '''Explanation of columns: "number_of_mutations" describes number of mutations relative to 3D7; "ns_changes" describes the amino acid changes of each unique haplotype; "SA", "AF-W", "AF-C", etc. shows number of samples observed with that haplotype in each geographic distribution (see sidebar for details); "Total" is the total number of samples with that haplotype; "ns_changes_list" is a list of amino acid changes of the haplotype; "sample_names" describes which lab strains the haplotype is found in''',
+        help = '''Explanation of columns: "number_of_mutations" describes number of mutations relative to 3D7; "ns_changes" describes the amino acid changes of each unique haplotype; "LA-W", "LA-E", "AF-W", etc. shows number of samples observed with that haplotype in each geographic distribution (see sidebar for details); "Total" is the total number of samples with that haplotype; "ns_changes_list" is a list of amino acid changes of the haplotype; "sample_names" describes the lab strains in which the haplotype is also found''',
         use_container_width = True)
     
     st.download_button(
         "Download sample-level summary",
         df_join.to_csv().encode('utf-8'),
         file_name = f'pf-haploatlas-{gene_id_selected}_sample_summary.csv',
-        help = '''Explanation of columns: "Sample" is the sample name; "Study" is the clinical study of origin; "Country" of sample collection; "Admin level"	is the location of sample collection; "latitude", "longitude, "Year" of sample collection; "ENA" is the ID in the European Nucleotide Archive; "All samples same case" is reformatted sample name, "Population" refers to geographic distribution (see sidebar for details); "% callable" of SNPs" describes what percentage of QC-passed SNP positions were callable; "QC pass" is whether the sample passed quality control for Pf8; "Exclusion reason" describes the reason for a sample's removal from the Pf8 QC-pass cohort or whether it was part of the QC-passed analysis set ("Analysis_set"); "Sample type" describes the type of sample put through to sequencing; "Sample was in Pf7" is whether the sample was in the previous Pf7 data resource; "ns_changes" describes the amino acid changes of the sample for the gene selected; "HaploAtlas exclusion reason" describes for what reason the sample was excluded from analysis on the app for the sample number threshold used at the time of downloading the data ("Missing_genotype" means a genotype call was missing so amino acid haplotype could not be reliably identified; "Het_calls" means there were SNPs which were called as heterozygous so amino acid haplotype could not be reliably identified; "Unverified_identity" means there was missing metadata in Pf8; "Stop_codon" implies SNPs suggested that the protein would be truncated by a stop codon so amino acid haplotype could not be reliably identified; "Analysis_set indicates the sample was not removed and was used in analysis)''',
+        help = '''Explanation of columns: "Sample" is the sample name; "Study" is the clinical study of origin; "Country" of sample collection; "Admin level 1" is the location of sample collection; "Year" of sample collection; "Population" refers to geographic distribution (see sidebar for details); "QC pass" is whether the sample passed quality control for Pf9; "Exclusion reason" describes the reason for a sample's removal from the Pf9 QC-pass cohort or whether it was part of the QC-passed analysis set ("Analysis_set"); "ns_changes" describes the amino acid changes of the sample for the gene selected; "HaploAtlas exclusion reason" describes for what reason the sample was excluded from analysis on the app for the sample number threshold used at the time of downloading the data ("Missing_genotype" means a genotype call was missing so amino acid haplotype could not be reliably identified; "Het_calls" means there were SNPs which were called as heterozygous so amino acid haplotype could not be reliably identified; "Unverified_identity" means there was missing metadata in Pf9; "Stop_codon" implies SNPs suggested that the protein would be truncated by a stop codon so amino acid haplotype could not be reliably identified; "Analysis_set indicates the sample was not removed and was used in analysis)''',
         use_container_width = True)
     
     return

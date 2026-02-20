@@ -222,7 +222,7 @@ Click and drag to zoom to focus on certain locations. Double-click to reset.
             'font': {
                 'size': 14,
             }},
-        height = 1300,
+        height = 1800,
         xaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
         xaxis2 = dict(range = (0, 1), fixedrange=True, tickvals = []),
         xaxis3 = dict(fixedrange=True, tickangle=-60, tickvals = np.arange(min_year, max_year).astype(int)),

@@ -1,25 +1,10 @@
 import streamlit as st
-import pandas as pd
 import numpy as np
-import plotly.express as px
 import plotly.graph_objs as go
+
 from plotly.subplots import make_subplots
-import collections
 
 from src.utils import cache_load_population_colours, generate_download_buttons, _cache_load_utility_mappers, _st_justify_markdown_html
-
-def _locations_agg(x, ns_changes):
-    """Aggregation function used to reformat dataframe in preparation for world map plot"""
-    names = collections.OrderedDict()
-    names['n'] = np.count_nonzero(x['ns_changes_homozygous'])
-    if names['n'] == 0:
-        names[f'frequency'] = 0
-        names['haplo_count'] = 0
-    else:
-        names['haplo_count'] = np.count_nonzero(( x['ns_changes'] == ns_changes))
-        names[f'frequency'] = names['haplo_count'] / names['n']
-
-    return pd.Series(names)
 
 def _partial_frequency_marker_colour(freq: float) -> str:
     """
@@ -88,33 +73,9 @@ Adjust the slider below to choose your time interval of interest for calculating
     if len(df_join) == 0:
         st.warning("No haplotype data found.")
         st.stop()
-    
-    # Filter QC fail and missing samples  
-    df_join.loc[(df_join["Exclusion reason"] == 'Analysis_set') & (df_join["HaploAtlas exclusion reason"] == "Analysis_set")].copy()
-    
+
     df_samples_with_ns_changes = df_join.copy()
-    # worldmap map requires iso_alpha values
-    plotly_worldmap_df = px.data.gapminder().query("year==2007")
-    iso_country_dict = dict(zip(plotly_worldmap_df['country'], plotly_worldmap_df['iso_alpha']))
-    df_samples_with_ns_changes.loc[:,'iso_alpha'] = df_samples_with_ns_changes['Country'].map(iso_country_dict)
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Papua New Guinea', 'iso_alpha'] = 'PNG'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Laos', 'iso_alpha'] = 'LAO'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', 'iso_alpha'] = 'COD'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Côte d'Ivoire", 'iso_alpha'] = 'CIV'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'South Sudan', 'iso_alpha'] = 'SSD'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Lao People's Democratic Republic", 'iso_alpha'] = 'LAO'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'United Republic of Tanzania', 'iso_alpha'] = 'TZA'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'The Gambia', 'iso_alpha'] = 'GMB'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Guyana', 'iso_alpha'] = 'GUY'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'DRC', 'iso_alpha'] = 'COD'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Solomon Islands', 'iso_alpha'] = 'SLB'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Vanuatu', 'iso_alpha'] = 'VUT'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Congo', 'iso_alpha'] = 'COG'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'French Guiana', 'iso_alpha'] = 'GUF'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Yemen', 'iso_alpha'] = 'YEM'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Suriname', 'iso_alpha'] = 'SUR'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Cape Verde', 'iso_alpha'] = 'CPV'
-    df_samples_with_ns_changes.loc[:,'iso_alpha'] = df_samples_with_ns_changes['iso_alpha'].astype(object)
+    # worldmap uses country names directly for locations
 
     # Fix for population of vietnam
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Vietnam", ['Population']] = 'AS-SE-E'
@@ -139,17 +100,23 @@ Adjust the slider below to choose your time interval of interest for calculating
     df_samples_with_ns_changes['Year-interval'] = str(year)
 
     ### AGGREGATION     
-    if len(df_samples_with_ns_changes.groupby(['iso_alpha', 'Country', 'Year-interval', 'Population'])) == 0:
+    if len(df_samples_with_ns_changes.groupby(['Country', 'Year-interval', 'Population'])) == 0:
         st.warning("No haplotype data found.")
         st.stop()
         
     df_frequencies = (
         df_samples_with_ns_changes
-        .groupby(['iso_alpha', 'Country', 'Year-interval', 'Population'])
-        .apply(lambda x: _locations_agg(x, ns_changes))
-        .reset_index()
-        .set_index(['Country'])
-        .reset_index())
+        .groupby(['Country', 'Year-interval', 'Population'], as_index = False)
+        .agg(
+            n = ('ns_changes_homozygous', lambda s: np.count_nonzero(s)),
+            haplo_count = ('ns_changes', lambda s: np.count_nonzero(s == ns_changes))
+        )
+    )
+    df_frequencies['frequency'] = 0
+    df_frequencies.loc[df_frequencies['n'] > 0, 'frequency'] = (
+        df_frequencies.loc[df_frequencies['n'] > 0, 'haplo_count']
+        / df_frequencies.loc[df_frequencies['n'] > 0, 'n']
+    )
     
     # only>min_samples 
     df_frequencies = df_frequencies.loc[(df_frequencies['n'] >= min_samples)]
@@ -194,7 +161,8 @@ Adjust the slider below to choose your time interval of interest for calculating
     # Add worldmap plot (scattergeo subplot)
     for _, row in df_frequencies.iterrows():
         trace = go.Scattergeo(
-            locations=[row['iso_alpha']],
+            locations=[row['Country']],
+            locationmode="country names",
             hoverinfo='text',
             hovertemplate=f"<b>{row['Country']}: {row['Year-interval'].strip('()').replace(',', ' - ')}</b><br>Population: {row['Population']}<br>Samples with selected haplotype: {row['haplo_count']} ({row['frequency']}%) <br>Number of samples: {row['n']}</b><extra></extra>",
             marker=dict(

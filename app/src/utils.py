@@ -2,7 +2,7 @@ import streamlit as st
 import json, os, lzma, pickle, collections, io
 import pandas as pd
 
-DATAPACK_BASE_PATH = "app/files/datapack-2025-02-26"
+DATAPACK_BASE_PATH = "app/files/pf9-datapack-2026-02-19"
 
 @st.cache_data
 def _cache_load_utility_mappers(base_path = DATAPACK_BASE_PATH):
@@ -37,32 +37,40 @@ def _cache_load_utility_mappers(base_path = DATAPACK_BASE_PATH):
 
 @st.cache_data
 def _cache_load_sample_metadata():
-    return pd.read_csv(f'{DATAPACK_BASE_PATH}/auxiliary/Pf_8_samples_20241212.txt.gz', sep = "\t", low_memory = False)
+    return pd.read_csv(f'{DATAPACK_BASE_PATH}/auxiliary/2026_02_19_Pf9_sample_metadata.tsv.gz', sep = "\t", low_memory = False)
 
 @st.cache_data
 def cache_load_gene_summary(filename: str, base_path = DATAPACK_BASE_PATH):
     """Loads the relevant gene summary file based on provided file path. Caches the objects when first loaded"""    
+
     with lzma.open(f'{base_path}/genes/{filename}', 'rb') as file:
         df_haplotypes, df_join, background_ns_changes = pickle.load(file)
+    
     df_join = df_join.rename(columns = {"Exclusion reason": "HaploAtlas exclusion reason"})
     df_join = pd.concat([_cache_load_sample_metadata(), df_join], axis = 1)
+
+    df_join["Exclusion reason"] = df_join["Exclusion reason"].fillna("Analysis_set")
+    df_join["HaploAtlas exclusion reason"] = df_join["HaploAtlas exclusion reason"].fillna("Analysis_set")
     
     return df_haplotypes, df_join, background_ns_changes
 
 @st.cache_data
 def cache_load_population_colours():
-    """Pf8 population colour palette. Caches the objects when first loaded"""
+    """Pf9 population colour palette. Caches the objects when first loaded"""
     population_colours = collections.OrderedDict()
-    population_colours['SA']      = "#4daf4a"
-    population_colours['AF-W']    = "#e31a1c"
-    population_colours['AF-C']    = "#fd8d3c" 
-    population_colours['AF-NE']   = "#bb8129" 
-    population_colours['AF-E']    = "#fecc5c"
-    population_colours['AS-S-E']  = "#dfc0eb" 
-    population_colours['AS-S-FE'] = "#984ea3" 
-    population_colours['AS-SE-W'] = "#9ecae1"
-    population_colours['AS-SE-E'] = "#3182bd"
-    population_colours['OC-NG']   = "#f781bf"
+    population_colours["LA-W"]    = "#b8e186"
+    population_colours["LA-E"]    = "#4dac26"
+    population_colours["AF-W"]    = "#e31a1c"
+    population_colours["AF-C"]    = "#fd8d3c"
+    population_colours["AF-NE"]   = "#bb8129"
+    population_colours["AF-E"]    = "#fecc5c"
+    population_colours["AS-S-E"]  = "#dfc0eb"
+    population_colours["AS-S-FE"] = "#984ea3"
+    population_colours["AS-SE-W"] = "#9ecae1"
+    population_colours["AS-SE-E"] = "#3182bd"
+    population_colours["AS-SE-M"] = "#02818a"
+    population_colours["OC-NG"]   = "#f781bf"
+    population_colours["EU"]      = "#003399"
     
     return population_colours
 
@@ -146,11 +154,11 @@ def _st_justify_markdown_html(text: str, location = None):
         )
     return
 
-@st.dialog("Pf-HaploAtlas now uses Pf8! 🎉")
+@st.dialog("Pf9 is here! 🥳")
 def _present_cookie_banner():
     tab1, tab2 = st.tabs(["Welcome", "Cookie details"])
 
-    tab1.markdown("We now use [**MalariaGEN Pf8**](https://wellcomeopenresearch.org/articles/10-325), which means that the Pf-HaploAtlas now contains data from **24,409** QC-passed samples. That's _8,206_ more, or over _50%_ more than the last version. Happy haplotype hunting!")
+    tab1.markdown("We now use [**MalariaGEN Pf8**](https://wellcomeopenresearch.org/articles/10-325), which means that the Pf-HaploAtlas now contains data from **40,074** QC-passed samples. That's _15,665_ more, or over _64%_ more than the last version. Happy haplotype hunting!")
 
     tab1.markdown("""<p style="text-align: right;"><i>- the HaploAtlas team</i></p>""", unsafe_allow_html = True)
 

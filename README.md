@@ -1,11 +1,11 @@
 # Pf-HaploAtlas
-The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 4,952 core genes by using data from 24,409 samples, from 34 countries, and spread between the years 1966 and 2022, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. 
+The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 4,952 core genes by using data from 40,074 samples, from 49 countries, and spread between the years 1944 and 2023, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. 
 
-Pf-HaploAtlas currently uses data generated using the MalariaGEN Pf8 whole genome sequencing data release, but will expand with each new MalariaGEN _Plasmodium_ data release. 
+Pf-HaploAtlas currently uses data generated using the MalariaGEN Pf9 whole genome sequencing data release, but will expand with each new MalariaGEN _Plasmodium_ data release. 
 
 We encourage users to access and share the app using the following stable link to prevent outages in service: https://apps.malariagen.net/pf-haploatlas.
 
-The accompanying preprint manuscript for the Pf-HaploAtlas will be published soon.
+
 
 
 # 10-minute demo of the online app (also available in the [app](https://apps.malariagen.net/pf-haploatlas))
@@ -64,7 +64,7 @@ The app should naturally open in your browser but if not, click on the appropria
 
 
 # Contributing
-We strongly encourage you to submit feature requests! Please open an issue [here](https://github.com/malariagen/pf-haploatlas/issues) where you will see a list of features already requested within our community, or fill out our [Google Forms](https://docs.google.com/forms/d/e/1FAIpQLSd2Bbr47PU85esj1_vA07EMmhySApjaRkVQSYK2yZ6o4Udd7w/viewform)!
+We strongly encourage you to submit feature requests! Please open an issue [here](https://github.com/malariagen/pf-haploatlas/issues) where you will see a list of features already requested within our community, or contact support@malariagen.net!
 
 
 
