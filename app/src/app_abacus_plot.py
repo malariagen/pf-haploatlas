@@ -58,6 +58,8 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', ['Country']] = 'DRC'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "3D7 REF"
 
+    df_samples_with_ns_changes["Admin level 1"] = df_samples_with_ns_changes["Admin level 1"].fillna("(Unspecified)")
+
     df_samples_with_ns_changes.loc[:,'ns_changes_homozygous'] = ( df_samples_with_ns_changes['ns_changes'] == df_samples_with_ns_changes['ns_changes'].str.upper() )
 
     aggregated_locations = df_samples_with_ns_changes.groupby(['Population', 'Country', 'Admin level 1']).apply(lambda x: len(x) >= min_samples)
