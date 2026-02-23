@@ -215,6 +215,16 @@ Click and drag to zoom to focus on certain locations. Double-click to reset.
                         ) for pos, freq in zip(partial_frequency_positions, partial_frequency_frequencies)],
         
         rows = 1, cols = 1)
+    
+    def map_value(x):
+        """
+        Linear mapping of number of locations to plot height. I roughly used these coords to fit:
+        (17, 1000), (100, 1800), (160, 2500)
+        """
+        y = 1000 + 10.5 * (x - 17)
+        return max(1000, min(2500, y))
+
+    plot_height = map_value(len(df_frequencies[["Country", "Admin level 1"]].drop_duplicates()))
 
     fig.add_annotation(_plotly_arrow(0.42, 0.57, legend_y+0.3))
 
@@ -228,7 +238,7 @@ Click and drag to zoom to focus on certain locations. Double-click to reset.
             'font': {
                 'size': 14,
             }},
-        height = 1800,
+        height = plot_height,
         xaxis = dict(tickvals = [], range = (0, 1), fixedrange=True, zeroline=False),
         xaxis2 = dict(range = (0, 1), fixedrange=True, tickvals = []),
         xaxis3 = dict(fixedrange=True, tickangle=-60, tickvals = np.arange(min_year, max_year).astype(int)),
