@@ -203,7 +203,7 @@ You can <b><u>investigate a specific haplotype by clicking on any of the data el
     )
 
     if gene_id_selected == "PF3D7_1343700":
-        st.warning("Sampling for this gene is biased: samples with artemisinin partial resistance from Uganda are over-represented. We have kept these samples in to show which mutations have been observed in the field, but trends should be interpreted with caution. See the changelog in the sidebar for details. ")
+        st.warning("Some samples were sequenced specifically because molecular surveillance had detected particular kelch13 mutations. Haplotype frequencies for these locations and years are therefore likely to be overestimated and should be treated with caution: Uganda (2017–2022): selected for C469Y or A675V; Kagera, Tanzania (2021–2022): selected for R561H; Guyana (2016): selected for C580Y. ")
 
     selection_dict = plotly_events(fig, override_height = total_plot_height, config = {"displayModeBar": False})
 
