@@ -202,6 +202,9 @@ You can <b><u>investigate a specific haplotype by clicking on any of the data el
         """
     )
 
+    if gene_id_selected == "PF3D7_1343700":
+        st.warning("Sampling for this gene is biased: samples with artemisinin partial resistance from Uganda are over-represented. We have kept these samples in to show which mutations have been observed in the field, but trends should be interpreted with caution. See the changelog in the sidebar for details. ")
+
     selection_dict = plotly_events(fig, override_height = total_plot_height, config = {"displayModeBar": False})
 
     generate_download_buttons(fig, gene_id_selected, total_plot_height, 800, plot_number = 1)
