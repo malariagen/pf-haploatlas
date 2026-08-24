@@ -203,7 +203,7 @@ You can <b><u>investigate a specific haplotype by clicking on any of the data el
     )
 
     if gene_id_selected == "PF3D7_1343700":
-        st.warning("Some samples were sequenced because particular kelch13 mutations were detected. Haplotype frequencies for these locations and years are therefore likely to be overestimated and should be treated with caution: Uganda (2017–2022) selected for C469Y or A675V; Kagera, Tanzania (2021–2022) selected for R561H; Guyana (2016) selected for C580Y. ")
+        st.warning("A small proportion of samples were selected because they had particular kelch13 mutations initially detected by malaria molecular surveillance. Haplotype frequencies for the following locations are therefore likely overestimated and should be treated with caution: Uganda (2017-2022) selected for C469Y or A675V; Kagera, Tanzania (2021 and 2022) selected for R561H; Guyana (2016) selected for C580Y ")
 
     selection_dict = plotly_events(fig, override_height = total_plot_height, config = {"displayModeBar": False})
 
