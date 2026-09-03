@@ -62,7 +62,7 @@ The world map plot displays the average haplotype frequency over an interval of 
 
 Adjust the slider below to choose your time interval of interest for calculating the proportion of samples containing the {ns_changes} haplotype: 
 """)
-    year = st.slider(' ', 1982, 2024, (2010, 2018))
+    year = st.slider(' ', 1971, 2026, (2010, 2018))
     population_colours = cache_load_population_colours()
     utility_mappers = _cache_load_utility_mappers()
 
@@ -79,8 +79,8 @@ Adjust the slider below to choose your time interval of interest for calculating
 
     # Fix for population of vietnam
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Vietnam", ['Population']] = 'AS-SE-E'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "India", ['Population']] = 'AS-S-E'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Kenya", ['Population']] = 'AF-E'
+    # df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "India", ['Population']] = 'AS-S-E'
+    # df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Kenya", ['Population']] = 'AF-E'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Thailand", ['Population']] = 'AS-SE-W'
 
     # deal with encoding of 'wildtype' in literature dataset
@@ -91,7 +91,7 @@ Adjust the slider below to choose your time interval of interest for calculating
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', ['Country']] = 'DRC'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'United Republic of Tanzania', ['Country']] = 'Tanzania'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Lao People's Democratic Republic", ['Country']] = 'Laos'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "3D7 REF"
+    df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "P01"
 
     df_samples_with_ns_changes['ns_changes_homozygous'] = ( df_samples_with_ns_changes['ns_changes'] == df_samples_with_ns_changes['ns_changes'].str.upper() )
 

@@ -1,3 +1,7 @@
+## Version Pv5.0.0 - September 2026
+- Ingested MalariaGEN Pv5 - 2,298 samples and 1,265 QC-passed samples. 
+- Includes 4,936 core Pv genes
+
 ## Version Pf9.0.0 - February 2026
 - Ingested the MalariaGEN Pf9 data release - now 40,074 QC-passed samples. Alongside samples sequenced at the Sanger Institute, Pf9 now includes ENA samples sequenced by other organisations. A small proportion of samples were sequenced because they had particular kelch13 mutations initially detected by malaria molecular surveillance. Haplotype frequencies for the following locations are therefore likely overestimated and should be treated with caution: Uganda (2017-2022) selected for C469Y or A675V; Kagera, Tanzania (2021 and 2022) selected for R561H; Guyana (2016) selected for C580Y.
 - Previous Pf-HaploAtlas Pf8 version has been made available [here](https://pf8-haploatlas.streamlit.app/) (it may require waking up the app!). 

@@ -8,7 +8,7 @@ def set_up_interface():
     """Main function called in main.py to set up basic page settings, introduction and sidebar"""
 
     st.set_page_config(
-        page_title            = "Pf-HaploAtlas",
+        page_title            = "Pv-HaploAtlas",
         layout                = "centered",
         page_icon             = "app/files/favicon.svg",
         initial_sidebar_state = "collapsed",
@@ -39,7 +39,7 @@ def set_up_interface():
     st.markdown(
         """
         <div style="text-align:center; font-size:4em; font-weight:bold;">
-            Pf-HaploAtlas
+            Pv-HaploAtlas
         </div>
         """, 
         unsafe_allow_html=True
@@ -54,15 +54,15 @@ def set_up_interface():
     _st_justify_markdown_html("""
 ### Introduction
 
-The _Plasmodium falciparum_ Haplotype Atlas (or Pf-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. falciparum_ genome! The app provides visualisations of haplotypes for all 4,952 core genes by using data from 24,409 samples, from 34 countries, and spread between the years 1966 and 2022, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. 
+The _Plasmodium vivax_ Haplotype Atlas (or Pv-HaploAtlas) allows anyone with an internet connection to study and track genetic mutations across any gene in the _P. vivax_ genome! The app provides visualisations of haplotypes for all 4,936 core genes by using data from 2,298 samples, from 29 countries, and spread between the years 1971 and 2019, facilitating comprehensive spatial and temporal analyses of genes and variants of interest. 
                               
-The Pf-HaploAtlas has been designed to be user-friendly and intuitive, so that you can <b><u>learn how to use the app by simply continuing to read this page</b></u>. If you prefer, refer to our tutorial video or manuscript in the sidebar for a quick demo. To request a feature, get involved on our GitHub Issues or feedback form in the sidebar. We also encourage users to access and share the app using the following stable link to prevent outages in service: https://apps.malariagen.net/pf-haploatlas.
+The Pv-HaploAtlas has been designed to be user-friendly and intuitive, so that you can <b><u>learn how to use the app by simply continuing to read this page</b></u>. If you prefer, refer to our tutorial video or manuscript in the sidebar for a quick demo. To request a feature, get involved on our GitHub Issues or feedback form in the sidebar. 
 
-Pf-HaploAtlas currently uses data generated using the [MalariaGEN Pf8 whole genome sequencing data release](https://wellcomeopenresearch.org/articles/10-325), and will expand with each new MalariaGEN _Plasmodium_ data release. 
+Pv-HaploAtlas currently uses data generated using the [MalariaGEN Pv5 whole genome sequencing data release](insert link), and will expand with each new MalariaGEN _Plasmodium vivax_ data release. 
 
 #### Search for a gene below to get started.
 
-If you're new here, try clicking below and typing "AAT1"! Alternatively, choose from the key drug resistance genes we've placed at the top of the list (DHFR-TS, MDR1, CRT, PPPK-DHPS, Kelch13).
+If you're new here, try clicking below and typing "CRT"! Alternatively, choose from the key drug resistance genes we've placed at the top of the list (CRT, DHFR, DHPS, MDR1).
 
 """, location = placeholder)
 
@@ -88,7 +88,7 @@ def file_selector(placeholder):
         st.session_state["gene_id"] = gene_id_extracted
     
     priority_gene_ids = [
-        "PF3D7_0417200", "PF3D7_0523000", "PF3D7_0709000", "PF3D7_0810800", "PF3D7_1343700"
+        "PVP01_0109300", "PVP01_0526600", "PVP01_1429500", "PVP01_1010900"
     ]
     priority_gene_names = [utility_mappers["gene_ids_to_gene_names"][gene_id] for gene_id in priority_gene_ids]
     
@@ -97,7 +97,7 @@ def file_selector(placeholder):
                                               for gene_id in utility_mappers["gene_ids"] 
                                               if gene_id in utility_mappers["gene_ids_to_gene_names"].keys()],
                                     key = "gene_id",
-                                    help = """This list of core genes was created using "protein coding genes" (as defined by the GFF of PlasmoDB version 55) based on core genome region annotations from Miles et al., 2016. Gene IDs are accompanied by values from the GFF's "ID" field value or if unavailable, from the "description" field (in which case it is enclosed by quotation marks). """
+                                    help = """This list of core genes was created using "protein coding genes" (as defined by the GFF of PlasmoDB version 68 for _P. vivax_ reference strain P01) based on core genome region annotations from [REF]. Gene IDs are accompanied by values from the GFF's "ID" field value or if unavailable, from the "description" field (in which case it is enclosed by quotation marks). """
                                    )
     
     if "--" in gene_id_selected:
@@ -166,31 +166,25 @@ Clicking on a haplotype will generate the two following plots:
         _st_justify_markdown_html("""
 ## Geographic distribution
 
-The locations of where samples were collected are grouped into 13 major "sub-populations" based on their geographic and genetic characteristics, as defined in the <a href="https://wellcomeopenresearch.org/articles/10-325" target="_blank">Pf8 paper</a>. These are colour-coded as follows:
+The locations of where samples were collected are grouped into 7 major "sub-populations" based on their geographic and genetic characteristics, as defined in the <a href=" " target="_blank">Pv5 paper</a>. An eighth group "Unassigned" contains samples from countries with < 25 samples which did not clearly group with another subpopulation. These are colour-coded as follows:
 """)
-
         st.markdown("""
 <ul style="list-style-type:none;">
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#b8e186; border-radius:50%;"></span> LA-W - Latin America (West)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#4dac26; border-radius:50%;"></span> LA-E - Latin America (East)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#e31a1c; border-radius:50%;"></span> AF-W - Africa (West)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#fd8d3c; border-radius:50%;"></span> AF-C - Africa (Central)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#bb8129; border-radius:50%;"></span> AF-NE - Africa (North-East)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#fecc5c; border-radius:50%;"></span> AF-E - Africa (East)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#dfc0eb; border-radius:50%;"></span> AS-S-E - South Asia (East)</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#984ea3; border-radius:50%;"></span> AS-S-FE - South Asia (Far East)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#4daf4a; border-radius:50%;"></span> LA - Latin America</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#e31a1c; border-radius:50%;"></span> AF-ETH - Africa (Ethiopia)</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#984ea3; border-radius:50%;"></span> AS-W - Asia (West)</li>
     <li><span style="display:inline-block; width:10px; height:10px; background-color:#9ecae1; border-radius:50%;"></span> AS-SE-W - South-East Asia (West)</li>
     <li><span style="display:inline-block; width:10px; height:10px; background-color:#3182bd; border-radius:50%;"></span> AS-SE-E - South-East Asia (East)</li>
     <li><span style="display:inline-block; width:10px; height:10px; background-color:#02818a; border-radius:50%;"></span> AS-SE-M - South-East Asia (Maritime)</li>
     <li><span style="display:inline-block; width:10px; height:10px; background-color:#f781bf; border-radius:50%;"></span> OC-NG - Oceania, New Guinea</li>
-    <li><span style="display:inline-block; width:10px; height:10px; background-color:#003399; border-radius:50%;"></span> EU - Europe</li>
+    <li><span style="display:inline-block; width:10px; height:10px; background-color:#D3D3D3; border-radius:50%;"></span> Unassigned</li>
 </ul>
 """, unsafe_allow_html=True)
 
         _st_justify_markdown_html("""
-On the x-axis of the geographic distribution subplot of the Haplotype UpSet plot, you will also see the names of lab strains which are also of that haplotype (e.g., 3D7, 7G8, Dd2, IT, GB4, HB3). 
+On the x-axis of the geographic distribution subplot of the Haplotype UpSet plot, you will also see the names of lab strains which are also of that haplotype (e.g., P01). 
 
-Due to the country-level aggregation used in the world map plot, countries containing more than one sub-population were allocated their majority sub-population (i.e., Kenya, India, Thailand). 
+Due to the country-level aggregation used in the world map plot, countries containing more than one sub-population were allocated their majority sub-population (i.e. Thailand). 
 """)
         st.divider()
 
@@ -201,7 +195,7 @@ Due to the country-level aggregation used in the world map plot, countries conta
         _st_justify_markdown_html("""
 ## How to cite
 
-When publishing work that uses data and/or plots from the Pf-HaploAtlas, please cite our manuscript on Bioinformatics: 
+When publishing work that uses data and/or plots from the Pf- or Pv-HaploAtlas, please cite our manuscript on Bioinformatics: 
 
 > Chiyun Lee, Eyyüb S Ünlü, Nina F D White, Jacob Almagro-Garcia, Cristina V Ariani, Richard D Pearson, Pf-HaploAtlas: an interactive web app for spatiotemporal analysis of Plasmodium falciparum genes, Bioinformatics, Volume 40, Issue 11, November 2024, btae673, https://doi.org/10.1093/bioinformatics/btae673
 """)
@@ -228,7 +222,7 @@ When publishing work that uses data and/or plots from the Pf-HaploAtlas, please 
         _st_justify_markdown_html("""
 ## Acknowledgements
 
-Pf-HaploAtlas currently uses data generated using the MalariaGEN Pf9 data release which was made possible by clinical parasite samples contributed by partner studies, whose investigators are represented in the data release's author list.
+Pv-HaploAtlas currently uses data generated using the MalariaGEN Pv5 data release which was made possible by clinical parasite samples contributed by partner studies, whose investigators are represented in the data release's author list.
 
 """)
         st.divider()

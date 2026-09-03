@@ -22,7 +22,7 @@ def generate_haplotype_plot(df_haplotypes, gene_id_selected, background_ns_chang
     total_samples = df_haplotypes['Total'].sum()
     df_haplotypes['cum_proportion'] = df_haplotypes['Total'].cumsum() / total_samples 
     df_haplotypes_set = df_haplotypes.loc[df_haplotypes['Total'] >= min_samples] 
-    df_haplotypes_set.loc[df_haplotypes_set['ns_changes'] == '', 'ns_changes'] = '3D7 REF'
+    df_haplotypes_set.loc[df_haplotypes_set['ns_changes'] == '', 'ns_changes'] = 'P01 REF'
     different_haplotypes= len(df_haplotypes_set)
     if different_haplotypes == 0:
         st.warning("No haplotype data found.")
@@ -198,12 +198,9 @@ The Haplotype UpSet plot provides an overview of the haplotypes for the gene sel
 
 Each vertical stack of 3 subplots corresponds to one haplotype. Hover your mouse over the data to see details. 
 
-You can <b><u>investigate a specific haplotype by clicking on any of the data elements of the haplotype</b></u>, e.g., clicking on the bar chart, and scrolling down. If you've chosen one of the key genes linked to drug resistance, you can also find more information on each haplotype in [this guide from the Pf8 data release](https://pf8-release.cog.sanger.ac.uk/Pf8_resistance_classification.pdf). 
+You can <b><u>investigate a specific haplotype by clicking on any of the data elements of the haplotype</b></u>, e.g., clicking on the bar chart, and scrolling down. 
         """
     )
-
-    if gene_id_selected == "PF3D7_1343700":
-        st.warning("A small proportion of samples were sequenced because they had particular kelch13 mutations initially detected by malaria molecular surveillance. Haplotype frequencies for the following locations are therefore likely overestimated and should be treated with caution: Uganda (2017-2022) selected for C469Y or A675V; Kagera, Tanzania (2021 and 2022) selected for R561H; Guyana (2016) selected for C580Y ")
 
     selection_dict = plotly_events(fig, override_height = total_plot_height, config = {"displayModeBar": False})
 
