@@ -91,7 +91,7 @@ Adjust the slider below to choose your time interval of interest for calculating
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', ['Country']] = 'DRC'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'United Republic of Tanzania', ['Country']] = 'Tanzania'
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == "Lao People's Democratic Republic", ['Country']] = 'Laos'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "P01"
+    df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "P01 REF"
 
     df_samples_with_ns_changes['ns_changes_homozygous'] = ( df_samples_with_ns_changes['ns_changes'] == df_samples_with_ns_changes['ns_changes'].str.upper() )
 

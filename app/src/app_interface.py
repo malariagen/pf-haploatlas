@@ -97,7 +97,7 @@ def file_selector(placeholder):
                                               for gene_id in utility_mappers["gene_ids"] 
                                               if gene_id in utility_mappers["gene_ids_to_gene_names"].keys()],
                                     key = "gene_id",
-                                    help = """This list of core genes was created using "protein coding genes" (as defined by the GFF of PlasmoDB version 68 for _P. vivax_ reference strain P01) based on core genome region annotations from [REF]. Gene IDs are accompanied by values from the GFF's "ID" field value or if unavailable, from the "description" field (in which case it is enclosed by quotation marks). """
+                                    help = """This list of core genes was created using "protein coding genes" (as defined by the GFF of PlasmoDB version 68 for _P. vivax_ reference strain P01) based on core genome region annotations from [MalariaGEN et al. 2022](https://wellcomeopenresearch.org/articles/7-136). Gene IDs are accompanied by values from the GFF's "ID" field value or if unavailable, from the "description" field (in which case it is enclosed by quotation marks). """
                                    )
     
     if "--" in gene_id_selected:

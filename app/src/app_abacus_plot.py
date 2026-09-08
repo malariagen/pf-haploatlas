@@ -56,7 +56,8 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
     ].copy()
     
     df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Country'] == 'Democratic Republic of the Congo', ['Country']] = 'DRC'
-    df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "P01"
+    df_samples_with_ns_changes.loc[df_samples_with_ns_changes['Admin level 1'] == 'Southern Nations Nationalities and Peoples', ['Admin level 1']] = 'Southern Nations<br> Nationalities and Peoples'
+    df_samples_with_ns_changes.loc[df_samples_with_ns_changes.ns_changes == "", "ns_changes"] = "P01 REF"
 
     df_samples_with_ns_changes["Admin level 1"] = df_samples_with_ns_changes["Admin level 1"].fillna("(Unspecified)")
 
@@ -89,6 +90,8 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
 The Abacus plot shows how the haplotype frequency of your selected haplotype changes across locations and time (in years). The colour intensity of each “bead” on the Abacus plot corresponds to its observed frequency in each year and in each location. Haplotypes at fixation are marked with “100” to highlight 100% frequency, whilst “beads” with 0% haplotype frequency are crossed out. Hover your mouse over the data to see details. 
 
 Click and drag to zoom to focus on certain locations. Double-click to reset. 
+
+Not seeing all populations from the Haplotype UpSet plot? Try lowering the minimum sample threshold in the data filtering settings.
 """)
     
     fig = make_subplots(rows = 2, cols = 2,
