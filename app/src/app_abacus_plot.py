@@ -89,9 +89,7 @@ def generate_abacus_plot(ns_changes, df_join, min_samples, df_haplotypes_set, ge
     _st_justify_markdown_html("""
 The Abacus plot shows how the haplotype frequency of your selected haplotype changes across locations and time (in years). The colour intensity of each “bead” on the Abacus plot corresponds to its observed frequency in each year and in each location. Haplotypes at fixation are marked with “100” to highlight 100% frequency, whilst “beads” with 0% haplotype frequency are crossed out. Hover your mouse over the data to see details. 
 
-Click and drag to zoom to focus on certain locations. Double-click to reset. 
-
-Not seeing all populations from the Haplotype UpSet plot? Try lowering the minimum sample threshold in the data filtering settings.
+Not seeing all populations from the Haplotype UpSet plot? There are only a few location/year combinations with at least 25 samples (the default for display). Try lowering the minimum sample threshold in the data filtering settings, using the ‘Click to see more about the data’ dropdown above.
 """)
     
     fig = make_subplots(rows = 2, cols = 2,

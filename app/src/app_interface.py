@@ -62,7 +62,7 @@ Pv-HaploAtlas currently uses data generated using the [MalariaGEN Pv5 whole geno
 
 #### Search for a gene below to get started.
 
-If you're new here, try clicking below and typing "CRT"! Alternatively, choose from the key drug resistance genes we've placed at the top of the list (CRT, DHFR, DHPS, MDR1).
+If you're new here, try clicking below and typing "CRT"! Alternatively, choose from the key drug resistance genes we've placed at the top of the list (CRT, DHFR, DHPS, MDR1, Kelch13).
 
 """, location = placeholder)
 
@@ -88,7 +88,7 @@ def file_selector(placeholder):
         st.session_state["gene_id"] = gene_id_extracted
     
     priority_gene_ids = [
-        "PVP01_0109300", "PVP01_0526600", "PVP01_1429500", "PVP01_1010900"
+        "PVP01_0109300", "PVP01_0526600", "PVP01_1429500", "PVP01_1010900", "PVP01_1211100"
     ]
     priority_gene_names = [utility_mappers["gene_ids_to_gene_names"][gene_id] for gene_id in priority_gene_ids]
     
@@ -182,7 +182,7 @@ The locations of where samples were collected are grouped into 7 major "sub-popu
 """, unsafe_allow_html=True)
 
         _st_justify_markdown_html("""
-On the x-axis of the geographic distribution subplot of the Haplotype UpSet plot, you will also see the names of lab strains which are also of that haplotype (e.g., P01). 
+On the x-axis of the geographic distribution subplot of the Haplotype UpSet plot, you will also see the name P01 for the haplotype seen in the PvP01 reference genome strain. 
 
 Due to the country-level aggregation used in the world map plot, countries containing more than one sub-population were allocated their majority sub-population (i.e. Thailand). 
 """)

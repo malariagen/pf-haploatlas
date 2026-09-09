@@ -44,7 +44,7 @@ def process_configs_menu(gene_id_selected, df_haplotypes, df_join):
 def _config_data_filtering_section():
     min_samples = st.number_input(
         "Minimum number of samples per haplotype for analysis",
-        help = "Sometimes we get genes with a huge number of rare haplotypes, which can make interpreting plots difficult. To prevent this, plots only show data for a haplotype if the number of samples with that haplotype exceeds a threshold. We recommend a threshold of 25, but you can investigate rare haplotypes by lowering this threshold. ",
+        help = "Sometimes we get genes with a huge number of rare haplotypes, which can make interpreting plots difficult. To prevent this, plots only show data for a haplotype if the number of samples with that haplotype exceeds a threshold. We recommend a threshold of 25, but you can investigate rare haplotypes by lowering this threshold. Note that to see all populations in the Abacus plot, you may need to lower this threshold below 25.",
         min_value = 1, value = 25)
     
     toast_message = f"Threshold for minimum number of samples per haplotype for analysis has been changed to {min_samples}."
